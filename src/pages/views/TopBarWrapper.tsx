@@ -4,8 +4,7 @@ import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import TopBarBackground from "./TopBarBackground";
 import Icon from '@/assets/iconfont/index';
 
-export const TopBarNavigatorHeight = 15;
-export const TopBarBackgroundHeight = getStatusBarHeight() + TopBarNavigatorHeight;
+export const TopBarNavigatorHeight = 60;
 
 class TopBarWrapper extends React.Component {
 
@@ -44,8 +43,6 @@ class TopBarWrapper extends React.Component {
                         <Icon name="icon-search" size={25}/>
                     </View>
                 </View>
-
-
             </View>
         );
     }
@@ -59,7 +56,7 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
     },
     header: {
-        height: TopBarBackgroundHeight,
+        height: TopBarNavigatorHeight,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',

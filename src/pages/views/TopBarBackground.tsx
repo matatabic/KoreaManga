@@ -6,12 +6,10 @@ import {
 } from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-import {sideHeight} from "@/pages/Home/Carousel";
 import {BlurView} from '@react-native-community/blur';
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
-import {TopBarNavigatorHeight} from "@/pages/views/TopBarWrapper";
+import {sideHeight} from "@/pages/Home/Carousel";
 
-const TopBarBackgroundImageHeight = sideHeight + getStatusBarHeight() * 2 + TopBarNavigatorHeight;
 
 const mapStateToProps = ({home}: RootState) => {
     return {
@@ -33,14 +31,16 @@ class TopBarBackground extends React.Component<IProps> {
         const {carousels, activeCarouselIndex} = this.props;
         return (
             carousels && carousels.length > 0 &&
-            <View>
-                <Image source={{uri: carousels[activeCarouselIndex].image}} style={styles.image}/>
-                <BlurView
-                    blurType="light"
-                    blurAmount={10}
-                    style={StyleSheet.absoluteFillObject}
-                />
-            </View>
+            (
+                <View>
+                    <Image source={{uri: carousels[activeCarouselIndex].image}} style={styles.image}/>
+                    <BlurView
+                        blurType="light"
+                        blurAmount={10}
+                        style={StyleSheet.absoluteFillObject}
+                    />
+                </View>
+            )
         );
     }
 }
@@ -48,7 +48,7 @@ class TopBarBackground extends React.Component<IProps> {
 const styles = StyleSheet.create({
     image: {
         width: '100%',
-        height: TopBarBackgroundImageHeight,
+        height: getStatusBarHeight() + sideHeight + 60,
     }
 })
 
