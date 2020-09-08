@@ -5,14 +5,14 @@ import {
     TabNavigationState,
 } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeTabs from './HomeTabs';
 import Category from '@/pages/Category';
 import Shelf from '@/pages/Shelf';
 import Mine from '@/pages/Mine';
 import {RootStackParamList, RootStackNavigation} from './index';
+import Home from "@/pages/Home";
 
 export type BottomTabParamList = {
-    HomeTabs: undefined;
+    Home: undefined;
     Category: undefined;
     Shelf: undefined;
     Mine: undefined;
@@ -31,7 +31,7 @@ interface IProps {
 
 function getHeaderTitle(routeName: string) {
     switch (routeName) {
-        case 'HomeTabs':
+        case 'Home':
             return '首页';
         case 'Category':
             return '分类';
@@ -58,8 +58,9 @@ class BottomTabs extends React.Component<IProps> {
         const {navigation, route} = this.props;
         const routeName = route.state
             ? route.state.routes[route.state.index].name
-            : route.params?.screen || 'HomeTabs';
-        if (routeName === 'HomeTabs') {
+            : route.params?.screen || 'Home';
+        console.log(routeName)
+        if (routeName === 'Home') {
             navigation.setOptions({
                 headerTransparent: true,
                 headerTitle: '',
@@ -79,8 +80,8 @@ class BottomTabs extends React.Component<IProps> {
                     activeTintColor: '#FBDB3F',
                 }}>
                 <Tab.Screen
-                    name="HomeTabs"
-                    component={HomeTabs}
+                    name="Home"
+                    component={Home}
                     options={{
                         tabBarLabel: '首页',
                         tabBarIcon: ({color, size}) => (

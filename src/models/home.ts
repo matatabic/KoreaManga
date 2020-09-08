@@ -1,11 +1,6 @@
 import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
-import axios from 'axios';
 import HomeServices from "@/services/home";
-
-const CAROUSEL_URL = '/carousel/getCarouselList';
-const GUESS_URL = '/book/getGuessList';
-const COMMEND_URL = '/book/getCommendList';
 
 export interface ICarousel {
     id: string;
@@ -27,16 +22,16 @@ export interface ICommend {
     category: string;
 }
 
-export interface ICommends {
+export interface ICommendList {
     [key: string]: ICommend[];
 }
 
 export interface HomeState {
-    carousels: ICarousel[];
+    carouselList: ICarousel[];
     activeCarouselIndex: number;
     gradientVisible: boolean;
-    guess: IGuess[];
-    commends: ICommends[];
+    guessList: IGuess[];
+    commendList: ICommendList[];
 }
 
 interface HomeModel extends Model {
@@ -46,18 +41,18 @@ interface HomeModel extends Model {
         setState: Reducer<HomeState>;
     };
     effects: {
-        fetchCarousels: Effect;
-        fetchGuess: Effect;
-        fetchCommends: Effect;
+        fetchCarouselList: Effect;
+        fetchGuessList: Effect;
+        fetchCommendList: Effect;
     };
 }
 
 const initialState = {
-    carousels: [],
+    carouselList: [],
     activeCarouselIndex: 0,
     gradientVisible: true,
-    guess: [],
-    commends: [],
+    guessList: [],
+    commendList: [],
 };
 
 const homeModel: HomeModel = {
@@ -72,30 +67,30 @@ const homeModel: HomeModel = {
         },
     },
     effects: {
-        *fetchCarousels(_, {call, put}) {
+        *fetchCarouselList(_, {call, put}) {
             const {data} = yield call(HomeServices.getCarouselList);
             yield put({
                 type: 'setState',
                 payload: {
-                    carousels: data.list,
+                    carouselList: data.list,
                 },
             });
         },
-        *fetchGuess(_, {call, put}) {
+        *fetchGuessList(_, {call, put}) {
             const {data} = yield call(HomeServices.getGuessList);
             yield put({
                 type: 'setState',
                 payload: {
-                    guess: data,
+                    guessList: data,
                 },
             });
         },
-        *fetchCommends(_, {call, put}) {
+        *fetchCommendList(_, {call, put}) {
             const {data} = yield call(HomeServices.getCommendList);
             yield put({
                 type: 'setState',
                 payload: {
-                    commends: data.list,
+                    commendList: data.list,
                 },
             });
         },

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Animated} from 'react-native';
-import {NavigationContainer, RouteProp} from '@react-navigation/native';
+import {NavigationContainer, RouteProp,NavigationState} from '@react-navigation/native';
 import {
     createStackNavigator,
     StackNavigationProp,
@@ -11,45 +11,36 @@ import BottomTabs from './BottomTabs';
 import {Platform, StyleSheet, StatusBar} from 'react-native';
 import Brief from '@/pages/Brief';
 
+
 export type RootStackParamList = {
     BottomTabs: {
         screen?: string;
     };
     Detail: undefined;
     CategorySetting: undefined;
-    Brief: undefined;
+    Brief: {
+        item: {
+            id: string;
+            title: string;
+            image: string;
+            category: string;
+        }
+    };
 };
 
 export type RootStackNavigation = StackNavigationProp<RootStackParamList>;
 
-export type ModalStackParamList = {
-    Root: undefined;
-    ProgramDetail: {
-        id?: string;
-        previousId?: string;
-        nextId?: string;
-    };
-    Login: undefined;
-};
+const RootStack = createStackNavigator<RootStackParamList>();
 
-export type ModalStackNavigation = StackNavigationProp<ModalStackParamList>;
+interface IState {
+    navigationState: NavigationState | undefined;
+}
 
-const Stack = createStackNavigator<RootStackParamList>();
-
-
-const styles = StyleSheet.create({
-    headerBackground: {
-        flex: 1,
-        backgroundColor: '#fff',
-        opacity: 0,
-    },
-});
-
-class Navigator extends React.Component {
+class Navigator extends React.Component<any, IState>{
     render() {
         return (
             <NavigationContainer>
-                <Stack.Navigator
+                <RootStack.Navigator
                     headerMode="float"
                     screenOptions={{
                         headerTitleAlign: 'center',
@@ -73,18 +64,18 @@ class Navigator extends React.Component {
                             }),
                         },
                     }}>
-                    <Stack.Screen
+                    <RootStack.Screen
                         name="BottomTabs"
                         component={BottomTabs}
                         options={{
                             headerTitle: '首页',
                         }}
                     />
-                    <Stack.Screen
+                    <RootStack.Screen
                         name="Brief"
                         component={Brief}
                     />
-                </Stack.Navigator>
+                </RootStack.Navigator>
             </NavigationContainer>
         );
     }

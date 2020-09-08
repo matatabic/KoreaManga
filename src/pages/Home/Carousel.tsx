@@ -9,6 +9,7 @@ import {StyleSheet, View} from 'react-native';
 import {ICarousel} from '@/models/home';
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
+import CarouselBackground from "@/pages/views/CarouselBackground";
 
 const sliderWidth = viewportWidth;
 const sideWidth = wp(90);
@@ -17,7 +18,7 @@ const itemWidth = sideWidth + wp(2) * 2;
 
 const mapStateToProps = ({home}: RootState) => {
     return {
-        carousels: home.carousels,
+        carouselList: home.carouselList,
         activeCarouselIndex: home.activeCarouselIndex,
     };
 };
@@ -38,7 +39,7 @@ class Carousel extends React.Component<IProps> {
     fetch = () => {
         const {dispatch} = this.props;
         dispatch({
-            type: 'home/fetchCarousels',
+            type: 'home/fetchCarouselList',
         });
     };
 
@@ -69,8 +70,9 @@ class Carousel extends React.Component<IProps> {
         );
     };
 
+
     get pagination() {
-        const {carousels, activeCarouselIndex} = this.props;
+        const {carouselList, activeCarouselIndex} = this.props;
         return (
             <View style={styles.paginationWrapper}>
                 <Pagination
@@ -78,7 +80,7 @@ class Carousel extends React.Component<IProps> {
                     activeDotIndex={activeCarouselIndex}
                     dotContainerStyle={styles.dotContainer}
                     dotStyle={styles.dot}
-                    dotsLength={carousels.length}
+                    dotsLength={carouselList.length}
                     inactiveDotScale={0.7}
                     inactiveDotOpacity={0.4}
                 />
@@ -87,11 +89,12 @@ class Carousel extends React.Component<IProps> {
     }
 
     render() {
-        const {carousels} = this.props;
+        const {carouselList} = this.props;
         return (
             <View>
+                {/*{this.carouselBackground}*/}
                 <SnapCarousel
-                    data={carousels}
+                    data={carouselList}
                     renderItem={this.renderItem}
                     sliderWidth={sliderWidth}
                     itemWidth={itemWidth}

@@ -25,7 +25,7 @@ type ModelState = ConnectedProps<typeof connector>;
 interface IProps extends ModelState {
 }
 
-class TopBarBackground extends React.Component<IProps> {
+class CarouselBackground extends React.Component<IProps> {
 
     render() {
         const {carouselList, activeCarouselIndex} = this.props;
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default connector(TopBarBackground);
+export default connector(CarouselBackground);
