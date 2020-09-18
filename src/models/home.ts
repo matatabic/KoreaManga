@@ -2,6 +2,14 @@ import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import HomeServices from "@/services/home";
 
+export interface IBookCover {
+    id: string;
+    title: string;
+    image: string;
+    category?: string;
+    status?: string;
+}
+
 export interface ICarousel {
     id: string;
     image: string;
@@ -15,15 +23,8 @@ export interface IGuess {
     category: string;
 }
 
-export interface ICommend {
-    id: string;
-    title: string;
-    image: string;
-    category: string;
-}
-
 export interface ICommendList {
-    [key: string]: ICommend[];
+    [key: string]: IBookCover[];
 }
 
 export interface HomeState {

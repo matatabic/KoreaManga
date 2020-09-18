@@ -1,6 +1,6 @@
 import React from 'react';
 import {Animated} from 'react-native';
-import {NavigationContainer, RouteProp,NavigationState} from '@react-navigation/native';
+import {NavigationContainer, RouteProp, NavigationState} from '@react-navigation/native';
 import {
     createStackNavigator,
     StackNavigationProp,
@@ -10,6 +10,7 @@ import {
 import BottomTabs from './BottomTabs';
 import {Platform, StyleSheet, StatusBar} from 'react-native';
 import Brief from '@/pages/Brief';
+import CategorySetting from "@/pages/CategorySetting";
 
 
 export type RootStackParamList = {
@@ -23,7 +24,7 @@ export type RootStackParamList = {
             id: string;
             title: string;
             image: string;
-            category: string;
+            category?: string;
         }
     };
 };
@@ -36,7 +37,7 @@ interface IState {
     navigationState: NavigationState | undefined;
 }
 
-class Navigator extends React.Component<any, IState>{
+class Navigator extends React.Component<any, IState> {
     render() {
         return (
             <NavigationContainer>
@@ -74,6 +75,13 @@ class Navigator extends React.Component<any, IState>{
                     <RootStack.Screen
                         name="Brief"
                         component={Brief}
+                    />
+                    <RootStack.Screen
+                        name="CategorySetting"
+                        component={CategorySetting}
+                        options={{
+                            headerTitle: '分类设置',
+                        }}
                     />
                 </RootStack.Navigator>
             </NavigationContainer>

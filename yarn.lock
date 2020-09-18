@@ -1151,6 +1151,11 @@
   resolved "https://registry.npm.taobao.org/@react-native-community/masked-view/download/@react-native-community/masked-view-0.1.10.tgz#5dda643e19e587793bc2034dd9bf7398ad43d401"
   integrity sha1-XdpkPhnlh3k7wgNN2b9zmK1D1AE=
 
+"@react-native-community/viewpager@^4.1.6":
+  version "4.1.6"
+  resolved "https://registry.npm.taobao.org/@react-native-community/viewpager/download/@react-native-community/viewpager-4.1.6.tgz#788f401f883929e8ac3698e328caef40b146f36e"
+  integrity sha1-eI9AH4g5KeisNpjjKMrvQLFG824=
+
 "@react-navigation/bottom-tabs@^5.8.0":
   version "5.8.0"
   resolved "https://registry.npm.taobao.org/@react-navigation/bottom-tabs/download/@react-navigation/bottom-tabs-5.8.0.tgz?cache=0&sync_timestamp=1596543041287&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40react-navigation%2Fbottom-tabs%2Fdownload%2F%40react-navigation%2Fbottom-tabs-5.8.0.tgz#d7386809bceeead0adcaacf61b6563be9cefd5cb"
@@ -1899,7 +1904,7 @@ babel-preset-jest@^25.5.0:
     babel-plugin-jest-hoist "^25.5.0"
     babel-preset-current-node-syntax "^0.1.2"
 
-babel-runtime@^6.22.0:
+babel-runtime@^6.20.0, babel-runtime@^6.22.0:
   version "6.26.0"
   resolved "https://registry.npm.taobao.org/babel-runtime/download/babel-runtime-6.26.0.tgz?cache=0&sync_timestamp=1589682807065&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fbabel-runtime%2Fdownload%2Fbabel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
@@ -2679,6 +2684,13 @@ dva-loading-ts@^3.0.23:
   integrity sha1-KFnA5r5suxHwKIMfAD+zyEVraio=
   dependencies:
     "@babel/runtime" "^7.0.0"
+
+dva-model-extend@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.npm.taobao.org/dva-model-extend/download/dva-model-extend-0.1.2.tgz#a3e615995feaaed5d141eb5b0a26cb98542a9820"
+  integrity sha1-o+YVmV/qrtXRQetbCibLmFQqmCA=
+  dependencies:
+    babel-runtime "^6.20.0"
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -6105,6 +6117,11 @@ react-native-svg@^12.1.0:
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
+
+react-native-tab-view-viewpager-adapter@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/react-native-tab-view-viewpager-adapter/download/react-native-tab-view-viewpager-adapter-1.1.0.tgz#d6e085ed1c91a13e714d87395d428f8afc2b3377"
+  integrity sha1-1uCF7RyRoT5xTYc5XUKPivwrM3c=
 
 react-native-tab-view@^2.15.1:
   version "2.15.1"

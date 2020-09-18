@@ -4,10 +4,11 @@ import Carousel, {sideHeight} from "@/pages/Home/Carousel";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {RootStackNavigation} from "@/navigator/index";
-import {ICommend, ICommendList, IGuess} from "@/models/home";
+import {IBookCover, ICommendList} from "@/models/home";
 import CommendItem from "./CommendItem";
 import TopBarWrapper, {TopBarNavigatorHeight} from "@/pages/views/TopBarWrapper";
 import CarouselBackground from "@/pages/views/CarouselBackground";
+
 
 const mapStateToProps = ({home}: RootState) => {
     return {
@@ -41,7 +42,7 @@ class Home extends React.Component<IProps> {
         return (
             <View>
                 <View style={styles.imageBackground}>
-                    <CarouselBackground />
+                    <CarouselBackground/>
                 </View>
                 <View style={styles.carouselTop}>
                     <Carousel/>
@@ -50,7 +51,7 @@ class Home extends React.Component<IProps> {
         );
     }
 
-    goBrief = (data: ICommend | IGuess) => {
+    goBrief = (data: IBookCover) => {
         const {navigation} = this.props;
         navigation.navigate('Brief', {
             item: data,
@@ -93,7 +94,7 @@ class Home extends React.Component<IProps> {
 }
 
 const styles = StyleSheet.create({
-    imageBackground:{
+    imageBackground: {
         ...StyleSheet.absoluteFillObject
     },
     carouselTop: {

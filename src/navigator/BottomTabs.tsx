@@ -5,18 +5,30 @@ import {
     TabNavigationState,
 } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Category from '@/pages/Category';
 import Shelf from '@/pages/Shelf';
 import Mine from '@/pages/Mine';
 import {RootStackParamList, RootStackNavigation} from './index';
 import Home from "@/pages/Home";
+import CategoryTabs from "@/navigator/CategoryTabs";
+import {RootState} from "@/models/index";
+import {connect, ConnectedProps} from "react-redux";
 
 export type BottomTabParamList = {
     Home: undefined;
-    Category: undefined;
+    CategoryTabs: undefined;
     Shelf: undefined;
     Mine: undefined;
 };
+
+const mapStateToProps = ({category}: RootState) => {
+    return {
+        hideHeader: category.hideHeader,
+    };
+};
+
+const connector = connect(mapStateToProps);
+
+type ModelState = ConnectedProps<typeof connector>;
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -24,7 +36,7 @@ type Route = RouteProp<RootStackParamList, 'BottomTabs'> & {
     state?: TabNavigationState;
 };
 
-interface IProps {
+interface IProps extends ModelState {
     navigation: RootStackNavigation;
     route: Route;
 }
@@ -33,8 +45,8 @@ function getHeaderTitle(routeName: string) {
     switch (routeName) {
         case 'Home':
             return '首页';
-        case 'Category':
-            return '分类';
+        case 'CategoryTabs':
+            return '漫画分类';
         case 'Shelf':
             return '书架';
         case 'Mine':
@@ -59,8 +71,7 @@ class BottomTabs extends React.Component<IProps> {
         const routeName = route.state
             ? route.state.routes[route.state.index].name
             : route.params?.screen || 'Home';
-        console.log(routeName)
-        if (routeName === 'Home') {
+        if (routeName === 'Home' || routeName === 'CategoryTabs') {
             navigation.setOptions({
                 headerTransparent: true,
                 headerTitle: '',
@@ -90,8 +101,8 @@ class BottomTabs extends React.Component<IProps> {
                     }}
                 />
                 <Tab.Screen
-                    name="Category"
-                    component={Category}
+                    name="CategoryTabs"
+                    component={CategoryTabs}
                     options={{
                         tabBarLabel: '分类',
                         tabBarIcon: ({color, size}) => (
@@ -124,4 +135,4 @@ class BottomTabs extends React.Component<IProps> {
     }
 }
 
-export default BottomTabs;
+export default connector(BottomTabs);

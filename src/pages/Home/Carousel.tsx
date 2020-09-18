@@ -9,7 +9,6 @@ import {StyleSheet, View} from 'react-native';
 import {ICarousel} from '@/models/home';
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
-import CarouselBackground from "@/pages/views/CarouselBackground";
 
 const sliderWidth = viewportWidth;
 const sideWidth = wp(90);

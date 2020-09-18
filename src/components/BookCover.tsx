@@ -1,10 +1,9 @@
 import React from 'react';
-import {Image, Text} from 'react-native';
-import {ICommend, IGuess} from '@/models/home';
+import {Image, StyleSheet, Text} from 'react-native';
 import Touchable from '@/components/Touchable';
+import {viewportWidth, wp} from "@/utils/index";
+import {IBookCover} from "@/models/home";
 
-const DEFAULT_IMAGE =
-    'https://jiecaomh.com/media/uploads/a/目標就是妳內褲完結/cover.jpg';
 
 interface itemStyle {
     width: Number;
@@ -13,26 +12,32 @@ interface itemStyle {
 }
 
 export interface IProps {
-    data: ICommend | IGuess;
-    goBrief: (data: ICommend) => void;
-    itemStyle: any;
-    imageStyle: any;
+    data: IBookCover;
+    goBrief: (data: IBookCover) => void;
 }
 
-class BookCover extends React.PureComponent<IProps> {
+const DEFAULT_IMAGE =
+    'https://jiecaomh.com/media/uploads/a/目標就是妳內褲完結/cover.jpg';
+
+const itemWidth = wp(30);
+const imageHeight = itemWidth / 0.675;
+const itemMargin = (viewportWidth - (itemWidth * 3)) / 4;
+
+
+class BookCover extends React.Component<IProps> {
     showError = () => {
         const {data} = this.props;
         console.log('error' + data.id);
     };
 
     render() {
-        const {data, goBrief, itemStyle, imageStyle} = this.props;
+        const {data, goBrief} = this.props;
         return (
-            <Touchable style={{...itemStyle}} onPress={() => goBrief(data)}>
+            <Touchable style={styles.item} onPress={() => goBrief(data)}>
                 <Image
                     source={{uri: data.image}}
                     onError={this.showError}
-                    style={{...imageStyle}}
+                    style={styles.image}
                     resizeMode="stretch"
                 />
                 <Text numberOfLines={1}>{data.title}</Text>
@@ -41,5 +46,18 @@ class BookCover extends React.PureComponent<IProps> {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    item: {
+        width: itemWidth,
+        marginLeft: itemMargin,
+        marginTop: itemMargin,
+    },
+    image: {
+        width: '100%',
+        height: imageHeight,
+        borderRadius: 5,
+    },
+})
 
 export default BookCover;

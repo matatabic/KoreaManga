@@ -1,27 +1,23 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {ICommendList, ICommend} from '@/models/home';
-import {hp, viewportWidth, wp} from '@/utils/index';
+import {IBookCover, ICommendList} from '@/models/home';
 import BookCover from '@/components/BookCover';
+
 
 interface IProps {
     data: ICommendList;
-    goBrief: (data: ICommend) => void;
+    goBrief: (data: IBookCover) => void;
 }
 
-const itemMargin = 5;
-const itemWidth = (wp(100) - (itemMargin * 8)) / 3;
-const imageHeight = itemWidth / 0.675;
 
 class CommendItem extends React.PureComponent<IProps> {
-    renderItem = (item: ICommend, index: Number) => {
+
+    renderItem = (item: IBookCover, index: Number) => {
         const {goBrief} = this.props;
         return (
             <BookCover
                 data={item}
                 goBrief={goBrief}
-                itemStyle={styles.item}
-                imageStyle={styles.image}
                 key={item.id}
             />
         );
@@ -73,19 +69,9 @@ const styles = StyleSheet.create({
     },
     classifyView: {
         flexDirection: 'row',
-        justifyContent:'center',
-        alignContent:'center',
+        justifyContent:'flex-start',
         flexWrap: 'wrap',
-    },
-    item: {
-        width: itemWidth,
-        margin: itemMargin,
-    },
-    image: {
-        width: '100%',
-        height: imageHeight,
-        borderRadius: 5,
-    },
+    }
 });
 
 export default CommendItem;
