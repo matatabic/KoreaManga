@@ -12,6 +12,9 @@ import Home from "@/pages/Home";
 import CategoryTabs from "@/navigator/CategoryTabs";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
+import {getBottomSpace} from "react-native-iphone-x-helper";
+
+export const bottomHeight = getBottomSpace() + 49;
 
 export type BottomTabParamList = {
     Home: undefined;
@@ -89,6 +92,9 @@ class BottomTabs extends React.Component<IProps> {
             <Tab.Navigator
                 tabBarOptions={{
                     activeTintColor: '#FBDB3F',
+                    style: {
+                        height: bottomHeight
+                    }
                 }}>
                 <Tab.Screen
                     name="Home"

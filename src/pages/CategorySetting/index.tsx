@@ -84,7 +84,7 @@ class CategorySetting extends React.Component<IProps, IState> {
         const {isEdit} = this.props;
         const {myCategories} = this.state;
         const disabled = fixedItems.indexOf(index) > -1;
-        if (disabled) {
+        if (selected && disabled) {
             return false;
         }
         if (isEdit) {

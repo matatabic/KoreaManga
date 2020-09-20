@@ -10,13 +10,12 @@ import More from "@/components/More";
 import End from "@/components/End";
 
 
-
 const mapStateToProps = (state: RootState, {route}: { route: RouteProp<CategoryParamList, string> }) => {
-    let model = '';
     const {namespace, category_id, goBrief} = route.params;
     const categoryState = state['category']
-    model = `${namespace}-status-${categoryState.activeStatus}`;
+    const model = `${namespace}-status-${categoryState.activeStatus}`;
     const modelState = state[model];
+
     return {
         namespace,
         category_id,
@@ -40,26 +39,33 @@ interface IProps extends ModelState {
 }
 
 interface IState {
-    loading: boolean;
     endReached: boolean;
     offsetY: number,
-    viewDidAppear: any;
+    scrollViewScrollDirection: string,
 }
 
+const FLATLIST_DIRECTION_UP = 0;     //表示FlatList组件往上滚动
+const FLATLIST_DIRECTION_DOWN = 1;   //表示FlatList组件往下滚动
+
+
 class Category extends React.PureComponent<IProps, IState> {
+
+    scrollViewStartOffsetY = 0;         //用于记录手指开始滑动时FlatList组件的Y轴偏移量，通过这个变量可以判断滚动方向
+    scrollViewScrollDirection = 0;      //FlatList组件滚动的方向：0往上；1往下
+    hideHearer = false;
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            loading: false,
             endReached: false,
             offsetY: 0,
-            viewDidAppear: null,
+            scrollViewScrollDirection: ''
         };
     }
 
     componentDidMount() {
         this.loadData(true);
+        console.log('componentDidMount')
     }
 
 
@@ -117,49 +123,48 @@ class Category extends React.PureComponent<IProps, IState> {
         if (!hasMore) {
             return <End/>;
         }
+
         return null;
     };
 
     onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
-        // const offsetY = nativeEvent.contentOffset.y;
-        // const {dispatch, hasMore, hideHeader} = this.props;
-        // console.log('hasMore------------' + hasMore)
-        // // console.log(offsetY)
-        // if (offsetY < 0) {
-        //     return;
-        // }
-        // if (offsetY > this.state.offsetY) {
-        //     if (!this.state.endReached && hasMore) {
-        //         if (!hideHeader) {
-        //             console.log('dispatch/hide/true')
-        //             dispatch({
-        //                 type: 'category/setState',
-        //                 payload: {
-        //                     hideHeader: true,
-        //                 },
-        //             });
-        //         }
-        //         this.setState({
-        //             offsetY: offsetY
-        //         })
-        //     }
-        // } else {
-        //     if (hideHeader) {
-        //         console.log('dispatch/hide/false')
-        //         dispatch({
-        //             type: 'category/setState',
-        //             payload: {
-        //                 hideHeader: false,
-        //             },
-        //         });
-        //
-        //     }
-        //     this.setState({
-        //         offsetY: offsetY
-        //     })
-        // }
+        const offsetY = nativeEvent.contentOffset.y;
+
+        if (this.scrollViewStartOffsetY > offsetY) {
+            //手势往下滑动，FlatList组件往上滚动
+            // console.log('手势往下滑动，FlatList组件往上滚动');
+            this.scrollViewScrollDirection = FLATLIST_DIRECTION_UP;
+        } else if (this.scrollViewStartOffsetY < offsetY) {
+            //手势往上滑动，ScrollView组件往下滚动
+            // console.log('手势往上滑动，FlatList组件往下滚动');
+            this.scrollViewScrollDirection = FLATLIST_DIRECTION_DOWN;
+        }
     };
 
+    onScrollBeginDrag = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
+        this.scrollViewStartOffsetY = nativeEvent.contentOffset.y;
+    }
+
+    onScrollEndDrag = () => {
+        const {dispatch} = this.props;
+        if (this.scrollViewScrollDirection === FLATLIST_DIRECTION_UP && this.hideHearer) {
+            dispatch({
+                type: 'category/setState',
+                payload: {
+                    hideHeader: false,
+                },
+            });
+            this.hideHearer = false;
+        } else if (this.scrollViewScrollDirection === FLATLIST_DIRECTION_DOWN && !this.hideHearer) {
+            dispatch({
+                type: 'category/setState',
+                payload: {
+                    hideHeader: true,
+                },
+            });
+            this.hideHearer = true;
+        }
+    }
 
     render() {
         const {bookList, refreshing} = this.props;
@@ -173,6 +178,9 @@ class Category extends React.PureComponent<IProps, IState> {
                 onRefresh={this.onRefresh}
                 contentContainerStyle={styles.container}
                 ListFooterComponent={this.renderFooter}
+                scrollEventThrottle={1}
+                onScrollBeginDrag={this.onScrollBeginDrag}
+                onScrollEndDrag={this.onScrollEndDrag}
                 onScroll={this.onScroll}
                 numColumns={3}
                 onEndReached={this.onEndReached}

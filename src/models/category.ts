@@ -30,6 +30,7 @@ export interface CategoryState {
     activeModel: string;
     activeCategory: number;
     refreshing: boolean;
+    loading: boolean;
     hideHeader: boolean;
     pagination: IPagination;
 }
@@ -53,6 +54,7 @@ const initialState = {
     activeModel: '',
     activeCategory: 0,
     refreshing: false,
+    loading: false,
     hideHeader: false,
     pagination: {
         current_page: 1,

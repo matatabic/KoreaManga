@@ -1,8 +1,8 @@
-import { Effect, Model, SubscriptionsMapObject } from 'dva-core-ts';
-import { Reducer } from 'redux';
-import storage, { load } from '@/config/storage';
+import {Effect, Model, SubscriptionsMapObject} from 'dva-core-ts';
+import {Reducer} from 'redux';
+import storage, {load} from '@/config/storage';
 import axios from 'axios';
-import { RootState } from '@/models/index';
+import {RootState} from '@/models/index';
 
 const CATEGORY_URl = '/category/getCategoryTreeList';
 
@@ -38,7 +38,7 @@ interface CategorySettingModel extends Model {
 const initialState = {
     isEdit: false,
     myCategories: [
-        { id: '0', name: '全部' },
+        {id: '0', name: '全部'},
     ],
     categories: [],
 };
@@ -47,9 +47,9 @@ const categorySettingModel: CategorySettingModel = {
     namespace: 'categorySetting',
     state: initialState,
     effects: {
-        *loadData(_, { call, put }) {
-            const myCategories = yield call(load, { key: 'myCategories' });
-            const categories = yield call(load, { key: 'categories' });
+        *loadData(_, {call, put}) {
+            const myCategories = yield call(load, {key: 'myCategories'});
+            const categories = yield call(load, {key: 'categories'});
             if (myCategories) {
                 yield put({
                     type: 'setState',
@@ -67,15 +67,15 @@ const categorySettingModel: CategorySettingModel = {
                 });
             }
         },
-        *toggle({ payload }, { put, select }) {
+        *toggle({payload}, {put, select}) {
             const categorySetting = yield select(
-                ({ categorySetting }: RootState) => categorySetting,
+                ({categorySetting}: RootState) => categorySetting,
             );
             yield put({
                 type: 'setState',
                 payload: {
                     isEdit: !categorySetting.isEdit,
-                    myCategories:payload.myCategories,
+                    myCategories: payload.myCategories,
                 },
             })
             if (categorySetting.isEdit) {
@@ -87,7 +87,7 @@ const categorySettingModel: CategorySettingModel = {
         },
     },
     reducers: {
-        setState(state, { payload }) {
+        setState(state, {payload}) {
             return {
                 ...state,
                 ...payload,
@@ -95,8 +95,8 @@ const categorySettingModel: CategorySettingModel = {
         },
     },
     subscriptions: {
-        setup({ dispatch }) {
-            dispatch({ type: 'loadData' });
+        setup({dispatch}) {
+            dispatch({type: 'loadData'});
         },
         asyncStorage() {
             storage.sync.categories = async () => {
