@@ -6,21 +6,16 @@ export interface IBookCover {
     id: string;
     title: string;
     image: string;
-    category?: string;
-    status?: string;
+    category: string;
+    author: string;
+    description: string;
+    status: string;
 }
 
 export interface ICarousel {
     id: string;
     image: string;
     colors: [string, string];
-}
-
-export interface IGuess {
-    id: string;
-    title: string;
-    image: string;
-    category: string;
 }
 
 export interface ICommendList {
@@ -30,8 +25,6 @@ export interface ICommendList {
 export interface HomeState {
     carouselList: ICarousel[];
     activeCarouselIndex: number;
-    gradientVisible: boolean;
-    guessList: IGuess[];
     commendList: ICommendList[];
 }
 
@@ -43,7 +36,6 @@ interface HomeModel extends Model {
     };
     effects: {
         fetchCarouselList: Effect;
-        fetchGuessList: Effect;
         fetchCommendList: Effect;
     };
 }
@@ -51,8 +43,6 @@ interface HomeModel extends Model {
 const initialState = {
     carouselList: [],
     activeCarouselIndex: 0,
-    gradientVisible: true,
-    guessList: [],
     commendList: [],
 };
 
@@ -74,15 +64,6 @@ const homeModel: HomeModel = {
                 type: 'setState',
                 payload: {
                     carouselList: data.list,
-                },
-            });
-        },
-        *fetchGuessList(_, {call, put}) {
-            const {data} = yield call(HomeServices.getGuessList);
-            yield put({
-                type: 'setState',
-                payload: {
-                    guessList: data,
                 },
             });
         },

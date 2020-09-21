@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
-import TopBarBackground from "./TopBarBackground";
 import Icon from '@/assets/iconfont/index';
 
 export const NavigatorHeight = 60;
@@ -9,18 +8,9 @@ export const TopBarNavigatorHeight = getStatusBarHeight() + NavigatorHeight;
 
 class TopBarWrapper extends React.Component {
 
-    get TopTabBarBackground() {
-        return (
-            <View style={styles.gradient}>
-                <TopBarBackground/>
-            </View>
-        );
-    }
-
     render() {
         return (
             <View style={styles.container}>
-                {/*{this.TopTabBarBackground}*/}
                 <View style={styles.header}>
                     <View style={styles.headerLeft}>
                         <View style={styles.headerLeftView}>
@@ -55,10 +45,6 @@ const styles = StyleSheet.create({
         paddingTop: getStatusBarHeight(),
         backgroundColor: 'transparent',
         height: TopBarNavigatorHeight,
-
-    },
-    gradient: {
-        ...StyleSheet.absoluteFillObject,
     },
     header: {
         height: TopBarNavigatorHeight,

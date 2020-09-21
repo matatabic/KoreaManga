@@ -24,7 +24,6 @@ type ModelState = ConnectedProps<typeof connector>;
 type IProps = MaterialTopTabBarProps & ModelState;
 
 
-
 class CategoryTopBarWrapper extends React.PureComponent<IProps> {
 
 
@@ -34,9 +33,7 @@ class CategoryTopBarWrapper extends React.PureComponent<IProps> {
     };
 
     onPress(id: number) {
-        console.log('onPress')
         const {dispatch, activeCategory} = this.props;
-        console.log(activeCategory)
         dispatch({
             type: 'category/setState',
             payload: {
@@ -79,7 +76,7 @@ class CategoryTopBarWrapper extends React.PureComponent<IProps> {
                                 style = styles.activeText;
                             }
                             return (
-                                <Touchable onPress={() => this.onPress(item.id)} style={styles.bottomView}>
+                                <Touchable key={item.id} onPress={() => this.onPress(item.id)} style={styles.bottomView}>
                                     <Text style={style}>{item.name}</Text>
                                 </Touchable>
                             )

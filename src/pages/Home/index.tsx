@@ -13,7 +13,6 @@ import CarouselBackground from "@/pages/views/CarouselBackground";
 const mapStateToProps = ({home}: RootState) => {
     return {
         commendList: home.commendList,
-        gradientVisible: home.gradientVisible,
     };
 };
 
@@ -41,7 +40,7 @@ class Home extends React.Component<IProps> {
     get header() {
         return (
             <View>
-                <View style={styles.imageBackground}>
+                <View style={styles.blurView}>
                     <CarouselBackground/>
                 </View>
                 <View style={styles.carouselTop}>
@@ -54,22 +53,15 @@ class Home extends React.Component<IProps> {
     goBrief = (data: IBookCover) => {
         const {navigation} = this.props;
         navigation.navigate('Brief', {
-            item: data,
+            data
         });
     };
 
     onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
         const offsetY = nativeEvent.contentOffset.y;
         let newGradientVisible = offsetY < sideHeight;
-        const {dispatch, gradientVisible,} = this.props;
-        if (gradientVisible !== newGradientVisible) {
-            dispatch({
-                type: 'home/setState',
-                payload: {
-                    gradientVisible: newGradientVisible,
-                },
-            });
-        }
+        const {dispatch} = this.props;
+
     };
 
     renderItem = ({item}: ListRenderItemInfo<ICommendList>) => {
@@ -94,7 +86,7 @@ class Home extends React.Component<IProps> {
 }
 
 const styles = StyleSheet.create({
-    imageBackground: {
+    blurView: {
         ...StyleSheet.absoluteFillObject
     },
     carouselTop: {

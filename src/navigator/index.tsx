@@ -20,11 +20,14 @@ export type RootStackParamList = {
     Detail: undefined;
     CategorySetting: undefined;
     Brief: {
-        item: {
+        data: {
             id: string;
             title: string;
             image: string;
-            category?: string;
+            category: string;
+            author: string;
+            description: string;
+            status: string;
         }
     };
 };
@@ -38,6 +41,13 @@ interface IState {
 }
 
 class Navigator extends React.Component<any, IState> {
+
+    headerLeft = () => {
+        return (
+            <></>
+        )
+    }
+
     render() {
         return (
             <NavigationContainer>
@@ -75,6 +85,11 @@ class Navigator extends React.Component<any, IState> {
                     <RootStack.Screen
                         name="Brief"
                         component={Brief}
+                        options={{
+                            headerTransparent: true,
+                            headerTitle: '',
+                            headerLeft: this.headerLeft,
+                        }}
                     />
                     <RootStack.Screen
                         name="CategorySetting"
