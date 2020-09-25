@@ -114,8 +114,6 @@ class CategorySetting extends React.Component<IProps, IState> {
                 data={item}
                 isEdit={isEdit}
                 disabled={disabled}
-                itemWrapperStyle={styles.itemWrapper}
-                item={styles.item}
                 selected
             />
         );
@@ -131,8 +129,6 @@ class CategorySetting extends React.Component<IProps, IState> {
                 <Item
                     data={item}
                     isEdit={isEdit}
-                    itemWrapperStyle={styles.itemWrapper}
-                    item={styles.item}
                     selected={false}
                 />
             </Touchable>
@@ -213,18 +209,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         padding: 5,
     },
-    itemWrapper: {
-        width: itemWidth,
-        height: itemHeight,
-    },
-    item: {
-        flex: 1,
-        backgroundColor: '#fff',
-        margin: margin,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 4,
-    },
+
 });
 
 export default connector(CategorySetting);

@@ -1,22 +1,26 @@
 import React from 'react';
 import {ICategory} from '@/models/categorySetting';
 import {StyleSheet, Text, View} from 'react-native';
+import {viewportWidth} from "@/utils/index";
 
 interface IProps {
     isEdit: boolean;
     selected: boolean;
     data: ICategory;
     disabled?: boolean;
-    itemWrapperStyle: any;
-    item: any;
 }
+
+const parentWidth = viewportWidth - 10;
+const itemWidth = parentWidth / 4;
+const itemHeight = 48;
+const margin = 5;
 
 class Item extends React.Component<IProps> {
     render() {
-        const {data, isEdit, selected, disabled, itemWrapperStyle, item} = this.props;
+        const {data, isEdit, selected, disabled} = this.props;
         return (
-            <View style={{...itemWrapperStyle}}>
-                <View style={[{...item}, disabled && styles.disabled]}>
+            <View style={styles.itemWrapper}>
+                <View style={[styles.item, disabled && styles.disabled]}>
                     <Text>{data.name}</Text>
                     {isEdit && !disabled && (
                         <View style={styles.icon}>
@@ -47,6 +51,18 @@ const styles = StyleSheet.create({
     iconText: {
         color: '#fff',
         lineHeight: 15,
+    },
+    itemWrapper: {
+        width: itemWidth,
+        height: itemHeight,
+    },
+    item: {
+        flex: 1,
+        backgroundColor: '#fff',
+        margin: margin,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 4,
     },
 });
 

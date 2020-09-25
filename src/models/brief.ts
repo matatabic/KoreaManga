@@ -5,9 +5,13 @@ import BriefServices from "@/services/brief";
 export interface IChapter {
     id: string;
     title: string;
+    name: string;
 }
 
 export interface BriefState {
+    collected: boolean;
+    markChapter: string;
+    markIndex: string;
     chapterList: IChapter[];
 }
 
@@ -18,11 +22,14 @@ interface CategoryModel extends Model {
         setState: Reducer<BriefState>;
     };
     effects: {
-        fetchChapterList: Effect;
+        fetchBrief: Effect;
     };
 }
 
 const initialState = {
+    collected: false,
+    markChapter: '',
+    markIndex: '',
     chapterList: []
 };
 
@@ -38,16 +45,18 @@ const briefModel: CategoryModel = {
         },
     },
     effects: {
-        *fetchChapterList({payload}, {call, put}) {
-            const {data} = yield call(BriefServices.getChapterList, payload.data.id);
+        *fetchBrief({payload}, {call, put}) {
+            const {data} = yield call(BriefServices.getBrief, payload);
             yield put({
                 type: 'setState',
                 payload: {
-                    chapterList: data.list,
+                    collected: data.collected,
+                    markChapter: data.markChapter,
+                    markIndex: data.markIndex,
+                    chapterList: data.chapters,
                 },
             });
         },
-
     },
 };
 

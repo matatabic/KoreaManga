@@ -176,7 +176,7 @@ class Category extends React.PureComponent<IProps, IState> {
                 renderItem={this.renderItem}
                 refreshing={refreshing}
                 onRefresh={this.onRefresh}
-                contentContainerStyle={styles.container}
+                style={styles.container}
                 ListFooterComponent={this.renderFooter}
                 scrollEventThrottle={1}
                 onScrollBeginDrag={this.onScrollBeginDrag}

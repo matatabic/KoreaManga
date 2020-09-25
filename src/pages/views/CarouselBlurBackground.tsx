@@ -25,14 +25,14 @@ type ModelState = ConnectedProps<typeof connector>;
 interface IProps extends ModelState {
 }
 
-class CarouselBackground extends React.Component<IProps> {
+class CarouselBlurBackground extends React.Component<IProps> {
 
     render() {
         const {carouselList, activeCarouselIndex} = this.props;
         return (
             carouselList && carouselList.length > 0 &&
             (
-                <View>
+                <View style={styles.container}>
                     <Image source={{uri: carouselList[activeCarouselIndex].image}} style={styles.image}/>
                     <BlurView
                         blurType="light"
@@ -46,10 +46,13 @@ class CarouselBackground extends React.Component<IProps> {
 }
 
 const styles = StyleSheet.create({
+    container:{
+        ...StyleSheet.absoluteFillObject
+    },
     image: {
         width: '100%',
         height: getStatusBarHeight() + sideHeight + 60,
     }
 })
 
-export default connector(CarouselBackground);
+export default connector(CarouselBlurBackground);

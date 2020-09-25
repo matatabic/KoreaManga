@@ -1,15 +1,14 @@
 import axios from "axios";
-import {bookReqParam} from '@/models/category'
 
 const BOOK_URL = '/book/getBookList';
 const CATEGORY_URL = '/category/getCategoryList';
 
 
-async function getBookList(params: bookReqParam) {
+async function getBookList(data: any) {
     return axios.get(BOOK_URL, {
         params: {
-            ...params
-        }
+            ...data
+        },
     });
 }
 

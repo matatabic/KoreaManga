@@ -11,6 +11,7 @@ import BottomTabs from './BottomTabs';
 import {Platform, StyleSheet, StatusBar} from 'react-native';
 import Brief from '@/pages/Brief';
 import CategorySetting from "@/pages/CategorySetting";
+import MangaView from "@/pages/MangaView";
 
 
 export type RootStackParamList = {
@@ -30,6 +31,12 @@ export type RootStackParamList = {
             status: string;
         }
     };
+    MangaView: {
+        data: {
+            id: string;
+            title: string;
+        }
+    }
 };
 
 export type RootStackNavigation = StackNavigationProp<RootStackParamList>;
@@ -94,6 +101,13 @@ class Navigator extends React.Component<any, IState> {
                     <RootStack.Screen
                         name="CategorySetting"
                         component={CategorySetting}
+                        options={{
+                            headerTitle: '分类设置',
+                        }}
+                    />
+                    <RootStack.Screen
+                        name="MangaView"
+                        component={MangaView}
                         options={{
                             headerTitle: '分类设置',
                         }}

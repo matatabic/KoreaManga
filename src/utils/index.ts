@@ -15,6 +15,11 @@ function hp(percentage: number) {
     return Math.round(value);
 }
 
+//根据图片宽度百分比计算高度
+function ip(width: number) {
+    return width / 0.675;
+}
+
 function getActiveRouteName(state: NavigationState) {
     let route;
     route = state.routes[state.index];
@@ -24,4 +29,4 @@ function getActiveRouteName(state: NavigationState) {
     return route.name;
 }
 
-export {viewportWidth, viewportHeight, wp, hp, getActiveRouteName};
+export {viewportWidth, viewportHeight, wp, hp, ip, getActiveRouteName};

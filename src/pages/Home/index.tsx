@@ -7,7 +7,7 @@ import {RootStackNavigation} from "@/navigator/index";
 import {IBookCover, ICommendList} from "@/models/home";
 import CommendItem from "./CommendItem";
 import TopBarWrapper, {TopBarNavigatorHeight} from "@/pages/views/TopBarWrapper";
-import CarouselBackground from "@/pages/views/CarouselBackground";
+import CarouselBlurBackground from "@/pages/views/CarouselBlurBackground";
 
 
 const mapStateToProps = ({home}: RootState) => {
@@ -40,9 +40,7 @@ class Home extends React.Component<IProps> {
     get header() {
         return (
             <View>
-                <View style={styles.blurView}>
-                    <CarouselBackground/>
-                </View>
+                <CarouselBlurBackground/>
                 <View style={styles.carouselTop}>
                     <Carousel/>
                 </View>
@@ -53,7 +51,7 @@ class Home extends React.Component<IProps> {
     goBrief = (data: IBookCover) => {
         const {navigation} = this.props;
         navigation.navigate('Brief', {
-            data
+            data: data
         });
     };
 
@@ -86,9 +84,6 @@ class Home extends React.Component<IProps> {
 }
 
 const styles = StyleSheet.create({
-    blurView: {
-        ...StyleSheet.absoluteFillObject
-    },
     carouselTop: {
         paddingTop: TopBarNavigatorHeight,
     },

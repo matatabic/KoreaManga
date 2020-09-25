@@ -1,15 +1,19 @@
 import axios from "axios";
 
-const CHAPTER_URL = '/chapter/getChapterList';
+const CHAPTER_URL = '/brief/getBrief';
 
-async function getChapterList(id: number) {
+interface BriefReqPrams {
+    book_id: number
+}
+
+export async function getBrief(data: BriefReqPrams) {
     return axios.get(CHAPTER_URL, {
         params: {
-            book_id: id
+            ...data
         }
     });
 }
 
 export default {
-    getChapterList,
+    getBrief,
 };

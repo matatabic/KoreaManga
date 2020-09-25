@@ -1,14 +1,17 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, FlatList, ListRenderItemInfo} from 'react-native';
-import Icon from '@/assets/iconfont/index';
-import {getStatusBarHeight} from "react-native-iphone-x-helper";
+import {View, Text, StyleSheet, FlatList, ListRenderItemInfo, Image} from 'react-native';
 import {RootState} from "@/models/index";
 import {RouteProp} from "@react-navigation/native";
-import {RootStackParamList} from "@/navigator/index";
+import {RootStackNavigation, RootStackParamList} from "@/navigator/index";
 import {connect, ConnectedProps} from "react-redux";
-import {BlurView} from "@react-native-community/blur";
 import {IChapter} from "@/models/brief";
-import ChapterItem from "@/pages/Brief/ChapterItem";
+import Item from "./Item";
+import ImageBlurBackground from "@/pages/views/ImageBlurBackground";
+import TopBarWrapper from "./TopBarWrapper";
+import {ip} from "@/utils/index";
+import {getStatusBarHeight} from "react-native-iphone-x-helper";
+import Icon from "@/assets/iconfont";
+import Footer from "./Footer";
 
 
 const mapStateToProps = ({brief}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
@@ -16,7 +19,10 @@ const mapStateToProps = ({brief}: RootState, {route}: { route: RouteProp<RootSta
 
     return {
         data,
-        chapterList:brief.chapterList,
+        collected: brief.collected,
+        markChapter: brief.markChapter,
+        markIndex: brief.markChapter,
+        chapterList: brief.chapterList,
     };
 };
 
@@ -26,6 +32,7 @@ type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
     route: RouteProp<RootStackParamList, 'Brief'>
+    navigation: RootStackNavigation;
 }
 
 class Brief extends React.PureComponent<IProps> {
@@ -35,90 +42,194 @@ class Brief extends React.PureComponent<IProps> {
     }
 
     loadData = () => {
-        const {dispatch,data} = this.props;
+        const {dispatch, data} = this.props;
         dispatch({
-            type:'brief/fetchChapterList',
-            payload:{
-                data
+            type: 'brief/fetchBrief',
+            payload: {
+                book_id: data.id
             }
         })
     }
 
-    get header(){
-        const {data} = this.props;
+    goMangaView = (data: IChapter) => {
+        const {navigation} = this.props;
+        console.log(data)
+        navigation.navigate('MangaView', {
+            data
+        });
+    }
+
+    get header() {
+        const {data, collected} = this.props;
         return (
-            <View style={styles.container}>
-                <View style={styles.blurView}>
-                    <Image source={{uri: data.image}} style={styles.TopBackground}/>
-                    <BlurView
-                        blurType="light"
-                        blurAmount={10}
-                        style={[StyleSheet.absoluteFillObject, {height: 500}]}
-                    />
-                </View>
-                <View style={styles.headerContainer}>
-                    <View style={styles.leftView}>
-                        <Icon name="icon-arrow-left-bold" size={24}/>
+            <View>
+                <View>
+                    <View style={styles.operateView}>
+                        <View style={styles.operateLeftView}>
+                            <Icon name="icon-xing" color='#F43453' size={22}/>
+                            <Text>收藏</Text>
+                        </View>
+                        <View style={styles.operateRightView}>
+                            <Text style={styles.operateRightTitle}>开始阅读</Text>
+                        </View>
                     </View>
-                    <View style={styles.rightView}>
-                        <Icon style={styles.rightIcon} name="icon-shangbian" size={22}/>
-                        <Icon style={styles.rightIcon} name="icon-xiabian" size={22}/>
-                        <Icon style={styles.rightIcon} name="icon-jubao" size={22}/>
+                    <View style={styles.headerContainer}>
+                        <View style={styles.bulletinView}>
+                            <Image source={{uri: data.image}} style={styles.image}/>
+                            <View style={styles.bulletinTitleView}>
+                                <Text style={styles.bulletinTitle}>{data.title}</Text>
+                                <Text style={styles.bulletin}>{data.status}</Text>
+                                <Text style={styles.bulletin}>{data.author}</Text>
+                                <Text style={styles.bulletin}>{data.category}</Text>
+                            </View>
+                        </View>
                     </View>
                 </View>
-                <View style={styles.mainContainer}>
-                    <Text>
-
-                    </Text>
-
+                <View style={styles.descriptionView}>
+                    <Text style={styles.descriptionTitle}>{data.description}</Text>
+                </View>
+                <View style={styles.itemHeader}>
+                    <View style={styles.itemHeaderLeft}>
+                        <Text style={styles.itemHeaderLeftTitle}>章节</Text>
+                    </View>
+                    <View style={styles.itemHeaderRight}>
+                        <Text style={styles.itemHeaderRightTitle}>2020-09-16更新至第363话</Text>
+                    </View>
                 </View>
             </View>
-        )
+
+        );
     }
 
     renderItem = ({item}: ListRenderItemInfo<IChapter>) => {
-        return <ChapterItem  />;
+        return <Item data={item} goMangaView={this.goMangaView}/>;
     };
 
+    renderFooter = () => {
+        return <Footer/>
+    }
+
     render() {
-        const {chapterList} = this.props;
+        const {data, chapterList} = this.props;
 
         return (
-            <FlatList
-                ListHeaderComponent={this.header}
-                data={chapterList}
-                renderItem={this.renderItem}
-            />
+            <>
+                <ImageBlurBackground image={data.image}/>
+                <FlatList
+                    ListHeaderComponent={this.header}
+                    style={styles.container}
+                    data={chapterList}
+                    numColumns={4}
+                    columnWrapperStyle={styles.columnWrapper}
+                    renderItem={this.renderItem}
+                    keyExtractor={(item, key) => `item-${key}`}
+                    ListFooterComponent={this.renderFooter}
+                />
+                <TopBarWrapper/>
+            </>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-
-        paddingTop: getStatusBarHeight()
+        flex: 1,
+        // backgroundColor:'red'
+    },
+    columnWrapper: {
+        paddingHorizontal: 10,
+        backgroundColor: '#fff'
     },
     headerContainer: {
+        paddingTop: getStatusBarHeight() + 75,
+        marginHorizontal: 10,
+        height: 330,
+    },
+    bulletinView: {
         flexDirection: 'row',
-        justifyContent: "space-between",
-        paddingTop: 15,
     },
-    blurView: {
-        ...StyleSheet.absoluteFillObject
+    bulletinTitleView: {
+        marginLeft: 10,
     },
-    TopBackground: {
+    bulletinTitle: {
+        color: '#f3f6f6',
+        fontSize: 26,
+        marginTop: 5,
+        marginBottom: 12,
+    },
+    bulletin: {
+        color: '#ccc',
+        fontSize: 15,
+        marginBottom: 12,
+    },
+    operateView: {
+        position: "absolute",
         width: '100%',
-        height: 500,
+        height: 80,
+        bottom: 0,
+        backgroundColor: '#fff',
+        flexDirection: 'row'
     },
-    leftView: {},
-    rightView: {
+    operateLeftView: {
+        marginTop: 330 - ip(120) - getStatusBarHeight() - 75 - 10,
+        marginLeft: 10,
+        width: 120,
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    rightIcon: {
-        marginHorizontal: 15
+    operateLeftTitle: {
+        marginLeft: 8,
     },
-    mainContainer: {}
-
+    operateRightView: {
+        flex: 1,
+        marginTop: 330 - ip(120) - getStatusBarHeight() - 75 - 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F43453',
+        marginHorizontal: 10,
+        borderRadius: 35,
+    },
+    operateRightTitle: {
+        color: '#fff'
+    },
+    image: {
+        width: 120,
+        height: ip(120),
+    },
+    descriptionView: {
+        flex: 1,
+        backgroundColor: '#fff',
+        paddingTop: 20,
+        paddingLeft: 10,
+        paddingRight: 5,
+    },
+    descriptionTitle: {
+        color: '#5B5B5B',
+    },
+    itemHeader: {
+        flex: 1,
+        height: 45,
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+    },
+    itemHeaderLeft: {
+        flex: 1,
+        marginLeft: 10,
+        justifyContent: 'center',
+    },
+    itemHeaderLeftTitle: {
+        fontSize: 15
+    },
+    itemHeaderRight: {
+        flex: 1,
+        marginRight: 25,
+        justifyContent: 'center',
+    },
+    itemHeaderRightTitle: {
+        fontSize: 12,
+        color: '#93919C'
+    },
 })
 
 export default connector(Brief);
