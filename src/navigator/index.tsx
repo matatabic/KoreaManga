@@ -35,6 +35,7 @@ export type RootStackParamList = {
         data: {
             id: string;
             title: string;
+            book_id: string;
         }
     }
 };
@@ -48,12 +49,6 @@ interface IState {
 }
 
 class Navigator extends React.Component<any, IState> {
-
-    headerLeft = () => {
-        return (
-            <></>
-        )
-    }
 
     render() {
         return (
@@ -95,7 +90,12 @@ class Navigator extends React.Component<any, IState> {
                         options={{
                             headerTransparent: true,
                             headerTitle: '',
-                            headerLeft: this.headerLeft,
+                            cardStyle: {backgroundColor: '#fff'},
+                            headerLeft: () => {
+                                return (
+                                    <></>
+                                )
+                            },
                         }}
                     />
                     <RootStack.Screen
@@ -109,7 +109,14 @@ class Navigator extends React.Component<any, IState> {
                         name="MangaView"
                         component={MangaView}
                         options={{
-                            headerTitle: '分类设置',
+                            headerTransparent: true,
+                            headerTitle: '',
+                            cardStyle: {backgroundColor: '#000'},
+                            headerLeft: () => {
+                                return (
+                                    <></>
+                                )
+                            },
                         }}
                     />
                 </RootStack.Navigator>

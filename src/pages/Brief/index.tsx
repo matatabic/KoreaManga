@@ -51,11 +51,14 @@ class Brief extends React.PureComponent<IProps> {
         })
     }
 
-    goMangaView = (data: IChapter) => {
-        const {navigation} = this.props;
-        console.log(data)
+    goMangaView = (item: IChapter) => {
+        const {navigation, data} = this.props;
         navigation.navigate('MangaView', {
-            data
+            data: {
+                id: item.id,
+                title: item.title,
+                book_id: data.id,
+            }
         });
     }
 
@@ -66,8 +69,8 @@ class Brief extends React.PureComponent<IProps> {
                 <View>
                     <View style={styles.operateView}>
                         <View style={styles.operateLeftView}>
-                            <Icon name="icon-xing" color='#F43453' size={22}/>
-                            <Text>收藏</Text>
+                            <Icon name="icon-xing" color={collected ? '#F43453' : '#93919c'} size={22}/>
+                            <Text>{collected ? '已收藏' : '收藏'}</Text>
                         </View>
                         <View style={styles.operateRightView}>
                             <Text style={styles.operateRightTitle}>开始阅读</Text>
@@ -134,7 +137,6 @@ class Brief extends React.PureComponent<IProps> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor:'red'
     },
     columnWrapper: {
         paddingHorizontal: 10,

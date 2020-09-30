@@ -51,7 +51,7 @@ class Home extends React.Component<IProps> {
     goBrief = (data: IBookCover) => {
         const {navigation} = this.props;
         navigation.navigate('Brief', {
-            data: data
+            data
         });
     };
 

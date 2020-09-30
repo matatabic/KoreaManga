@@ -13,7 +13,6 @@ class ImageBlurBackground extends React.Component<IProps> {
         const {image} = this.props;
         return (
             <View style={StyleSheet.absoluteFillObject}>
-                <View style={[{flex: 1, backgroundColor: '#fff'}]}/>
                 <View style={styles.container}>
                     <Image source={{uri: image}} style={styles.image}/>
                     <BlurView

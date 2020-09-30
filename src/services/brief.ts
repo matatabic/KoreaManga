@@ -2,11 +2,11 @@ import axios from "axios";
 
 const CHAPTER_URL = '/brief/getBrief';
 
-interface BriefReqPrams {
+interface params {
     book_id: number
 }
 
-export async function getBrief(data: BriefReqPrams) {
+export async function getBrief(data: params) {
     return axios.get(CHAPTER_URL, {
         params: {
             ...data

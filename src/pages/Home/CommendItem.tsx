@@ -12,7 +12,7 @@ interface IProps {
 
 class CommendItem extends React.PureComponent<IProps> {
 
-    renderItem = (item: IBookCover, index: Number) => {
+    renderItem = (item: IBookCover) => {
         const {goBrief} = this.props;
         return (
             <BookCover

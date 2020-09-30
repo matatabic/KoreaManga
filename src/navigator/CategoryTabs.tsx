@@ -57,6 +57,7 @@ interface IState {
 class CategoryTabs extends React.PureComponent<IProps, IState> {
 
     start = false;
+
     constructor(props: any) {
         super(props);
         //设置默认宽高
@@ -70,10 +71,10 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
         this.start = true;
     }
 
-    goBrief = (data: IBookCover) => {
+    goBrief = (item: IBookCover) => {
         const {navigation} = this.props;
         navigation.navigate('Brief', {
-            data
+            item
         });
     };
 
@@ -129,7 +130,7 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
     render() {
         const {myCategories, hideHeader} = this.props;
         const {tabHeight, listHeight} = this.state;
-        if(this.start){
+        if (this.start) {
             if (hideHeader) {
                 LayoutAnimation.spring();
                 this.setState({
