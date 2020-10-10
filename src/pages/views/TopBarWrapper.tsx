@@ -2,11 +2,22 @@ import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import Icon from '@/assets/iconfont/index';
+import Touchable from "@/components/Touchable";
+import {RootStackNavigation} from "@/navigator/index";
 
-export const NavigatorHeight = 60;
+export const NavigatorHeight = 0;
 export const TopBarNavigatorHeight = getStatusBarHeight() + NavigatorHeight;
 
-class TopBarWrapper extends React.Component {
+interface IProps {
+    navigation: RootStackNavigation;
+}
+
+class TopBarWrapper extends React.Component<IProps> {
+
+    goSearch = () => {
+        const {navigation} = this.props;
+        navigation.navigate('Search');
+    }
 
     render() {
         return (
@@ -30,9 +41,11 @@ class TopBarWrapper extends React.Component {
                             <Text style={styles.headerText}>VIP</Text>
                         </View>
                     </View>
-                    <View style={styles.headerRight}>
-                        <Icon name="icon-search" size={25}/>
-                    </View>
+                    <Touchable onPress={this.goSearch}>
+                        <View style={styles.headerRight}>
+                            <Icon name="icon-search" size={25}/>
+                        </View>
+                    </Touchable>
                 </View>
             </View>
         );
@@ -47,7 +60,7 @@ const styles = StyleSheet.create({
         height: TopBarNavigatorHeight,
     },
     header: {
-        height: TopBarNavigatorHeight,
+        height: 45,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',

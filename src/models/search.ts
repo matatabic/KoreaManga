@@ -1,21 +1,8 @@
-import {Effect, Model} from "dva-core-ts";
-import {Reducer} from "redux";
-import {RootState} from "@/models/index";
-import {IBook} from "@/models/home";
-import CategoryServices from "@/services/category";
+import {Model, Effect} from 'dva-core-ts';
+import {Reducer} from 'redux';
 import BookServices from "@/services/book";
+import {RootState} from "@/models/index";
 
-export interface ICategory {
-    id: string;
-    name: string;
-}
-
-export interface bookReqParam {
-    page_size: number,
-    current_page: number,
-    category_id?: number,
-    status: number,
-}
 
 export interface IPagination {
     current_page: number;
@@ -23,46 +10,65 @@ export interface IPagination {
     hasMore: boolean;
 }
 
-export interface CategoryState {
-    categoryList: ICategory[];
+export interface IBook {
+    id: string;
+    title: string;
+    image: string;
+    author: string;
+    category: string;
+    status: string;
+    statusColor: string;
+}
+
+
+export interface SearchState {
+    searchList: any[];
+    simpleList: IBook[];
     bookList: IBook[];
-    activeStatus: number;
-    activeModel: string;
-    activeCategory: number;
+    searchValue: string,
     refreshing: boolean;
-    hideHeader: boolean;
+    hasSearch: boolean;
+    showDetail: boolean;
     pagination: IPagination;
 }
 
-interface CategoryModel extends Model {
-    namespace: 'category';
-    state: CategoryState;
+interface HomeModel extends Model {
+    namespace: 'search';
+    state: SearchState;
     reducers: {
-        setState: Reducer<CategoryState>;
+        setState: Reducer<SearchState>;
     };
     effects: {
-        fetchCategoryList: Effect;
+        fetchSimpleList: Effect;
         fetchBookList: Effect;
     };
 }
 
-const initialState = {
-    categoryList: [],
+const searchList = [
+    ['海贼王', '一拳超人', '怪物8👌', '东京巴别塔'],
+    ['青春辛德瑞拉', '我们在秘密交往'],
+    ['恶役只有死亡结局'],
+    ['因为成为了魔王的手下所以要毁掉原作漫画']
+];
+
+export const initialState = {
+    searchList: searchList,
+    simpleList: [],
     bookList: [],
-    activeStatus: 1,
-    activeModel: '',
-    activeCategory: 0,
+    searchValue: '',
     refreshing: false,
-    hideHeader: false,
+    hasSearch: false,
+    showDetail: false,
     pagination: {
         current_page: 1,
+        page_size:5,
         total: 0,
         hasMore: false,
     }
 };
 
-const categoryModel: CategoryModel = {
-    namespace: 'category',
+const homeModel: HomeModel = {
+    namespace: 'search',
     state: initialState,
     reducers: {
         setState(state = initialState, {payload}) {
@@ -73,12 +79,12 @@ const categoryModel: CategoryModel = {
         },
     },
     effects: {
-        *fetchCategoryList(_, {call, put}) {
-            const {data} = yield call(CategoryServices.getCategoryList);
+        *fetchSimpleList({payload}, {call, put}) {
+            const {data} = yield call(BookServices.getBookList, payload);
             yield put({
                 type: 'setState',
                 payload: {
-                    categoryList: data,
+                    simpleList: data.list,
                 },
             });
         },
@@ -86,29 +92,22 @@ const categoryModel: CategoryModel = {
             const {payload, type} = action;
             const {refreshing} = payload;
 
-            const namespace = type.split('/')[0];
-
             const {bookList: list, pagination} = yield select(
-                (state: RootState) => state[namespace],
+                (state: RootState) => state['search'],
             );
 
             yield put({
                 type: 'setState',
                 payload: {
-                    refreshing,
+                    refreshing
                 },
             });
 
-            const page = refreshing ? 1 : (pagination.current_page + 1);
+            const page = refreshing ? {'current_page': 1} : {'current_page': pagination.current_page + 1};
 
-            const {data} = yield call(BookServices.getBookList, {
-                page_size: 9,
-                current_page: page,
-                category_id: payload.category_id,
-                status: payload.status,
-            });
+            const {data} = yield call(BookServices.getBookList, {...payload, ...page});
 
-            const newList = refreshing ? data.list : [...list,...data.list];
+            const newList = refreshing ? data.list : [...list, ...data.list];
 
             yield put({
                 type: 'setState',
@@ -130,4 +129,4 @@ const categoryModel: CategoryModel = {
     },
 };
 
-export default categoryModel;
+export default homeModel;

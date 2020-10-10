@@ -9,6 +9,12 @@ export interface IChapter {
 }
 
 export interface BriefState {
+    title: string,
+    image: string,
+    category: string,
+    author: string,
+    description: string,
+    status: string,
     collected: boolean;
     markChapter: string;
     markIndex: string;
@@ -26,7 +32,13 @@ interface CategoryModel extends Model {
     };
 }
 
-const initialState = {
+export const initialState = {
+    title: '',
+    image: '',
+    category: '',
+    author: '',
+    description: '',
+    status: '',
     collected: false,
     markChapter: '',
     markIndex: '',
@@ -50,10 +62,7 @@ const briefModel: CategoryModel = {
             yield put({
                 type: 'setState',
                 payload: {
-                    collected: data.collected,
-                    markChapter: data.markChapter,
-                    markIndex: data.markIndex,
-                    chapterList: data.chapters,
+                    ...data
                 },
             });
         },

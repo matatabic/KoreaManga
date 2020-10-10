@@ -1,5 +1,4 @@
 import React from 'react';
-import {Animated} from 'react-native';
 import {NavigationContainer, RouteProp, NavigationState} from '@react-navigation/native';
 import {
     createStackNavigator,
@@ -12,24 +11,18 @@ import {Platform, StyleSheet, StatusBar} from 'react-native';
 import Brief from '@/pages/Brief';
 import CategorySetting from "@/pages/CategorySetting";
 import MangaView from "@/pages/MangaView";
+import Search from "@/pages/Search";
 
 
 export type RootStackParamList = {
     BottomTabs: {
         screen?: string;
     };
-    Detail: undefined;
     CategorySetting: undefined;
+    Search: undefined;
+    SearchBar:undefined;
     Brief: {
-        data: {
-            id: string;
-            title: string;
-            image: string;
-            category: string;
-            author: string;
-            description: string;
-            status: string;
-        }
+        id: string;
     };
     MangaView: {
         data: {
@@ -37,7 +30,7 @@ export type RootStackParamList = {
             title: string;
             book_id: string;
         }
-    }
+    },
 };
 
 export type RootStackNavigation = StackNavigationProp<RootStackParamList>;
@@ -106,6 +99,17 @@ class Navigator extends React.Component<any, IState> {
                         }}
                     />
                     <RootStack.Screen
+                        name="Search"
+                        component={Search}
+                        options={{
+                            headerTransparent: true,
+                            headerTitle: '',
+                            headerLeft: () => {
+                                return <></>
+                            },
+                        }}
+                    />
+                    <RootStack.Screen
                         name="MangaView"
                         component={MangaView}
                         options={{
@@ -113,9 +117,7 @@ class Navigator extends React.Component<any, IState> {
                             headerTitle: '',
                             cardStyle: {backgroundColor: '#000'},
                             headerLeft: () => {
-                                return (
-                                    <></>
-                                )
+                                return <></>
                             },
                         }}
                     />

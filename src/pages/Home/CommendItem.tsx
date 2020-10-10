@@ -1,18 +1,18 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {IBookCover, ICommendList} from '@/models/home';
+import {IBook, ICommendList} from '@/models/home';
 import BookCover from '@/components/BookCover';
 
 
 interface IProps {
     data: ICommendList;
-    goBrief: (data: IBookCover) => void;
+    goBrief: (data: IBook) => void;
 }
 
 
 class CommendItem extends React.PureComponent<IProps> {
 
-    renderItem = (item: IBookCover) => {
+    renderItem = (item: IBook) => {
         const {goBrief} = this.props;
         return (
             <BookCover

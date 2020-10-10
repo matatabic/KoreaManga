@@ -9,11 +9,9 @@ interface params {
     current_page: number,
 }
 
-export async function getEpisode(data: params) {
+export async function getEpisode(params: params) {
     return axios.get(EPISODE_URL, {
-        params: {
-            ...data
-        }
+        params
     });
 }
 

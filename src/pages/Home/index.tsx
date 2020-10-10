@@ -4,11 +4,11 @@ import Carousel, {sideHeight} from "@/pages/Home/Carousel";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {RootStackNavigation} from "@/navigator/index";
-import {IBookCover, ICommendList} from "@/models/home";
+import {IBook, ICommendList} from "@/models/home";
 import CommendItem from "./CommendItem";
 import TopBarWrapper, {TopBarNavigatorHeight} from "@/pages/views/TopBarWrapper";
 import CarouselBlurBackground from "@/pages/views/CarouselBlurBackground";
-
+import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 
 const mapStateToProps = ({home}: RootState) => {
     return {
@@ -48,10 +48,10 @@ class Home extends React.Component<IProps> {
         );
     }
 
-    goBrief = (data: IBookCover) => {
+    goBrief = (data: IBook) => {
         const {navigation} = this.props;
         navigation.navigate('Brief', {
-            data
+            id: data.id
         });
     };
 
@@ -67,7 +67,7 @@ class Home extends React.Component<IProps> {
     };
 
     render() {
-        const {commendList} = this.props;
+        const {commendList, navigation} = this.props;
         return (
             <View>
                 <FlatList
@@ -77,7 +77,7 @@ class Home extends React.Component<IProps> {
                     renderItem={this.renderItem}
                     onScroll={this.onScroll}
                 />
-                <TopBarWrapper/>
+                <TopBarWrapper navigation={navigation}/>
             </View>
         );
     }
@@ -85,7 +85,7 @@ class Home extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
     carouselTop: {
-        paddingTop: TopBarNavigatorHeight,
+        paddingTop: getStatusBarHeight() + 45,
     },
 })
 

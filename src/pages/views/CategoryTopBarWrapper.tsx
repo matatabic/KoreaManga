@@ -76,8 +76,10 @@ class CategoryTopBarWrapper extends React.PureComponent<IProps> {
                                 style = styles.activeText;
                             }
                             return (
-                                <Touchable key={item.id} onPress={() => this.onPress(item.id)} style={styles.bottomView}>
-                                    <Text style={style}>{item.name}</Text>
+                                <Touchable key={item.id} onPress={() => this.onPress(item.id)}>
+                                    <View style={styles.bottomView}>
+                                        <Text style={style}>{item.name}</Text>
+                                    </View>
                                 </Touchable>
                             )
                         })

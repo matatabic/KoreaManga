@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, Text} from 'react-native';
 import Touchable from '@/components/Touchable';
 import {viewportWidth, wp} from "@/utils/index";
-import {IBookCover} from "@/models/home";
+import {IBook} from "@/models/home";
 
 
 interface itemStyle {
@@ -12,8 +12,8 @@ interface itemStyle {
 }
 
 export interface IProps {
-    data: IBookCover;
-    goBrief: (data: IBookCover) => void;
+    data: IBook;
+    goBrief: (data: IBook) => void;
 }
 
 const DEFAULT_IMAGE =

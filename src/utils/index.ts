@@ -20,6 +20,7 @@ function ip(width: number) {
     return width / 0.675;
 }
 
+
 function getActiveRouteName(state: NavigationState) {
     let route;
     route = state.routes[state.index];

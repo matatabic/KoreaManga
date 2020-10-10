@@ -13,7 +13,7 @@ import {ICategory} from "@/models/categorySetting";
 import {createCategoryModel} from "@/config/dva";
 import {RootStackNavigation} from "@/navigator/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
-import {IBookCover} from "@/models/home";
+import {IBook} from "@/models/home";
 import {viewportHeight} from "@/utils/index";
 import {bottomHeight} from "@/navigator/BottomTabs";
 
@@ -32,7 +32,7 @@ type ModelState = ConnectedProps<typeof connector>;
 export type CategoryParamList = {
     [key: string]: {
         namespace: string;
-        goBrief: (data: IBookCover) => void;
+        goBrief: (data: IBook) => void;
         category_id: string;
     };
 };
@@ -71,10 +71,10 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
         this.start = true;
     }
 
-    goBrief = (item: IBookCover) => {
+    goBrief = (data: IBook) => {
         const {navigation} = this.props;
         navigation.navigate('Brief', {
-            item
+            id: data.id
         });
     };
 

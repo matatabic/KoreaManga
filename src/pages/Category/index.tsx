@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, ListRenderItemInfo, StyleSheet, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-import {IBookCover} from "@/models/home";
+import {IBook} from "@/models/home";
 import BookCover from "@/components/BookCover";
 import {RouteProp} from "@react-navigation/native";
 import {CategoryParamList} from "@/navigator/CategoryTabs";
@@ -103,7 +103,7 @@ class Category extends React.PureComponent<IProps, IState> {
         });
     }
 
-    renderItem = ({item}: ListRenderItemInfo<IBookCover>) => {
+    renderItem = ({item}: ListRenderItemInfo<IBook>) => {
         const {goBrief} = this.props;
         return (
             <BookCover

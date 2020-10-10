@@ -1,8 +1,8 @@
 import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
-import HomeServices from "@/services/home";
+import BookServices from "@/services/book";
 
-export interface IBookCover {
+export interface IBook {
     id: string;
     title: string;
     image: string;
@@ -19,7 +19,7 @@ export interface ICarousel {
 }
 
 export interface ICommendList {
-    [key: string]: IBookCover[];
+    [key: string]: IBook[];
 }
 
 export interface HomeState {
@@ -59,7 +59,7 @@ const homeModel: HomeModel = {
     },
     effects: {
         *fetchCarouselList(_, {call, put}) {
-            const {data} = yield call(HomeServices.getCarouselList);
+            const {data} = yield call(BookServices.getCarouselList);
             yield put({
                 type: 'setState',
                 payload: {
@@ -68,7 +68,7 @@ const homeModel: HomeModel = {
             });
         },
         *fetchCommendList(_, {call, put}) {
-            const {data} = yield call(HomeServices.getCommendList);
+            const {data} = yield call(BookServices.getCommendList);
             yield put({
                 type: 'setState',
                 payload: {

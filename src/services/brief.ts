@@ -6,11 +6,9 @@ interface params {
     book_id: number
 }
 
-export async function getBrief(data: params) {
+export async function getBrief(params: params) {
     return axios.get(CHAPTER_URL, {
-        params: {
-            ...data
-        }
+        params
     });
 }
 

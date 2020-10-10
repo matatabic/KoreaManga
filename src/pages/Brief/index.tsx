@@ -4,7 +4,7 @@ import {RootState} from "@/models/index";
 import {RouteProp} from "@react-navigation/native";
 import {RootStackNavigation, RootStackParamList} from "@/navigator/index";
 import {connect, ConnectedProps} from "react-redux";
-import {IChapter} from "@/models/brief";
+import {IChapter, initialState} from "@/models/brief";
 import Item from "./Item";
 import ImageBlurBackground from "@/pages/views/ImageBlurBackground";
 import TopBarWrapper from "./TopBarWrapper";
@@ -15,10 +15,15 @@ import Footer from "./Footer";
 
 
 const mapStateToProps = ({brief}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
-    const {data} = route.params;
-
+    const {id} = route.params;
     return {
-        data,
+        id,
+        title: brief.title,
+        image: brief.image,
+        category: brief.category,
+        author: brief.author,
+        description: brief.description,
+        status: brief.status,
         collected: brief.collected,
         markChapter: brief.markChapter,
         markIndex: brief.markChapter,
@@ -41,29 +46,39 @@ class Brief extends React.PureComponent<IProps> {
         this.loadData();
     }
 
+    componentWillUnmount() {
+        const {dispatch} = this.props;
+        dispatch({
+            type: 'brief/setState',
+            payload: {
+                ...initialState
+            }
+        })
+    }
+
     loadData = () => {
-        const {dispatch, data} = this.props;
+        const {dispatch, id} = this.props;
         dispatch({
             type: 'brief/fetchBrief',
             payload: {
-                book_id: data.id
+                book_id: id
             }
         })
     }
 
     goMangaView = (item: IChapter) => {
-        const {navigation, data} = this.props;
+        const {navigation, id} = this.props;
         navigation.navigate('MangaView', {
             data: {
                 id: item.id,
                 title: item.title,
-                book_id: data.id,
+                book_id: id,
             }
         });
     }
 
     get header() {
-        const {data, collected} = this.props;
+        const {title, image, status, author, category, collected, description} = this.props;
         return (
             <View>
                 <View>
@@ -78,18 +93,18 @@ class Brief extends React.PureComponent<IProps> {
                     </View>
                     <View style={styles.headerContainer}>
                         <View style={styles.bulletinView}>
-                            <Image source={{uri: data.image}} style={styles.image}/>
+                            <Image source={{uri: image}} style={styles.image}/>
                             <View style={styles.bulletinTitleView}>
-                                <Text style={styles.bulletinTitle}>{data.title}</Text>
-                                <Text style={styles.bulletin}>{data.status}</Text>
-                                <Text style={styles.bulletin}>{data.author}</Text>
-                                <Text style={styles.bulletin}>{data.category}</Text>
+                                <Text style={styles.bulletinTitle}>{title}</Text>
+                                <Text style={styles.bulletin}>{status}</Text>
+                                <Text style={styles.bulletin}>{author}</Text>
+                                <Text style={styles.bulletin}>{category}</Text>
                             </View>
                         </View>
                     </View>
                 </View>
                 <View style={styles.descriptionView}>
-                    <Text style={styles.descriptionTitle}>{data.description}</Text>
+                    <Text style={styles.descriptionTitle}>{description}</Text>
                 </View>
                 <View style={styles.itemHeader}>
                     <View style={styles.itemHeaderLeft}>
@@ -113,11 +128,11 @@ class Brief extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {data, chapterList} = this.props;
+        const {image, chapterList} = this.props;
 
         return (
             <>
-                <ImageBlurBackground image={data.image}/>
+                <ImageBlurBackground image={image}/>
                 <FlatList
                     ListHeaderComponent={this.header}
                     style={styles.container}
