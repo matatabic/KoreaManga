@@ -74,7 +74,7 @@ const categoryModel: CategoryModel = {
     },
     effects: {
         *fetchCategoryList(_, {call, put}) {
-            const {data} = yield call(CategoryServices.getCategoryList);
+            const {data} = yield call(CategoryServices.getList);
             yield put({
                 type: 'setState',
                 payload: {
@@ -101,7 +101,7 @@ const categoryModel: CategoryModel = {
 
             const page = refreshing ? 1 : (pagination.current_page + 1);
 
-            const {data} = yield call(BookServices.getBookList, {
+            const {data} = yield call(BookServices.getList, {
                 page_size: 9,
                 current_page: page,
                 category_id: payload.category_id,

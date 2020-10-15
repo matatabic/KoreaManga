@@ -1,0 +1,41 @@
+import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import Touchable from "@/components/Touchable";
+import {IBook} from "@/models/search";
+
+interface IProps {
+    data: any;
+    onPress: (data: IBook) => void;
+}
+
+class IntroItem extends React.Component<IProps> {
+
+    onPress = () =>{
+        const {data,onPress} = this.props;
+        onPress(data);
+    }
+
+    render() {
+        const {data} = this.props;
+        return (
+            <Touchable onPress={this.onPress} style={styles.item}>
+                <Text style={styles.title}>{data.title}</Text>
+            </Touchable>
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    item: {
+        height: '100%',
+        backgroundColor: '#f7f7f7',
+        justifyContent: 'center',
+        borderRadius: 5,
+        margin: 5
+    },
+    title: {
+        marginHorizontal: 7
+    }
+})
+
+export default IntroItem;

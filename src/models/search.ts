@@ -1,7 +1,8 @@
-import {Model, Effect} from 'dva-core-ts';
+import {Model, Effect, SubscriptionsMapObject} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import BookServices from "@/services/book";
 import {RootState} from "@/models/index";
+import storage, {load} from '@/config/storage';
 
 
 export interface IPagination {
@@ -13,22 +14,26 @@ export interface IPagination {
 export interface IBook {
     id: string;
     title: string;
-    image: string;
-    author: string;
-    category: string;
-    status: string;
-    statusColor: string;
+    image?: string;
+    author?: string;
+    category?: string;
+    status?: string;
+    statusColor?: string;
 }
 
+export interface IIntro {
+    [key: string]: IBook[];
+}
 
 export interface SearchState {
-    searchList: any[];
+    introList: IIntro[];
     simpleList: IBook[];
     bookList: IBook[];
-    searchValue: string,
+    searchHistoryList: string[];
+    searchTitle: string;
     refreshing: boolean;
-    hasSearch: boolean;
-    showDetail: boolean;
+    showSimpleView: boolean,
+    showBookView: boolean,
     pagination: IPagination;
 }
 
@@ -39,35 +44,36 @@ interface HomeModel extends Model {
         setState: Reducer<SearchState>;
     };
     effects: {
+        loadData: Effect;
+        fetchIntroList: Effect;
         fetchSimpleList: Effect;
         fetchBookList: Effect;
+        saveSearch: Effect;
+        destroyHistory: Effect;
+        clearHistory: Effect;
     };
+    subscriptions: SubscriptionsMapObject;
 }
 
-const searchList = [
-    ['海贼王', '一拳超人', '怪物8👌', '东京巴别塔'],
-    ['青春辛德瑞拉', '我们在秘密交往'],
-    ['恶役只有死亡结局'],
-    ['因为成为了魔王的手下所以要毁掉原作漫画']
-];
 
 export const initialState = {
-    searchList: searchList,
+    introList: [],
     simpleList: [],
     bookList: [],
-    searchValue: '',
+    searchHistoryList: [],
+    searchTitle: '',
     refreshing: false,
-    hasSearch: false,
-    showDetail: false,
+    showSimpleView: false,
+    showBookView: false,
     pagination: {
         current_page: 1,
-        page_size:5,
+        page_size: 9,
         total: 0,
         hasMore: false,
     }
 };
 
-const homeModel: HomeModel = {
+const searchModel: HomeModel = {
     namespace: 'search',
     state: initialState,
     reducers: {
@@ -79,8 +85,29 @@ const homeModel: HomeModel = {
         },
     },
     effects: {
+        *loadData(_, {call, put}) {
+            const searchHistoryList = yield call(load, {key: 'searchHistoryList'});
+            if (searchHistoryList) {
+                yield put({
+                    type: 'setState',
+                    payload: {
+                        searchHistoryList,
+                    },
+                });
+            }
+        },
+        *fetchIntroList(_, {call, put}) {
+            const {data} = yield call(BookServices.getIntro);
+            yield put({
+                type: 'setState',
+                payload: {
+                    introList: data,
+                },
+            });
+        },
         *fetchSimpleList({payload}, {call, put}) {
-            const {data} = yield call(BookServices.getBookList, payload);
+            console.log('fetchSimpleListfetchSimpleListfetchSimpleListfetchSimpleList')
+            const {data} = yield call(BookServices.getList, payload);
             yield put({
                 type: 'setState',
                 payload: {
@@ -91,7 +118,8 @@ const homeModel: HomeModel = {
         *fetchBookList(action, {call, put, select}) {
             const {payload, type} = action;
             const {refreshing} = payload;
-
+            console.log(action)
+            console.log('fetchBookListfetchBookListfetchBookListfetchBookList')
             const {bookList: list, pagination} = yield select(
                 (state: RootState) => state['search'],
             );
@@ -105,7 +133,7 @@ const homeModel: HomeModel = {
 
             const page = refreshing ? {'current_page': 1} : {'current_page': pagination.current_page + 1};
 
-            const {data} = yield call(BookServices.getBookList, {...payload, ...page});
+            const {data} = yield call(BookServices.getList, {...payload, ...page});
 
             const newList = refreshing ? data.list : [...list, ...data.list];
 
@@ -126,7 +154,70 @@ const homeModel: HomeModel = {
                 action.callback();
             }
         },
+        *saveSearch({payload}, {call, put, select}) {
+            let {searchHistoryList} = yield select(
+                ({search}: RootState) => search,
+            );
+
+            if (payload.data) {
+                searchHistoryList.unshift(payload.data)
+
+                yield put({
+                    type: 'setState',
+                    payload: {
+                        searchHistoryList
+                    }
+                })
+
+                storage.save({
+                    key: 'searchHistoryList',
+                    data: searchHistoryList,
+                })
+            }
+        },
+        *destroyHistory(_, {put}) {
+            yield put({
+                type: 'setState',
+                payload: {
+                    searchHistoryList: []
+                }
+            })
+
+            storage.save({
+                key: 'searchHistoryList',
+                data: [],
+            })
+        },
+        *clearHistory({payload}, {put, select}) {
+            let {searchHistoryList: list} = yield select(
+                ({search}: RootState) => search,
+            );
+
+            const searchHistoryList = list.filter((item: string, index: number) => index != payload.index)
+
+            yield put({
+                type: 'setState',
+                payload: {
+                    searchHistoryList
+                }
+            })
+
+            storage.save({
+                key: 'searchHistoryList',
+                data: searchHistoryList,
+            })
+        }
+    },
+    subscriptions: {
+        setup({dispatch}) {
+            dispatch({type: 'loadData'});
+        },
+        asyncStorage() {
+            storage.sync.searchHistoryList = async () => {
+                return null;
+            };
+        },
     },
 };
 
-export default homeModel;
+export default searchModel;

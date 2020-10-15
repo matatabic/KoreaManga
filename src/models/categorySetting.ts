@@ -1,10 +1,8 @@
 import {Effect, Model, SubscriptionsMapObject} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import storage, {load} from '@/config/storage';
-import axios from 'axios';
 import {RootState} from '@/models/index';
-
-const CATEGORY_URl = '/category/getCategoryTreeList';
+import CategoryServices from "@/services/category";
 
 export interface ICategory {
     id: string;
@@ -100,7 +98,7 @@ const categorySettingModel: CategorySettingModel = {
         },
         asyncStorage() {
             storage.sync.categories = async () => {
-                const data = await axios.get(CATEGORY_URl);
+                const data = await CategoryServices.getTreeList();
                 return data.data;
             };
             storage.sync.myCategories = async () => {

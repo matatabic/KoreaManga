@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const EPISODE_URL = '/episode/getEpisodeList';
+const EPISODE_URL = '/episode/getList';
 
 interface params {
     book_id: number,
@@ -9,12 +9,12 @@ interface params {
     current_page: number,
 }
 
-export async function getEpisode(params: params) {
+export async function getList(params: params) {
     return axios.get(EPISODE_URL, {
         params
     });
 }
 
 export default {
-    getEpisode,
+    getList,
 };

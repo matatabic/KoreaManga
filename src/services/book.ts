@@ -1,8 +1,9 @@
 import axios from "axios";
 
-const BOOK_URL = '/book/getBookList';
-const CAROUSEL_URL = '/carousel/getCarouselList';
-const COMMEND_URL = '/book/getCommendList';
+const BOOK_URL = '/book/getList';
+const CAROUSEL_URL = '/carousel/getList';
+const COMMEND_URL = '/book/getCommend';
+const INTRO_URL = '/book/getIntro';
 
 interface params {
     category_id: string;
@@ -12,22 +13,27 @@ interface params {
     title?: string;
 }
 
-async function getBookList(params: params) {
+async function getList(params: params) {
     return axios.get(BOOK_URL, {
         params
     });
 }
 
-async function getCarouselList() {
+async function getCarousel() {
     return axios.get(CAROUSEL_URL);
 }
 
-async function getCommendList() {
+async function getCommend() {
     return axios.get(COMMEND_URL);
 }
 
+async function getIntro() {
+    return axios.get(INTRO_URL);
+}
+
 export default {
-    getBookList,
-    getCarouselList,
-    getCommendList,
+    getList,
+    getCarousel,
+    getCommend,
+    getIntro,
 };

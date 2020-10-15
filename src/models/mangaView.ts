@@ -1,6 +1,6 @@
 import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
-import MangaViewServices from "@/services/mangaView";
+import EpisodeServices from "@/services/episode";
 
 
 export interface IEpisode {
@@ -40,7 +40,7 @@ const mangaViewModel: MangaViewModel = {
     },
     effects: {
         *fetchEpisodeList({payload}, {call, put}) {
-            const {data} = yield call(MangaViewServices.getEpisode, {
+            const {data} = yield call(EpisodeServices.getList, {
                 chapter_id: payload.chapter_id,
                 book_id: payload.book_id,
                 page_size: 10,

@@ -7,17 +7,18 @@ import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import More from "@/components/More";
 import End from "@/components/End";
+import Item from "./item";
 
 
-const imageWidth = wp(25);
-const imageHeight = ip(imageWidth);
-const itemHeight = imageHeight + 10;
+// const imageWidth = wp(25);
+// const imageHeight = ip(imageWidth);
+// const itemHeight = imageHeight + 10;
 
 const mapStateToProps = (state: RootState) => {
     const {search} = state;
     return {
         bookList: search.bookList,
-        searchValue: search.searchValue,
+        searchTitle: search.searchTitle,
         refreshing: search.refreshing,
         hasMore: search.pagination.hasMore,
         loading: state.loading.effects['search/fetchBookList']
@@ -36,7 +37,7 @@ interface IState {
     endReached: boolean;
 }
 
-class BookList extends React.Component<IProps,IState> {
+class BookList extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
@@ -44,6 +45,7 @@ class BookList extends React.Component<IProps,IState> {
             endReached: false,
         };
     }
+
 
     get header() {
         return <View style={styles.header}/>
@@ -54,11 +56,12 @@ class BookList extends React.Component<IProps,IState> {
     }
 
     loadData = (refreshing: boolean, callback?: () => void) => {
-        const {dispatch,searchValue} = this.props;
+        const {dispatch, searchTitle} = this.props;
+
         dispatch({
             type: 'search/fetchBookList',
             payload: {
-                title: searchValue,
+                title: searchTitle,
                 refreshing: refreshing,
             },
             callback
@@ -67,7 +70,6 @@ class BookList extends React.Component<IProps,IState> {
 
     onEndReached = () => {
         const {hasMore, loading} = this.props;
-        console.log(hasMore, loading)
         if (!hasMore || loading) {
             return;
         }
@@ -98,28 +100,12 @@ class BookList extends React.Component<IProps,IState> {
     renderItem = ({item}: ListRenderItemInfo<IBook>) => {
         const {goBrief} = this.props;
         return (
-            <Touchable style={styles.item} onPress={() => goBrief(item)}>
-                <View style={styles.leftView}>
-                    <Image
-                        source={{uri: item.image}}
-                        style={styles.image}
-                        resizeMode="stretch"
-                    />
-                </View>
-                <View style={styles.mainView}>
-                    <Text style={styles.titleText}>{item.title}</Text>
-                    <Text style={styles.authorText}>{item.author}</Text>
-                    <Text style={styles.categoryText}>{item.category}</Text>
-                </View>
-                <View style={styles.rightView}>
-                    <Text style={{color: item.statusColor}}>{item.status}</Text>
-                </View>
-            </Touchable>
+            <Item data={item} onPress={goBrief}/>
         )
     }
 
     render() {
-        const {bookList, loading, refreshing} = this.props;
+        const {bookList, refreshing} = this.props;
         return (
             <FlatList
                 data={bookList}
@@ -142,40 +128,7 @@ const styles = StyleSheet.create({
     header: {
         height: 10,
     },
-    item: {
-        height: itemHeight,
-        paddingTop: 10,
-        flexDirection: 'row',
-        backgroundColor: '#fff',
-        paddingHorizontal: 20,
-    },
-    leftView: {},
-    image: {
-        borderRadius: 10,
-        width: imageWidth,
-        height: imageHeight,
-    },
-    mainView: {
-        flex: 4,
-        marginTop: 25,
-        marginLeft: 10,
-        height: imageHeight + 20,
-    },
-    titleText: {
-        fontSize: 16,
-    },
-    authorText: {
-        marginTop: 5,
-        color: '#AFAFAF',
-    },
-    categoryText: {
-        marginTop: 5,
-        color: '#AFAFAF',
-    },
-    rightView: {
-        flex: 1,
-        justifyContent: 'center',
-    },
+
 
 })
 export default connector(BookList);

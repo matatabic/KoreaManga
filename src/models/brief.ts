@@ -58,7 +58,7 @@ const briefModel: CategoryModel = {
     },
     effects: {
         *fetchBrief({payload}, {call, put}) {
-            const {data} = yield call(BriefServices.getBrief, payload);
+            const {data} = yield call(BriefServices.getList, payload);
             yield put({
                 type: 'setState',
                 payload: {

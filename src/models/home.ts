@@ -59,7 +59,7 @@ const homeModel: HomeModel = {
     },
     effects: {
         *fetchCarouselList(_, {call, put}) {
-            const {data} = yield call(BookServices.getCarouselList);
+            const {data} = yield call(BookServices.getCarousel);
             yield put({
                 type: 'setState',
                 payload: {
@@ -68,7 +68,7 @@ const homeModel: HomeModel = {
             });
         },
         *fetchCommendList(_, {call, put}) {
-            const {data} = yield call(BookServices.getCommendList);
+            const {data} = yield call(BookServices.getCommend);
             yield put({
                 type: 'setState',
                 payload: {

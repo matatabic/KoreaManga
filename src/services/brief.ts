@@ -1,17 +1,17 @@
 import axios from "axios";
 
-const CHAPTER_URL = '/brief/getBrief';
+const BRIEF_URL = '/brief/getList';
 
 interface params {
     book_id: number
 }
 
-export async function getBrief(params: params) {
-    return axios.get(CHAPTER_URL, {
+export async function getList(params: params) {
+    return axios.get(BRIEF_URL, {
         params
     });
 }
 
 export default {
-    getBrief,
+    getList,
 };

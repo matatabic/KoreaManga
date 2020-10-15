@@ -4,7 +4,7 @@ import {
     MaterialTopTabBarProps,
 } from '@react-navigation/material-top-tabs';
 import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
-import {Animated, LayoutAnimation, StyleSheet, Text, View} from 'react-native';
+import { LayoutAnimation, Platform, StyleSheet, Text, View, UIManager} from 'react-native';
 import Category from "@/pages/Category";
 import CategoryTopBarWrapper from "@/pages/views/CategoryTopBarWrapper";
 import {RootState} from "@/models/index";
@@ -17,6 +17,11 @@ import {IBook} from "@/models/home";
 import {viewportHeight} from "@/utils/index";
 import {bottomHeight} from "@/navigator/BottomTabs";
 
+if (Platform.OS === 'android') {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+        UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+}
 
 const mapStateToProps = (state: RootState) => {
     return {
@@ -52,6 +57,8 @@ export const bookStatus = [
 interface IState {
     tabHeight: number,
     listHeight: number,
+    backgroundColor: string,
+    opacity: number,
 }
 
 class CategoryTabs extends React.PureComponent<IProps, IState> {
@@ -64,6 +71,8 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
         this.state = {
             tabHeight: 45,
             listHeight: viewportHeight - getStatusBarHeight() - 45 - bottomHeight,
+            backgroundColor: '#FBDB3F',
+            opacity: 1,
         }
     }
 
@@ -129,28 +138,38 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
 
     render() {
         const {myCategories, hideHeader} = this.props;
-        const {tabHeight, listHeight} = this.state;
+        const {tabHeight, listHeight, backgroundColor, opacity} = this.state;
+
         if (this.start) {
             if (hideHeader) {
-                LayoutAnimation.spring();
+                LayoutAnimation.easeInEaseOut();
                 this.setState({
                     tabHeight: 0,
                     listHeight: viewportHeight - getStatusBarHeight() - bottomHeight,
+                    backgroundColor: '#fff'
                 })
             } else {
-                LayoutAnimation.spring();
+                LayoutAnimation.easeInEaseOut();
                 this.setState({
                     tabHeight: 45,
                     listHeight: viewportHeight - getStatusBarHeight() - 45 - bottomHeight,
+                    backgroundColor: '#FBDB3F',
+
                 })
             }
         }
 
         return (
             <>
-                <View style={styles.statusBar}/>
+                <View style={[styles.statusBar, {
+                    backgroundColor: backgroundColor,
+                    opacity: opacity
+                }
+                ]}/>
                 <View style={[styles.tabView, {
-                    height: tabHeight
+                    height: tabHeight,
+                    backgroundColor: backgroundColor,
+                    opacity: opacity
                 }]}>
                     <Text style={styles.title}>漫画分类</Text>
                 </View>
@@ -199,14 +218,14 @@ const styles = StyleSheet.create({
     statusBar: {
         width: '100%',
         height: getStatusBarHeight(),
-        backgroundColor: '#FBDB3F',
+        // backgroundColor: '#FBDB3F',
     },
     tabView: {
         width: '100%',
-        height: 45,
+        // paddingTop:getStatusBarHeight(),
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FBDB3F',
+        // backgroundColor: '#FBDB3F',
     },
     title: {
         fontSize: 16

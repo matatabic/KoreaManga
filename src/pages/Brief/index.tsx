@@ -129,7 +129,9 @@ class Brief extends React.PureComponent<IProps> {
 
     render() {
         const {image, chapterList} = this.props;
-
+        if (!image && image.length == 0) {
+            return false;
+        }
         return (
             <>
                 <ImageBlurBackground image={image}/>

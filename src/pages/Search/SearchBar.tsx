@@ -1,16 +1,16 @@
 import React from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
-import Icon from "@/assets/iconfont";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {RootStackNavigation} from "@/navigator/index";
 import Touchable from "@/components/Touchable";
-import {initialState} from "@/models/search";
+import Icon from "@/assets/iconfont";
 
 const mapStateToProps = ({search}: RootState) => {
     return {
-        bookList: search.bookList
+        searchTitle: search.searchTitle,
+        showBookView: search.showBookView,
     };
 };
 
@@ -19,21 +19,59 @@ const connector = connect(mapStateToProps);
 type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
-    goBack: any;
+    navigation: RootStackNavigation;
 }
 
+interface IState {
+    initData: Boolean;
+    searchTitle: string;
+}
 
-class SearchBar extends React.PureComponent<IProps> {
+class SearchBar extends React.PureComponent<IProps, IState> {
 
     timeout: any = null;
-    inputText: string = '';
+    lastSearchTitle: string = '';
 
-
-    goBack = () => {
-        const {goBack} = this.props;
-        goBack();
+    constructor(Props: IProps) {
+        super(Props);
+        this.state = {
+            initData: true,
+            searchTitle: '',
+        }
     }
 
+    static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
+        if (nextProps.searchTitle === '') {
+            return {
+                initData: true,
+            }
+        }
+
+        if (prevState.initData && nextProps.searchTitle !== '') {
+            return {
+                searchTitle: nextProps.searchTitle,
+                initData: false,
+            }
+        }
+
+        return null;
+    }
+
+    chaCha = () => {
+        const {dispatch} = this.props
+        this.setState({
+            searchTitle: ''
+        })
+        dispatch({
+            type: 'search/setState',
+            payload: {
+                searchTitle: '',
+                bookList: [],
+                showSimpleView: false,
+                showBookView: false,
+            }
+        })
+    }
 
     debounce = (cb: any, text: string, wait = 500) => {
         let timeout = this.timeout
@@ -42,78 +80,107 @@ class SearchBar extends React.PureComponent<IProps> {
         }
         this.timeout = setTimeout(() => {
             this.timeout = null
-            this.inputText = text;
             cb && cb()
         }, wait);
     }
 
-    fetch = () => {
-        const {dispatch} = this.props;
-        if (this.inputText.length > 0) {
+    loadData = () => {
+        const {dispatch, showBookView} = this.props;
+        const {searchTitle} = this.state;
+
+        if (!showBookView) {
             dispatch({
                 type: 'search/fetchSimpleList',
                 payload: {
                     page_size: 5,
                     current_page: 1,
-                    title: this.inputText
+                    title: searchTitle
                 }
             })
             dispatch({
                 type: 'search/setState',
                 payload: {
-                    hasSearch: true,
+                    searchTitle,
+                    showSimpleView: true,
                 }
             })
+        }
+
+    }
+
+    onChangeText = (text: string) => {
+        const {dispatch} = this.props;
+        this.setState({
+            searchTitle: text
+        })
+        if (text && text.length > 0) {
+            this.debounce(this.loadData, text, 250)
         } else {
             dispatch({
                 type: 'search/setState',
                 payload: {
-                    ...initialState
+                    searchTitle: '',
+                    bookList: [],
+                    showSimpleView: false,
+                    showBookView: false,
                 }
             })
         }
     }
 
-    onChangeText = (text: string) => {
-        this.debounce(this.fetch, text, 500)
-    }
-
     onSubmitEditing = () => {
         const {dispatch} = this.props;
-        if (this.inputText && this.inputText.length > 0) {
+        const {searchTitle} = this.state;
+        let lastSearchTitle = this.lastSearchTitle;
+        if (searchTitle && searchTitle.length > 0) {
             dispatch({
-                type:'search/setState',
-                payload:{
-                    searchValue:this.inputText
+                type: 'search/setState',
+                payload: {
+                    showBookView: true,
+                    searchTitle
                 }
             })
             dispatch({
                 type: 'search/fetchBookList',
                 payload: {
-                    title: this.inputText,
+                    title: searchTitle,
                     refreshing: true,
                 }
             })
-        }
 
+            if (this.lastSearchTitle !== searchTitle) {
+                dispatch({
+                    type: 'search/saveSearch',
+                    payload: {
+                        data: searchTitle,
+                    }
+                })
+            }
+
+            this.lastSearchTitle = searchTitle
+        }
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.leftView}>
-                    <Icon name="icon-search" style={styles.searchIcon} size={15}/>
+                    <Icon name="icon-search" style={styles.searchIcon} size={18}/>
                     <TextInput style={styles.searchInput}
                                onSubmitEditing={this.onSubmitEditing}
                                maxLength={20}
                                placeholder={'搜索关键字...'}
+                               ref='textInputRefer'
                                onChangeText={(text) => {
                                    this.onChangeText(text)
                                }}
-                    >
-                    </TextInput>
+                               value={this.state.searchTitle}
+                    />
+                    <Touchable onPress={this.chaCha}>
+                        <Icon name="icon-chacha" style={styles.chaCha} size={18}/>
+                    </Touchable>
                 </View>
-                <Touchable onPress={this.goBack}>
+                <Touchable onPress={() => this.props.navigation.goBack()}>
                     <View style={styles.rightView}>
                         <Text>取消</Text>
                     </View>
@@ -144,7 +211,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     searchIcon: {
-        marginHorizontal: 8,
+        marginHorizontal: 10,
+    },
+    chaCha: {
+        marginHorizontal: 10,
     },
     searchInput: {
         flex: 1,
