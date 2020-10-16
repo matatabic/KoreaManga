@@ -9,6 +9,7 @@ import Item from '@/pages/CategorySetting/Item';
 import {RootStackNavigation} from '@/navigator/index';
 import HeaderRightBtn from './HeaderRightBtn';
 import Touchable from '@/components/Touchable';
+import {Color} from "@/utils/const";
 
 const mapStateToProps = ({categorySetting}: RootState) => {
     return {
@@ -196,7 +197,7 @@ class CategorySetting extends React.Component<IProps, IState> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f3f6f6',
+        backgroundColor: Color.white,
     },
     classifyName: {
         fontSize: 16,

@@ -12,6 +12,7 @@ import Brief from '@/pages/Brief';
 import CategorySetting from "@/pages/CategorySetting";
 import MangaView from "@/pages/MangaView";
 import Search from "@/pages/Search";
+import {Color} from "@/utils/const";
 
 
 export type RootStackParamList = {
@@ -60,7 +61,7 @@ class Navigator extends React.Component<any, IState> {
                             },
                         }),
                         headerBackTitleVisible: false,
-                        headerTintColor: '#333',
+                        headerTintColor: Color.grey_title,
                         headerStyle: {
                             ...Platform.select({
                                 android: {
@@ -83,7 +84,7 @@ class Navigator extends React.Component<any, IState> {
                         options={{
                             headerTransparent: true,
                             headerTitle: '',
-                            cardStyle: {backgroundColor: '#fff'},
+                            cardStyle: {backgroundColor: Color.page_bg},
                             headerLeft: () => {
                                 return (
                                     <></>
@@ -115,7 +116,7 @@ class Navigator extends React.Component<any, IState> {
                         options={{
                             headerTransparent: true,
                             headerTitle: '',
-                            cardStyle: {backgroundColor: '#000'},
+                            cardStyle: {backgroundColor: Color.black},
                             headerLeft: () => {
                                 return <></>
                             },

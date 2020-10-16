@@ -8,6 +8,7 @@ import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import {RootStackParamList} from "@/navigator/index";
 import {IEpisode} from "@/models/mangaView";
 import {viewportHeight, viewportWidth} from "@/utils/index";
+import {Color} from "@/utils/const";
 
 const mapStateToProps = ({mangaView}: RootState) => {
     return {
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: getStatusBarHeight(),
-        backgroundColor: 'red'
+        backgroundColor: Color.red
     },
     image: {
         width: viewportWidth,

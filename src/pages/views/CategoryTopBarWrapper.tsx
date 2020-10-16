@@ -8,6 +8,7 @@ import Touchable from '@/components/Touchable';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {bookStatus} from "@/navigator/CategoryTabs";
+import {Color} from "@/utils/const";
 
 const mapStateToProps = ({category}: RootState) => {
     return {
@@ -93,12 +94,12 @@ class CategoryTopBarWrapper extends React.PureComponent<IProps> {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
     },
     topTabBarView: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderBottomColor: '#ccc',
+        borderBottomColor: Color.light_btn,
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
     tabBar: {
@@ -110,14 +111,14 @@ const styles = StyleSheet.create({
     categoryBtn: {
         paddingHorizontal: 10,
         borderLeftWidth: StyleSheet.hairlineWidth,
-        borderColor: '#ccc',
+        borderColor: Color.light_btn,
     },
     text: {
-        color: '#333',
+        color: Color.black,
         fontSize: 15,
     },
     whiteBackgroundColor: {
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
     },
     bottomTabBarView: {
         flexDirection: 'row',
@@ -136,12 +137,12 @@ const styles = StyleSheet.create({
     },
     activeText: {
         fontSize: 12,
-        color: '#FBDB3F',
+        color: Color.theme,
     },
     line: {
         width: '100%',
         height: 7,
-        backgroundColor: '#efefef',
+        backgroundColor: Color.split_line,
         marginBottom: 3,
     }
 });

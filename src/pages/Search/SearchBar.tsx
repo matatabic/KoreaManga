@@ -6,6 +6,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {RootStackNavigation} from "@/navigator/index";
 import Touchable from "@/components/Touchable";
 import Icon from "@/assets/iconfont";
+import {Color} from "@/utils/const";
 
 const mapStateToProps = ({search}: RootState) => {
     return {
@@ -195,20 +196,20 @@ const styles = StyleSheet.create({
         height: 70,
         flexDirection: 'row',
         paddingTop: getStatusBarHeight(),
-        backgroundColor: '#FCE04F'
+        backgroundColor: Color.theme,
     },
     leftView: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
         borderRadius: 15,
         marginHorizontal: 10,
         marginVertical: 5,
     },
     searchView: {
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: Color.page_bg
     },
     searchIcon: {
         marginHorizontal: 10,

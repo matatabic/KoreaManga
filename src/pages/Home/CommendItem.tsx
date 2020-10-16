@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {IBook, ICommendList} from '@/models/home';
 import BookCover from '@/components/BookCover';
+import {Color} from "@/utils/const";
 
 
 interface IProps {
@@ -48,28 +49,28 @@ class CommendItem extends React.PureComponent<IProps> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: Color.page_bg,
     },
     header: {
-        flexDirection:'row',
-        justifyContent:"flex-start",
-        alignItems:'center',
+        flexDirection: 'row',
+        justifyContent: "flex-start",
+        alignItems: 'center',
         paddingVertical: 8,
-        borderBottomColor: '#efefef',
+        borderBottomColor: Color.split_line,
     },
-    cell:{
-        width:6,
-        height:15,
-        backgroundColor:'#FBDB3F'
+    cell: {
+        width: 6,
+        height: 15,
+        backgroundColor: Color.yellow_title,
     },
     classifyName: {
-        marginLeft:15,
+        marginLeft: 15,
         fontSize: 15,
-        color: '#000',
+        color: Color.black,
     },
     classifyView: {
         flexDirection: 'row',
-        justifyContent:'flex-start',
+        justifyContent: 'flex-start',
         flexWrap: 'wrap',
     }
 });

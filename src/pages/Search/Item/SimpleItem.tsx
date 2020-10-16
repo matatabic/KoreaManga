@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, StyleSheet} from 'react-native';
 import {IBook} from "@/models/search";
 import Touchable from "@/components/Touchable";
+import {Color} from "@/utils/const";
 
 interface IProps {
     data: IBook;
@@ -30,8 +31,8 @@ const styles = StyleSheet.create({
     item: {
         height: 44,
         paddingLeft: 20,
-        backgroundColor: '#fff',
-        borderBottomColor: '#ccc',
+        backgroundColor: Color.page_bg,
+        borderBottomColor: Color.split_line,
         borderBottomWidth: StyleSheet.hairlineWidth,
         flexDirection: 'row',
         alignItems: 'center'
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     authorText: {
         fontSize: 12,
         marginLeft: 5,
-        color: '#ccc'
+        color: Color.dark_title
     }
 })
 

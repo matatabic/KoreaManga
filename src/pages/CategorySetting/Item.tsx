@@ -2,6 +2,7 @@ import React from 'react';
 import {ICategory} from '@/models/categorySetting';
 import {StyleSheet, Text, View} from 'react-native';
 import {viewportWidth} from "@/utils/index";
+import {Color} from "@/utils/const";
 
 interface IProps {
     isEdit: boolean;
@@ -35,7 +36,7 @@ class Item extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
     disabled: {
-        backgroundColor: '#ccc',
+        backgroundColor: Color.disable,
     },
     icon: {
         position: 'absolute',
@@ -45,11 +46,11 @@ const styles = StyleSheet.create({
         width: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f86442',
+        backgroundColor: Color.icon,
         borderRadius: 8,
     },
     iconText: {
-        color: '#fff',
+        color: Color.white,
         lineHeight: 15,
     },
     itemWrapper: {
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     },
     item: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Color.grey_page_bg,
         margin: margin,
         justifyContent: 'center',
         alignItems: 'center',

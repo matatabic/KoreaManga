@@ -12,6 +12,7 @@ import {ip} from "@/utils/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 import Icon from "@/assets/iconfont";
 import Footer from "./Footer";
+import {Color} from "@/utils/const";
 
 
 const mapStateToProps = ({brief}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
@@ -84,8 +85,11 @@ class Brief extends React.PureComponent<IProps> {
                 <View>
                     <View style={styles.operateView}>
                         <View style={styles.operateLeftView}>
-                            <Icon name="icon-xing" color={collected ? '#F43453' : '#93919c'} size={22}/>
-                            <Text>{collected ? '已收藏' : '收藏'}</Text>
+                            <Icon name="icon-xing"
+                                  color={collected ? Color.red : Color.disable}
+                                  size={22}
+                            />
+                            <Text style={styles.collected}>{collected ? '已收藏' : '收藏'}</Text>
                         </View>
                         <View style={styles.operateRightView}>
                             <Text style={styles.operateRightTitle}>开始阅读</Text>
@@ -157,7 +161,7 @@ const styles = StyleSheet.create({
     },
     columnWrapper: {
         paddingHorizontal: 10,
-        backgroundColor: '#fff'
+        backgroundColor: Color.page_bg,
     },
     headerContainer: {
         paddingTop: getStatusBarHeight() + 75,
@@ -171,13 +175,13 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     bulletinTitle: {
-        color: '#f3f6f6',
+        color: Color.grey_title,
         fontSize: 26,
         marginTop: 5,
         marginBottom: 12,
     },
     bulletin: {
-        color: '#ccc',
+        color: Color.grey_title,
         fontSize: 15,
         marginBottom: 12,
     },
@@ -186,7 +190,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 80,
         bottom: 0,
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
         flexDirection: 'row'
     },
     operateLeftView: {
@@ -197,6 +201,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    collected: {
+        marginLeft: 5
+    },
     operateLeftTitle: {
         marginLeft: 8,
     },
@@ -205,12 +212,12 @@ const styles = StyleSheet.create({
         marginTop: 330 - ip(120) - getStatusBarHeight() - 75 - 10,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F43453',
+        backgroundColor: Color.red,
         marginHorizontal: 10,
         borderRadius: 35,
     },
     operateRightTitle: {
-        color: '#fff'
+        color: Color.grey_title
     },
     image: {
         width: 120,
@@ -218,19 +225,19 @@ const styles = StyleSheet.create({
     },
     descriptionView: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
         paddingTop: 20,
         paddingLeft: 10,
         paddingRight: 5,
     },
     descriptionTitle: {
-        color: '#5B5B5B',
+        color: Color.dark_title,
     },
     itemHeader: {
         flex: 1,
         height: 45,
         flexDirection: 'row',
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
     },
     itemHeaderLeft: {
         flex: 1,
@@ -247,7 +254,7 @@ const styles = StyleSheet.create({
     },
     itemHeaderRightTitle: {
         fontSize: 12,
-        color: '#93919C'
+        color: Color.grey_title,
     },
 })
 

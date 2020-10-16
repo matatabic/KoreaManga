@@ -10,13 +10,6 @@ export interface ICategory {
     name: string;
 }
 
-export interface bookReqParam {
-    page_size: number,
-    current_page: number,
-    category_id?: number,
-    status: number,
-}
-
 export interface IPagination {
     current_page: number;
     total: number;

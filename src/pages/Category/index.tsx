@@ -8,6 +8,7 @@ import {RouteProp} from "@react-navigation/native";
 import {CategoryParamList} from "@/navigator/CategoryTabs";
 import More from "@/components/More";
 import End from "@/components/End";
+import {Color} from "@/utils/const";
 
 
 const mapStateToProps = (state: RootState, {route}: { route: RouteProp<CategoryParamList, string> }) => {
@@ -65,7 +66,6 @@ class Category extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         this.loadData(true);
-        console.log('componentDidMount')
     }
 
 
@@ -192,7 +192,7 @@ class Category extends React.PureComponent<IProps, IState> {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
     }
 });
 

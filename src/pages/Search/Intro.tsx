@@ -4,6 +4,7 @@ import IntroItem from "@/pages/Search/Item/IntroItem";
 import {IBook} from "@/models/search";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
+import {Color} from "@/utils/const";
 
 const mapStateToProps = ({search}: RootState) => {
     return {
@@ -64,11 +65,11 @@ class Intro extends React.PureComponent<IProps> {
 const styles = StyleSheet.create({
     container: {
         height: 235,
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
         paddingHorizontal: 20,
     },
     headerTitle: {
-        color: '#a6a6a6',
+        color: Color.dark_title,
         marginTop: 15,
         fontSize: 12,
     },

@@ -13,6 +13,7 @@ import CategoryTabs from "@/navigator/CategoryTabs";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {getBottomSpace} from "react-native-iphone-x-helper";
+import {Color} from "@/utils/const";
 
 export const bottomHeight = getBottomSpace() + 49;
 
@@ -91,7 +92,7 @@ class BottomTabs extends React.Component<IProps> {
         return (
             <Tab.Navigator
                 tabBarOptions={{
-                    activeTintColor: '#FBDB3F',
+                    activeTintColor: Color.theme,
                     style: {
                         height: bottomHeight
                     }

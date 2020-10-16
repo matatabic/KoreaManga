@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {Text, StyleSheet} from 'react-native';
 import Touchable from "@/components/Touchable";
 import {IBook} from "@/models/search";
+import {Color} from "@/utils/const";
 
 interface IProps {
     data: any;
@@ -28,7 +29,7 @@ class IntroItem extends React.Component<IProps> {
 const styles = StyleSheet.create({
     item: {
         height: '100%',
-        backgroundColor: '#f7f7f7',
+        backgroundColor: Color.grey_page_bg,
         justifyContent: 'center',
         borderRadius: 5,
         margin: 5

@@ -118,8 +118,7 @@ const searchModel: HomeModel = {
         *fetchBookList(action, {call, put, select}) {
             const {payload, type} = action;
             const {refreshing} = payload;
-            console.log(action)
-            console.log('fetchBookListfetchBookListfetchBookListfetchBookList')
+
             const {bookList: list, pagination} = yield select(
                 (state: RootState) => state['search'],
             );

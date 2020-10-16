@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text, StyleSheet} from 'react-native';
 import Touchable from "@/components/Touchable";
+import {Color} from "@/utils/const";
 
 interface IProps {
     onPress: () => void;
@@ -22,10 +23,10 @@ const styles = StyleSheet.create({
         height: 45,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
     },
     title: {
-        color: '#a6a6a6',
+        color: Color.grey_title,
     }
 })
 

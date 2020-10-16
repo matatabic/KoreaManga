@@ -4,6 +4,7 @@ import SearchHistoryItem from './Item/SearchHistoryItem'
 import DestroyView from "./DestroyView";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
+import {Color} from "@/utils/const";
 
 const mapStateToProps = ({search}: RootState) => {
     return {
@@ -56,7 +57,10 @@ class SearchHistory extends React.PureComponent<IProps> {
     }
 
     get renderItem() {
-        const {searchHistoryList} = this.props;
+        let {searchHistoryList} = this.props;
+        if (searchHistoryList.length > 3) {
+            searchHistoryList = searchHistoryList.filter((item, index) => index<3)
+        }
         return (
             searchHistoryList.map((title, index) => {
                 return (
@@ -74,7 +78,7 @@ class SearchHistory extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {searchHistoryList} = this.props;
+        let {searchHistoryList} = this.props;
         if (searchHistoryList && searchHistoryList.length > 0) {
             return (
                 <View>
@@ -94,13 +98,13 @@ const styles = StyleSheet.create({
     header: {
         height: 50,
         flexDirection: 'column-reverse',
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
         borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: '#a6a6a6',
+        borderBottomColor: Color.split_line,
         paddingLeft: 20,
     },
     headerTitle: {
-        color: '#a6a6a6',
+        color: Color.dark_title,
         marginBottom: 15,
         fontSize: 12,
     },
@@ -110,8 +114,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomWidth: StyleSheet.hairlineWidth,
-        backgroundColor: '#fff',
-        borderBottomColor: '#a6a6a6',
+        backgroundColor: Color.page_bg,
+        borderBottomColor: Color.split_line,
     },
     itemLeft: {
         marginLeft: 20,

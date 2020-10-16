@@ -3,6 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {IChapter} from "@/models/brief";
 import {viewportWidth} from "@/utils/index";
 import Touchable from "@/components/Touchable";
+import {Color} from "@/utils/const";
 
 
 interface IProps {
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     },
     item: {
         flex: 1,
-        backgroundColor: '#f3f6f6',
+        backgroundColor: Color.grey_page_bg,
         margin: margin,
         justifyContent: 'center',
         alignItems: 'center',

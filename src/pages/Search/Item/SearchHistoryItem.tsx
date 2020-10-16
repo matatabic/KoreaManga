@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import Touchable from "@/components/Touchable";
 import Icon from "@/assets/iconfont";
+import {Color} from "@/utils/const";
 
 interface IProps {
     index: number;
@@ -48,8 +49,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomWidth: StyleSheet.hairlineWidth,
-        backgroundColor: '#fff',
-        borderBottomColor: '#a6a6a6',
+        backgroundColor: Color.page_bg,
+        borderBottomColor: Color.split_line,
     },
     itemLeft: {
         marginLeft: 20,

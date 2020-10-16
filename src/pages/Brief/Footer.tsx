@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+
 import {getBottomSpace} from "react-native-iphone-x-helper";
+import {Color} from "@/utils/const";
 
 class Footer extends React.Component {
     render() {
@@ -18,7 +20,7 @@ const style = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: 300,
-        backgroundColor: '#fff',
+        backgroundColor: Color.page_bg,
         paddingBottom: getBottomSpace()
     }
 })
