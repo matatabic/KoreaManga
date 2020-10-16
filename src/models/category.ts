@@ -1,13 +1,19 @@
-import {Effect, Model} from "dva-core-ts";
+import {Effect, Model, SubscriptionsMapObject} from "dva-core-ts";
 import {Reducer} from "redux";
 import {RootState} from "@/models/index";
 import {IBook} from "@/models/home";
 import CategoryServices from "@/services/category";
 import BookServices from "@/services/book";
+import storage, {load} from "@/config/storage";
 
 export interface ICategory {
     id: string;
     name: string;
+}
+
+export interface IStatus {
+    id: string;
+    title: string;
 }
 
 export interface IPagination {
@@ -19,9 +25,10 @@ export interface IPagination {
 export interface CategoryState {
     categoryList: ICategory[];
     bookList: IBook[];
-    activeStatus: number;
+    statusList: IStatus[];
+    activeStatus: string;
     activeModel: string;
-    activeCategory: number;
+    activeCategory: string;
     refreshing: boolean;
     hideHeader: boolean;
     pagination: IPagination;
@@ -34,17 +41,20 @@ interface CategoryModel extends Model {
         setState: Reducer<CategoryState>;
     };
     effects: {
+        loadData: Effect;
         fetchCategoryList: Effect;
         fetchBookList: Effect;
     };
+    subscriptions: SubscriptionsMapObject;
 }
 
 const initialState = {
     categoryList: [],
     bookList: [],
-    activeStatus: 1,
+    statusList: [],
+    activeStatus: '1',
     activeModel: '',
-    activeCategory: 0,
+    activeCategory: '0',
     refreshing: false,
     hideHeader: false,
     pagination: {
@@ -75,6 +85,15 @@ const categoryModel: CategoryModel = {
                 },
             });
         },
+        *loadData(_, {call, put}) {
+            const statusList = yield call(load, {key: 'statusList'});
+            yield put({
+                type: 'setState',
+                payload: {
+                    statusList
+                },
+            });
+        },
         *fetchBookList(action, {call, put, select}) {
             const {payload, type} = action;
             const {refreshing} = payload;
@@ -101,7 +120,7 @@ const categoryModel: CategoryModel = {
                 status: payload.status,
             });
 
-            const newList = refreshing ? data.list : [...list,...data.list];
+            const newList = refreshing ? data.list : [...list, ...data.list];
 
             yield put({
                 type: 'setState',
@@ -119,6 +138,17 @@ const categoryModel: CategoryModel = {
             if (action.callback) {
                 action.callback();
             }
+        },
+    },
+    subscriptions: {
+        setup({dispatch}) {
+            dispatch({type: 'loadData'});
+        },
+        asyncStorage() {
+            storage.sync.statusList = async () => {
+                const data = await CategoryServices.getStatus();
+                return data.data;
+            };
         },
     },
 };

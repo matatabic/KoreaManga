@@ -7,14 +7,16 @@ import {
 import Touchable from '@/components/Touchable';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-import {bookStatus} from "@/navigator/CategoryTabs";
 import {Color} from "@/utils/const";
+import TopBatItem from "@/pages/Category/Item/TopBatItem";
+import {IStatus} from "@/models/category";
 
 const mapStateToProps = ({category}: RootState) => {
     return {
         activeModel: category.activeModel,
         activeStatus: category.activeStatus,
         activeCategory: category.activeCategory,
+        statusList:category.statusList,
     };
 };
 
@@ -25,7 +27,7 @@ type ModelState = ConnectedProps<typeof connector>;
 type IProps = MaterialTopTabBarProps & ModelState;
 
 
-class CategoryTopBarWrapper extends React.PureComponent<IProps> {
+class CategoryTopBar extends React.PureComponent<IProps> {
 
 
     goCategorySetting = () => {
@@ -33,26 +35,26 @@ class CategoryTopBarWrapper extends React.PureComponent<IProps> {
         navigation.navigate('CategorySetting');
     };
 
-    onPress(id: number) {
+    onPress = (item:IStatus) => {
         const {dispatch, activeCategory} = this.props;
         dispatch({
             type: 'category/setState',
             payload: {
-                activeStatus: id
+                activeStatus: item.id
             }
         })
         dispatch({
-            type: `tab-category-${activeCategory}-status-${id}/fetchBookList`,
+            type: `tab-category-${activeCategory}-status-${item.id}/fetchBookList`,
             payload: {
                 refreshing: true,
                 category_id: activeCategory,
-                status: id,
+                status: item.id,
             },
         });
     }
 
     render() {
-        let {indicatorStyle, activeTintColor, activeStatus, ...restProps} = this.props;
+        let {statusList,indicatorStyle, activeTintColor, activeStatus, ...restProps} = this.props;
 
         return (
             <View style={styles.container}>
@@ -71,17 +73,10 @@ class CategoryTopBarWrapper extends React.PureComponent<IProps> {
                 </View>
                 <View style={styles.bottomTabBarView}>
                     {
-                        bookStatus.map((item) => {
-                            let style = styles.bottomText;
-                            if (item.id == activeStatus) {
-                                style = styles.activeText;
-                            }
+                        statusList.map((item) => {
+                            const active = item.id == activeStatus;
                             return (
-                                <Touchable key={item.id} onPress={() => this.onPress(item.id)}>
-                                    <View style={styles.bottomView}>
-                                        <Text style={style}>{item.name}</Text>
-                                    </View>
-                                </Touchable>
+                                <TopBatItem data={item} active={active} onPress={this.onPress} />
                             )
                         })
                     }
@@ -147,4 +142,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default connector(CategoryTopBarWrapper);
+export default connector(CategoryTopBar);

@@ -16,7 +16,6 @@ const mapStateToProps = (state: RootState, {route}: { route: RouteProp<CategoryP
     const categoryState = state['category']
     const model = `${namespace}-status-${categoryState.activeStatus}`;
     const modelState = state[model];
-
     return {
         namespace,
         category_id,

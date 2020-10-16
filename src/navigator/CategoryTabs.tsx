@@ -4,9 +4,9 @@ import {
     MaterialTopTabBarProps,
 } from '@react-navigation/material-top-tabs';
 import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
-import { LayoutAnimation, Platform, StyleSheet, Text, View, UIManager,Animated} from 'react-native';
+import {LayoutAnimation, Platform, StyleSheet, Text, View, UIManager, Animated} from 'react-native';
 import Category from "@/pages/Category";
-import CategoryTopBarWrapper from "@/pages/views/CategoryTopBarWrapper";
+import CategoryTopBar from "@/pages/Category/CategoryTopBar";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {ICategory} from "@/models/categorySetting";
@@ -26,8 +26,10 @@ if (Platform.OS === 'android') {
 
 const mapStateToProps = (state: RootState) => {
     return {
+        statusList:state['category'].statusList,
         myCategories: state['categorySetting'].myCategories,
         hideHeader: state['category'].hideHeader,
+        activeCategory: state['category'].activeCategory,
     };
 };
 
@@ -48,12 +50,6 @@ interface IProps extends ModelState {
     navigation: RootStackNavigation;
 }
 
-export const bookStatus = [
-    {'id': 1, 'name': '热门'},
-    {'id': 2, 'name': '更新'},
-    {'id': 3, 'name': '新上架'},
-    {'id': 4, 'name': '完结'},
-];
 
 interface IState {
     tabHeight: number,
@@ -81,18 +77,18 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
 
     goBrief = (data: IBook) => {
         const {navigation} = this.props;
-        console.log(777777777)
         navigation.navigate('Brief', {
             id: data.id
         });
     };
 
     renderTabBar = (props: MaterialTopTabBarProps) => {
-        return <CategoryTopBarWrapper {...props} />;
+        return <CategoryTopBar {...props} />;
     };
 
     createModel = (id: string) => {
-        bookStatus.map((item) => {
+        const {statusList} = this.props;
+        statusList.map((item) => {
             createCategoryModel(`tab-category-${id}-status-${item.id}`);
         })
     }

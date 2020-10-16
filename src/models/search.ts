@@ -106,7 +106,6 @@ const searchModel: HomeModel = {
             });
         },
         *fetchSimpleList({payload}, {call, put}) {
-            console.log('fetchSimpleListfetchSimpleListfetchSimpleListfetchSimpleList')
             const {data} = yield call(BookServices.getList, payload);
             yield put({
                 type: 'setState',
