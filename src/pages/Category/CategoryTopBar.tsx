@@ -11,12 +11,13 @@ import {Color} from "@/utils/const";
 import TopBatItem from "@/pages/Category/Item/TopBatItem";
 import {IStatus} from "@/models/category";
 
-const mapStateToProps = ({category}: RootState) => {
+const mapStateToProps = (state: RootState) => {
+    const {category, categorySetting} = state;
     return {
         activeModel: category.activeModel,
         activeStatus: category.activeStatus,
         activeCategory: category.activeCategory,
-        statusList:category.statusList,
+        statusList: categorySetting.statusList,
     };
 };
 
@@ -35,7 +36,7 @@ class CategoryTopBar extends React.PureComponent<IProps> {
         navigation.navigate('CategorySetting');
     };
 
-    onPress = (item:IStatus) => {
+    onPress = (item: IStatus) => {
         const {dispatch, activeCategory} = this.props;
         dispatch({
             type: 'category/setState',
@@ -54,7 +55,7 @@ class CategoryTopBar extends React.PureComponent<IProps> {
     }
 
     render() {
-        let {statusList,indicatorStyle, activeTintColor, activeStatus, ...restProps} = this.props;
+        let {statusList, indicatorStyle, activeTintColor, activeStatus, ...restProps} = this.props;
 
         return (
             <View style={styles.container}>
@@ -76,7 +77,9 @@ class CategoryTopBar extends React.PureComponent<IProps> {
                         statusList.map((item) => {
                             const active = item.id == activeStatus;
                             return (
-                                <TopBatItem data={item} active={active} onPress={this.onPress} />
+                                <View key={item.id}>
+                                    <TopBatItem data={item} active={active} onPress={this.onPress}/>
+                                </View>
                             )
                         })
                     }
@@ -89,7 +92,7 @@ class CategoryTopBar extends React.PureComponent<IProps> {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Color.page_bg,
+        backgroundColor: Color.white,
     },
     topTabBarView: {
         flexDirection: 'row',

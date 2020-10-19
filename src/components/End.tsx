@@ -1,11 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import {Color} from "@/utils/const";
 
 class End extends React.PureComponent {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.text}>我是有底线的！</Text>
+                <Text style={styles.text}>已经没有更多内容！</Text>
             </View>
         );
     }
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
-        color: '#000',
+        color: Color.theme,
     },
 });
 

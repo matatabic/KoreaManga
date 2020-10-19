@@ -1,10 +1,10 @@
-import {Effect, Model, SubscriptionsMapObject} from "dva-core-ts";
+import {Effect, Model} from "dva-core-ts";
 import {Reducer} from "redux";
 import {RootState} from "@/models/index";
 import {IBook} from "@/models/home";
 import CategoryServices from "@/services/category";
 import BookServices from "@/services/book";
-import storage, {load} from "@/config/storage";
+
 
 export interface ICategory {
     id: string;
@@ -41,11 +41,9 @@ interface CategoryModel extends Model {
         setState: Reducer<CategoryState>;
     };
     effects: {
-        loadData: Effect;
         fetchCategoryList: Effect;
         fetchBookList: Effect;
     };
-    subscriptions: SubscriptionsMapObject;
 }
 
 const initialState = {
@@ -82,15 +80,6 @@ const categoryModel: CategoryModel = {
                 type: 'setState',
                 payload: {
                     categoryList: data,
-                },
-            });
-        },
-        *loadData(_, {call, put}) {
-            const statusList = yield call(load, {key: 'statusList'});
-            yield put({
-                type: 'setState',
-                payload: {
-                    statusList
                 },
             });
         },
@@ -138,17 +127,6 @@ const categoryModel: CategoryModel = {
             if (action.callback) {
                 action.callback();
             }
-        },
-    },
-    subscriptions: {
-        setup({dispatch}) {
-            dispatch({type: 'loadData'});
-        },
-        asyncStorage() {
-            storage.sync.statusList = async () => {
-                const data = await CategoryServices.getStatus();
-                return data.data;
-            };
         },
     },
 };

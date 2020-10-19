@@ -1,18 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet, FlatList, ListRenderItemInfo, Image} from 'react-native';
 import {IBook} from "@/models/search";
-import Touchable from "@/components/Touchable";
-import {ip, wp} from "@/utils/index";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import More from "@/components/More";
 import End from "@/components/End";
 import Item from "./item";
 
-
-// const imageWidth = wp(25);
-// const imageHeight = ip(imageWidth);
-// const itemHeight = imageHeight + 10;
 
 const mapStateToProps = (state: RootState) => {
     const {search} = state;

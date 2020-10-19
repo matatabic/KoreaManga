@@ -4,10 +4,16 @@ import storage, {load} from '@/config/storage';
 import {RootState} from '@/models/index';
 import CategoryServices from "@/services/category";
 
+
 export interface ICategory {
     id: string;
     name: string;
     classify?: string;
+}
+
+export interface IStatus {
+    id: string;
+    title: string;
 }
 
 export interface ICategories {
@@ -18,6 +24,7 @@ interface CategorySettingModelState {
     isEdit: boolean;
     myCategories: ICategory[];
     categories: ICategories[];
+    statusList: IStatus[];
 }
 
 interface CategorySettingModel extends Model {
@@ -39,6 +46,7 @@ const initialState = {
         {id: '0', name: '全部'},
     ],
     categories: [],
+    statusList: [],
 };
 
 const categorySettingModel: CategorySettingModel = {
@@ -48,12 +56,14 @@ const categorySettingModel: CategorySettingModel = {
         *loadData(_, {call, put}) {
             const myCategories = yield call(load, {key: 'myCategories'});
             const categories = yield call(load, {key: 'categories'});
+            const statusList = yield call(load, {key: 'statusList'});
             if (myCategories) {
                 yield put({
                     type: 'setState',
                     payload: {
                         myCategories,
                         categories,
+                        statusList
                     },
                 });
             } else {
@@ -61,9 +71,14 @@ const categorySettingModel: CategorySettingModel = {
                     type: 'setState',
                     payload: {
                         categories,
+                        statusList
                     },
                 });
             }
+            storage.save({
+                key: 'statusList',
+                data: statusList,
+            })
         },
         *toggle({payload}, {put, select}) {
             const categorySetting = yield select(
@@ -103,6 +118,10 @@ const categorySettingModel: CategorySettingModel = {
             };
             storage.sync.myCategories = async () => {
                 return null;
+            };
+            storage.sync.statusList = async () => {
+                const data = await CategoryServices.getStatus();
+                return data.data;
             };
         },
     },

@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import {Color} from "@/utils/const";
 
 class More extends React.PureComponent {
     render() {
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize:15,
-        color: '#333',
+        color: Color.theme,
     },
 });
 

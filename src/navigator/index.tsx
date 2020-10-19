@@ -27,7 +27,7 @@ export type RootStackParamList = {
     };
     MangaView: {
         data: {
-            id: string;
+            chapter_id: string;
             title: string;
             book_id: string;
         }

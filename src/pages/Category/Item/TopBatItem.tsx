@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {Text, StyleSheet} from 'react-native';
 import Touchable from "@/components/Touchable";
 import {IStatus} from "@/models/category";
 import {Color} from "@/utils/const";
@@ -21,9 +21,9 @@ class TopBatItem extends React.PureComponent<IProps> {
         const {data, active} = this.props;
         return (
             <Touchable key={data.id} onPress={this.onPress}>
-                <View style={styles.item}>
+                <Touchable style={styles.item}>
                     <Text style={active ? styles.activeTitle : styles.title}>{data.title}</Text>
-                </View>
+                </Touchable>
             </Touchable>
         );
     }

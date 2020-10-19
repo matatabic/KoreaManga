@@ -1,18 +1,25 @@
 import React from 'react';
-import {View, Text, FlatList, StyleSheet, ListRenderItemInfo, Image} from 'react-native';
+import {View, Text, FlatList, StyleSheet, ListRenderItemInfo, Image, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import {IChapter} from "@/models/brief";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {RouteProp} from "@react-navigation/native";
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import {RootStackParamList} from "@/navigator/index";
-import {IEpisode} from "@/models/mangaView";
-import {viewportHeight, viewportWidth} from "@/utils/index";
-import {Color} from "@/utils/const";
+import {IEpisode, initialState} from "@/models/mangaView";
+import Item from "./item/Item";
+import More from "@/components/More";
+import End from "@/components/End";
+import {viewportWidth} from "@/utils/index";
 
-const mapStateToProps = ({mangaView}: RootState) => {
+const mapStateToProps = (state: RootState) => {
+    const {mangaView} = state;
     return {
         episodeList: mangaView.episodeList,
+        refreshing: mangaView.refreshing,
+        headerHasMore: mangaView.headerHasMore,
+        endHasMore: mangaView.endHasMore,
+        loading: state.loading.effects['mangaView/fetchEpisodeList']
     };
 };
 
@@ -26,50 +33,151 @@ interface IProps extends ModelState {
 }
 
 interface IState {
-    imgHeight: number;
+    endReached: boolean;
+    headerReached: boolean;
 }
 
 class MangaView extends React.PureComponent<IProps, IState> {
+
+    loadUpData = true;
+
     constructor(props: IProps) {
         super(props);
         this.state = {
-            imgHeight: 100,
-        }
+            endReached: false,
+            headerReached: false,
+        };
     }
 
     componentDidMount() {
         const {dispatch} = this.props;
-        const {id, book_id} = this.props.route.params.data;
+        const {chapter_id, book_id} = this.props.route.params.data;
+        dispatch({
+            type: 'mangaView/setState',
+            payload: {
+                book_id,
+                chapter_id,
+            }
+        });
+        this.loadData(true, true);
+    }
+
+    renderHeader = () => {
+        const {headerHasMore} = this.props;
+        const {headerReached} = this.state;
+        if (headerReached) {
+            return <More/>;
+        }
+        if (!headerHasMore) {
+            return <End/>;
+        }
+
+        return null;
+    }
+
+    renderFooter = () => {
+        const {endHasMore} = this.props;
+        const {endReached} = this.state;
+        if (endReached) {
+            return <More/>;
+        }
+        if (!endHasMore) {
+            return <End/>;
+        }
+
+        return null;
+    }
+
+    loadData = (refreshing: boolean, direction: boolean, callback?: () => void) => {
+        const {dispatch} = this.props;
+
         dispatch({
             type: 'mangaView/fetchEpisodeList',
             payload: {
-                chapter_id: id,
-                book_id: book_id
-            }
+                refreshing,
+                direction,
+            },
+            callback
         });
     }
 
+    onHeaderReached = () => {
+        const {headerHasMore, loading} = this.props;
+        console.log('onHeaderReached')
+        if (!headerHasMore || loading) {
+            return;
+        }
+        this.setState({
+            headerReached: true,
+        });
+
+        this.loadData(false, false, () => {
+            this.setState({
+                headerReached: false,
+            });
+            setTimeout(()=>{
+                this.loadUpData = true;
+            },1000)
+        });
+    }
+
+    onEndReached = () => {
+        const {endHasMore, loading} = this.props;
+        console.log('onEndReached')
+        if (!endHasMore || loading) {
+            return;
+        }
+        this.setState({
+            endReached: true,
+        });
+
+        this.loadData(false, true, () => {
+            this.setState({
+                endReached: false,
+            });
+        });
+    }
+
+    onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = nativeEvent.contentOffset.y;
+        if (this.loadUpData && offsetY < -30) {
+            this.loadUpData = false;
+            this.onHeaderReached();
+        }
+
+    };
+
     renderItem = ({item}: ListRenderItemInfo<IEpisode>) => {
-        const {imgHeight} = this.state;
-
         return (
-            <Image source={{uri: item.image}} resizeMode="stretch" style={{width: viewportWidth, height: 500}}/>
+            <Item data={item}/>
         )
+    }
 
-
+    componentWillUnmount() {
+        const {dispatch} = this.props;
+        dispatch({
+            type: 'mangaView/setState',
+            payload: {
+                ...initialState
+            }
+        })
     }
 
     render() {
         const {episodeList} = this.props;
         return (
             <FlatList
-                // ListHeaderComponent={this.header}
+                ListHeaderComponent={this.renderHeader}
                 style={styles.container}
                 data={episodeList}
                 numColumns={1}
+                extraData={this.state}
                 renderItem={this.renderItem}
-                keyExtractor={(item, key) => `item-${key}`}
-                // ListFooterComponent={this.renderFooter}
+                keyExtractor={(item, key) => `item-${item.id}`}
+                onEndReached={this.onEndReached}
+                onEndReachedThreshold={0.1}
+                onScroll={this.onScroll}
+                ListFooterComponent={this.renderFooter}
             />
         );
     }
@@ -79,12 +187,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: getStatusBarHeight(),
-        backgroundColor: Color.red
     },
-    image: {
-        width: viewportWidth,
-        height: viewportHeight,
-    }
 })
 
 export default connector(MangaView);

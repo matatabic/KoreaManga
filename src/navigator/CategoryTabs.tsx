@@ -26,7 +26,7 @@ if (Platform.OS === 'android') {
 
 const mapStateToProps = (state: RootState) => {
     return {
-        statusList:state['category'].statusList,
+        statusList:state['categorySetting'].statusList,
         myCategories: state['categorySetting'].myCategories,
         hideHeader: state['category'].hideHeader,
         activeCategory: state['category'].activeCategory,
@@ -137,22 +137,22 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
         const {myCategories, hideHeader} = this.props;
         const {tabHeight, listHeight, backgroundColor} = this.state;
 
-        if (this.start) {
-            LayoutAnimation.easeInEaseOut();
-            if (hideHeader) {
-                this.setState({
-                    tabHeight: 0,
-                    listHeight: viewportHeight - getStatusBarHeight() - bottomHeight,
-                    backgroundColor: Color.white
-                })
-            } else {
-                this.setState({
-                    tabHeight: 45,
-                    listHeight: viewportHeight - getStatusBarHeight() - 45 - bottomHeight,
-                    backgroundColor: Color.theme,
-                })
-            }
-        }
+        // if (this.start) {
+        //     LayoutAnimation.easeInEaseOut();
+        //     if (hideHeader) {
+        //         this.setState({
+        //             tabHeight: 0,
+        //             listHeight: viewportHeight - getStatusBarHeight() - bottomHeight,
+        //             backgroundColor: Color.white
+        //         })
+        //     } else {
+        //         this.setState({
+        //             tabHeight: 45,
+        //             listHeight: viewportHeight - getStatusBarHeight() - 45 - bottomHeight,
+        //             backgroundColor: Color.theme,
+        //         })
+        //     }
+        // }
 
         return (
             <>

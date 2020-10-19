@@ -71,7 +71,7 @@ class Brief extends React.PureComponent<IProps> {
         const {navigation, id} = this.props;
         navigation.navigate('MangaView', {
             data: {
-                id: item.id,
+                chapter_id: item.id,
                 title: item.title,
                 book_id: id,
             }
