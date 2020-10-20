@@ -51,12 +51,12 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         const {dispatch} = this.props;
-        const {chapter_id, book_id} = this.props.route.params.data;
+        const {sort, book_id} = this.props.route.params.data;
         dispatch({
             type: 'mangaView/setState',
             payload: {
                 book_id,
-                chapter_id,
+                sort,
             }
         });
         this.loadData(true, true);
@@ -65,6 +65,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
     renderHeader = () => {
         const {headerHasMore} = this.props;
         const {headerReached} = this.state;
+
         if (headerReached) {
             return <More/>;
         }
@@ -115,15 +116,15 @@ class MangaView extends React.PureComponent<IProps, IState> {
             this.setState({
                 headerReached: false,
             });
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.loadUpData = true;
-            },1000)
+            }, 1000)
         });
     }
 
     onEndReached = () => {
         const {endHasMore, loading} = this.props;
-        console.log('onEndReached')
+
         if (!endHasMore || loading) {
             return;
         }
@@ -140,6 +141,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
         const offsetY = nativeEvent.contentOffset.y;
+        console.log(offsetY)
         if (this.loadUpData && offsetY < -30) {
             this.loadUpData = false;
             this.onHeaderReached();
@@ -165,6 +167,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     render() {
         const {episodeList} = this.props;
+
         return (
             <FlatList
                 ListHeaderComponent={this.renderHeader}
@@ -178,6 +181,10 @@ class MangaView extends React.PureComponent<IProps, IState> {
                 onEndReachedThreshold={0.1}
                 onScroll={this.onScroll}
                 ListFooterComponent={this.renderFooter}
+                // @ts-ignore
+                maintainVisibleContentPosition={{
+                    minIndexForVisible: 2
+                }}
             />
         );
     }

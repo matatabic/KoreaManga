@@ -6,6 +6,7 @@ export interface IChapter {
     id: string;
     title: string;
     name: string;
+    sort: string;
 }
 
 export interface BriefState {

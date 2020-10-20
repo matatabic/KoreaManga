@@ -6,7 +6,6 @@ const EPISODE_URL = '/episode/getList';
 export interface IParams {
     book_id: number,
     sort: number,
-    chapter_id: number,
     page_size: number,
     current_page: number,
 }
