@@ -86,20 +86,33 @@ const searchModel: SearchModel = {
             };
         },
         addSearch(state = initialState, {payload}) {
-            const newDate = state.searchHistoryList.unshift(payload.searchTitle)
+            let [...searchHistoryList] = state.searchHistoryList
+            searchHistoryList.unshift(payload.searchTitle)
+            storage.save({
+                key: 'searchHistoryList',
+                data: searchHistoryList,
+            })
             return {
                 ...state,
-                newDate
+                searchHistoryList
             };
         },
         deleteHistory(state = initialState, {payload}) {
-            const newDate = state.searchHistoryList.filter((item: string, index: number) => index != payload.index)
+            const searchHistoryList = state.searchHistoryList.filter((item: string, index: number) => index != payload.index)
+            storage.save({
+                key: 'searchHistoryList',
+                data: searchHistoryList,
+            })
             return {
                 ...state,
-                searchHistoryList: newDate
+                searchHistoryList
             };
         },
         destroyHistory(state = initialState, {payload}) {
+            storage.save({
+                key: 'searchHistoryList',
+                data: [],
+            })
             return {
                 ...state,
                 searchHistoryList: []
