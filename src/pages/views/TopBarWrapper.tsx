@@ -5,7 +5,7 @@ import Icon from '@/assets/iconfont/index';
 import Touchable from "@/components/Touchable";
 import {RootStackNavigation} from "@/navigator/index";
 
-export const NavigatorHeight = 0;
+export const NavigatorHeight = 40;
 export const TopBarNavigatorHeight = getStatusBarHeight() + NavigatorHeight;
 
 interface IProps {
@@ -54,15 +54,14 @@ class TopBarWrapper extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
     container: {
-        ...StyleSheet.absoluteFillObject,
-        paddingTop: getStatusBarHeight(),
-        backgroundColor: 'transparent',
+        paddingTop: getStatusBarHeight() ,
+        zIndex: 100,
         height: TopBarNavigatorHeight,
     },
     header: {
-        height: 45,
+        ...StyleSheet.absoluteFillObject,
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: "flex-end",
         justifyContent: 'space-between',
     },
     headerLeft: {

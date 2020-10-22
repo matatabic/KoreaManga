@@ -37,6 +37,7 @@ class CategoryTopBar extends React.PureComponent<IProps> {
     };
 
     onPress = (item: IStatus) => {
+        console.log(item)
         const {dispatch, activeCategory} = this.props;
         dispatch({
             type: 'category/setState',

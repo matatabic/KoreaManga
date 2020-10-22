@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList, ListRenderItemInfo, Image} from 'react-native';
+import {View, Text, StyleSheet, FlatList, ListRenderItemInfo} from 'react-native';
 import {IBook} from "@/models/search";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
@@ -14,7 +14,7 @@ const mapStateToProps = (state: RootState) => {
         bookList: search.bookList,
         searchTitle: search.searchTitle,
         refreshing: search.refreshing,
-        hasMore: search.pagination.hasMore,
+        hasMore: search.hasMore,
         loading: state.loading.effects['search/fetchBookList']
     }
 }
@@ -51,7 +51,6 @@ class BookList extends React.Component<IProps, IState> {
 
     loadData = (refreshing: boolean, callback?: () => void) => {
         const {dispatch, searchTitle} = this.props;
-
         dispatch({
             type: 'search/fetchBookList',
             payload: {

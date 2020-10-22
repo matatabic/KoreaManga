@@ -6044,6 +6044,11 @@ react-native-drag-sort@^2.3.7:
   resolved "https://registry.npm.taobao.org/react-native-drag-sort/download/react-native-drag-sort-2.3.7.tgz#20608ad41df4a82248d8f3503a40fcaeba275d79"
   integrity sha1-IGCK1B30qCJI2PNQOkD8rronXXk=
 
+react-native-fast-image@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.npm.taobao.org/react-native-fast-image/download/react-native-fast-image-8.3.2.tgz#e9db271b70b9634b7be054760914d80954f9898c"
+  integrity sha1-6dsnG3C5Y0t74FR2CRTYCVT5iYw=
+
 react-native-gesture-handler@^1.7.0:
   version "1.7.0"
   resolved "https://registry.npm.taobao.org/react-native-gesture-handler/download/react-native-gesture-handler-1.7.0.tgz#0ef74a5ba836832e497dc49eb1ce58baa6c617e5"

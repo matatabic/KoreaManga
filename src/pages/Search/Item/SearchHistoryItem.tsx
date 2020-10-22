@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomWidth: StyleSheet.hairlineWidth,
-        backgroundColor: Color.page_bg,
+        backgroundColor: Color.white,
         borderBottomColor: Color.split_line,
     },
     itemLeft: {

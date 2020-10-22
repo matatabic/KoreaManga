@@ -12,6 +12,8 @@ export interface IEpisode {
 
 export interface IPagination {
     current_page: number;
+    page_size: number;
+    total: number;
 }
 
 export interface MangaViewState {
@@ -45,7 +47,9 @@ export const initialState = {
     headerHasMore: false,
     endHasMore: false,
     pagination: {
-        current_page: 1,
+        current_page: 0,
+        page_size: 0,
+        total: 0,
     }
 };
 
@@ -75,7 +79,7 @@ const mangaViewModel: MangaViewModel = {
                     ? headerIndex - 6 : 1,
                 current_page: 1,
                 page_size: refreshing ? 6 : direction ? 6 : headerIndex - 6 > 0 ?
-                    6 :  headerIndex -1,
+                    6 : headerIndex - 1,
             });
 
             const newList = refreshing ? data.list :
@@ -88,9 +92,11 @@ const mangaViewModel: MangaViewModel = {
                     headerIndex: newList[0].sort,
                     endIndex: newList[newList.length - 1].sort,
                     headerHasMore: newList[0].sort > 1,
-                    endHasMore: data.pages.current_page * data.pages.page_size < data.pages.total,
+                    endHasMore: newList[newList.length - 1].sort < data.pages.total,
                     pagination: {
                         current_page: data.pages.current_page,
+                        page_size: data.pages.page_size,
+                        total: data.pages.total,
                     },
                 }
             });

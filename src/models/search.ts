@@ -7,8 +7,9 @@ import storage, {load} from '@/config/storage';
 
 export interface IPagination {
     current_page: number;
+    page_size: number;
     total: number;
-    hasMore: boolean;
+
 }
 
 export interface IBook {
@@ -34,23 +35,24 @@ export interface SearchState {
     refreshing: boolean;
     showSimpleView: boolean,
     showBookView: boolean,
+    hasMore: boolean,
     pagination: IPagination;
 }
 
-interface HomeModel extends Model {
+interface SearchModel extends Model {
     namespace: 'search';
     state: SearchState;
     reducers: {
         setState: Reducer<SearchState>;
+        addSearch: Reducer<SearchState>;
+        deleteHistory: Reducer<SearchState>;
+        destroyHistory: Reducer<SearchState>;
     };
     effects: {
         loadData: Effect;
         fetchIntroList: Effect;
         fetchSimpleList: Effect;
         fetchBookList: Effect;
-        saveSearch: Effect;
-        destroyHistory: Effect;
-        clearHistory: Effect;
     };
     subscriptions: SubscriptionsMapObject;
 }
@@ -65,15 +67,15 @@ export const initialState = {
     refreshing: false,
     showSimpleView: false,
     showBookView: false,
+    hasMore: false,
     pagination: {
         current_page: 1,
         page_size: 9,
         total: 0,
-        hasMore: false,
     }
 };
 
-const searchModel: HomeModel = {
+const searchModel: SearchModel = {
     namespace: 'search',
     state: initialState,
     reducers: {
@@ -81,6 +83,26 @@ const searchModel: HomeModel = {
             return {
                 ...state,
                 ...payload,
+            };
+        },
+        addSearch(state = initialState, {payload}) {
+            const newDate = state.searchHistoryList.unshift(payload.searchTitle)
+            return {
+                ...state,
+                newDate
+            };
+        },
+        deleteHistory(state = initialState, {payload}) {
+            const newDate = state.searchHistoryList.filter((item: string, index: number) => index != payload.index)
+            return {
+                ...state,
+                searchHistoryList: newDate
+            };
+        },
+        destroyHistory(state = initialState, {payload}) {
+            return {
+                ...state,
+                searchHistoryList: []
             };
         },
     },
@@ -140,10 +162,11 @@ const searchModel: HomeModel = {
                 payload: {
                     bookList: newList,
                     refreshing: false,
+                    hasMore: data.pages.current_page * data.pages.page_size < data.pages.total,
                     pagination: {
                         current_page: data.pages.current_page,
+                        page_size: data.pages.page_size,
                         total: data.pages.total,
-                        hasMore: data.pages.current_page * data.pages.page_size < data.pages.total,
                     },
                 }
             });
@@ -152,59 +175,6 @@ const searchModel: HomeModel = {
                 action.callback();
             }
         },
-        *saveSearch({payload}, {call, put, select}) {
-            let {searchHistoryList} = yield select(
-                ({search}: RootState) => search,
-            );
-
-            if (payload.data) {
-                searchHistoryList.unshift(payload.data)
-
-                yield put({
-                    type: 'setState',
-                    payload: {
-                        searchHistoryList
-                    }
-                })
-
-                storage.save({
-                    key: 'searchHistoryList',
-                    data: searchHistoryList,
-                })
-            }
-        },
-        *destroyHistory(_, {put}) {
-            yield put({
-                type: 'setState',
-                payload: {
-                    searchHistoryList: []
-                }
-            })
-
-            storage.save({
-                key: 'searchHistoryList',
-                data: [],
-            })
-        },
-        *clearHistory({payload}, {put, select}) {
-            let {searchHistoryList: list} = yield select(
-                ({search}: RootState) => search,
-            );
-
-            const searchHistoryList = list.filter((item: string, index: number) => index != payload.index)
-
-            yield put({
-                type: 'setState',
-                payload: {
-                    searchHistoryList
-                }
-            })
-
-            storage.save({
-                key: 'searchHistoryList',
-                data: searchHistoryList,
-            })
-        }
     },
     subscriptions: {
         setup({dispatch}) {

@@ -1,14 +1,14 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {RootStackNavigation} from "@/navigator/index";
 import {IBook} from "@/models/search";
 import SearchBar from "./SearchBar";
 import Intro from "./Intro";
-import BookList from "@/components/BookList";
+import BookList from "./BookList/index";
 import SearchHistory from "./SearchHistory";
 import Simple from "./Simple";
+import {ScrollView} from "react-native";
 
 const mapStateToProps = ({search}: RootState) => {
     return {
@@ -54,14 +54,12 @@ class Search extends React.Component<IProps> {
             return <Simple goBrief={this.goBrief}/>
         } else {
             return (
-                <>
+                <ScrollView>
                     <Intro goBrief={this.goBrief}/>
                     <SearchHistory/>
-                </>
+                </ScrollView>
             );
         }
-
-
     }
 
     render() {

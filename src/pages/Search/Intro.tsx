@@ -65,7 +65,7 @@ class Intro extends React.PureComponent<IProps> {
 const styles = StyleSheet.create({
     container: {
         height: 235,
-        backgroundColor: Color.page_bg,
+        backgroundColor: Color.white,
         paddingHorizontal: 20,
     },
     headerTitle: {

@@ -23,8 +23,10 @@ async function getCarousel() {
     return axios.get(CAROUSEL_URL);
 }
 
-async function getCommend() {
-    return axios.get(COMMEND_URL);
+async function getCommend(params: any) {
+    return axios.get(COMMEND_URL,{
+        params
+    });
 }
 
 async function getIntro() {

@@ -23,10 +23,10 @@ const styles = StyleSheet.create({
         height: 45,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Color.page_bg,
+        backgroundColor: Color.white,
     },
     title: {
-        color: Color.grey_title,
+        color: Color.dark_title,
     }
 })
 

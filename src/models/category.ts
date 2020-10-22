@@ -18,8 +18,8 @@ export interface IStatus {
 
 export interface IPagination {
     current_page: number;
+    page_size: number;
     total: number;
-    hasMore: boolean;
 }
 
 export interface CategoryState {
@@ -31,6 +31,7 @@ export interface CategoryState {
     activeCategory: string;
     refreshing: boolean;
     hideHeader: boolean;
+    hasMore: boolean;
     pagination: IPagination;
 }
 
@@ -55,10 +56,11 @@ const initialState = {
     activeCategory: '0',
     refreshing: false,
     hideHeader: false,
+    hasMore: false,
     pagination: {
-        current_page: 1,
+        current_page: 0,
+        page_size: 0,
         total: 0,
-        hasMore: false,
     }
 };
 
@@ -100,7 +102,7 @@ const categoryModel: CategoryModel = {
                 },
             });
 
-            const page = refreshing ? 1 : (pagination.current_page + 1);
+            const page = refreshing ? 1 : pagination.current_page + 1;
 
             const {data} = yield call(BookServices.getList, {
                 page_size: 9,
@@ -116,10 +118,11 @@ const categoryModel: CategoryModel = {
                 payload: {
                     bookList: newList,
                     refreshing: false,
+                    hasMore: data.pages.current_page * data.pages.page_size < data.pages.total,
                     pagination: {
                         current_page: data.pages.current_page,
+                        page_size: data.pages.page_size,
                         total: data.pages.total,
-                        hasMore: data.pages.current_page * data.pages.page_size < data.pages.total,
                     },
                 }
             });

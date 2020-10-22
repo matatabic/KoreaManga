@@ -69,9 +69,9 @@ class MangaView extends React.PureComponent<IProps, IState> {
         if (headerReached) {
             return <More/>;
         }
-        // if (!headerHasMore) {
-        //     return <End/>;
-        // }
+        if (!headerHasMore) {
+            return <End/>;
+        }
 
         return null;
     }
@@ -104,8 +104,8 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     onHeaderReached = () => {
         const {headerHasMore, loading} = this.props;
-
-        if (!headerHasMore || loading || this.loadUpData) {
+        console.log('onHeaderReached')
+        if (!headerHasMore || loading) {
             return;
         }
         this.setState({
@@ -116,7 +116,9 @@ class MangaView extends React.PureComponent<IProps, IState> {
             this.setState({
                 headerReached: false,
             });
-            this.loadUpData = true;
+            setTimeout(() => {
+                this.loadUpData = true;
+            }, 1000)
         });
     }
 
@@ -138,12 +140,12 @@ class MangaView extends React.PureComponent<IProps, IState> {
     }
 
     onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const offsetY = nativeEvent.contentOffset.y;
-
-        if (this.loadUpData && offsetY < -30) {
-            this.loadUpData = false;
-            this.onHeaderReached();
-        }
+        // const offsetY = nativeEvent.contentOffset.y;
+        // console.log(offsetY)
+        // if (this.loadUpData && offsetY < -30) {
+        //     this.loadUpData = false;
+        //     this.onHeaderReached();
+        // }
     };
 
     renderItem = ({item}: ListRenderItemInfo<IEpisode>) => {
@@ -167,7 +169,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
         return (
             <FlatList
-                ListHeaderComponent={this.renderHeader}
+                // ListHeaderComponent={this.renderHeader}
                 style={styles.container}
                 data={episodeList}
                 numColumns={1}
@@ -177,12 +179,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
                 onEndReached={this.onEndReached}
                 onEndReachedThreshold={0.1}
                 onScroll={this.onScroll}
-                showsVerticalScrollIndicator={false}
                 ListFooterComponent={this.renderFooter}
-                // @ts-ignore
-                maintainVisibleContentPosition={{
-                    minIndexForVisible: 2
-                }}
             />
         );
     }

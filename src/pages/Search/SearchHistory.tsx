@@ -31,7 +31,7 @@ class SearchHistory extends React.PureComponent<IProps> {
     clearHistory = (index: number) => {
         const {dispatch} = this.props;
         dispatch({
-            type: 'search/clearHistory',
+            type: 'search/deleteHistory',
             payload: {
                 index
             }
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     header: {
         height: 50,
         flexDirection: 'column-reverse',
-        backgroundColor: Color.page_bg,
+        backgroundColor: Color.white,
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderBottomColor: Color.split_line,
         paddingLeft: 20,

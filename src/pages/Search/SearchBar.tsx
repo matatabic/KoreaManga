@@ -114,9 +114,11 @@ class SearchBar extends React.PureComponent<IProps, IState> {
         this.setState({
             searchTitle: text
         })
+        console.log(text.length)
         if (text && text.length > 0) {
             this.debounce(this.loadData, text, 250)
         } else {
+            console.log('showSimpleView: falseshowSimpleView: falseshowSimpleView: false')
             dispatch({
                 type: 'search/setState',
                 payload: {
@@ -132,7 +134,6 @@ class SearchBar extends React.PureComponent<IProps, IState> {
     onSubmitEditing = () => {
         const {dispatch} = this.props;
         const {searchTitle} = this.state;
-        let lastSearchTitle = this.lastSearchTitle;
         if (searchTitle && searchTitle.length > 0) {
             dispatch({
                 type: 'search/setState',
@@ -149,11 +150,12 @@ class SearchBar extends React.PureComponent<IProps, IState> {
                 }
             })
 
-            if (this.lastSearchTitle !== searchTitle) {
+            if (searchTitle != '' && this.lastSearchTitle !== searchTitle) {
                 dispatch({
-                    type: 'search/saveSearch',
+                    type: 'search/addSearch',
+
                     payload: {
-                        data: searchTitle,
+                        searchTitle
                     }
                 })
             }

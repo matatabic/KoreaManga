@@ -91,7 +91,6 @@ class Carousel extends React.Component<IProps> {
         const {carouselList} = this.props;
         return (
             <View>
-                {/*{this.carouselBackground}*/}
                 <SnapCarousel
                     data={carouselList}
                     renderItem={this.renderItem}

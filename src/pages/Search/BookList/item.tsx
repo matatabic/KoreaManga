@@ -1,8 +1,10 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Touchable from "@/components/Touchable";
 import {ip, wp} from "@/utils/index";
 import {IBook} from "@/models/search";
+import {Color} from "@/utils/const";
 
 const imageWidth = wp(25);
 const imageHeight = ip(imageWidth);
@@ -27,10 +29,10 @@ class Item extends React.PureComponent<IProps> {
         return (
             <Touchable style={styles.item} onPress={this.onPress}>
                 <View>
-                    <Image
-                        source={{uri: data.image}}
+                    <FastImage
+                        source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
                         style={styles.image}
-                        resizeMode="stretch"
+                        resizeMode={FastImage.resizeMode.stretch}
                     />
                 </View>
                 <View style={styles.mainView}>
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
         height: itemHeight,
         paddingTop: 5,
         flexDirection: 'row',
-        backgroundColor: '#fff',
+        backgroundColor: Color.white,
         paddingHorizontal: 20,
     },
     image: {
@@ -70,11 +72,11 @@ const styles = StyleSheet.create({
     },
     authorText: {
         marginTop: 5,
-        color: '#AFAFAF',
+        color: Color.dark_title,
     },
     categoryText: {
         marginTop: 5,
-        color: '#AFAFAF',
+        color: Color.dark_title,
     },
     rightView: {
         flex: 1,

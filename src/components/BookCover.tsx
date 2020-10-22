@@ -1,15 +1,10 @@
 import React from 'react';
-import {Image, StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Touchable from '@/components/Touchable';
-import {viewportWidth, wp} from "@/utils/index";
+import {ip, viewportWidth, wp} from "@/utils/index";
 import {IBook} from "@/models/home";
-
-
-interface itemStyle {
-    width: Number;
-    marginVertical: Number;
-    marginHorizontal: Number;
-}
+import {Color} from "@/utils/const";
+import FastImage from 'react-native-fast-image';
 
 export interface IProps {
     data: IBook;
@@ -19,12 +14,12 @@ export interface IProps {
 const DEFAULT_IMAGE =
     'https://jiecaomh.com/media/uploads/a/目標就是妳內褲完結/cover.jpg';
 
-const itemWidth = wp(30);
-const imageHeight = itemWidth / 0.675;
-const itemMargin = (viewportWidth - (itemWidth * 3)) / 4;
+const itemWidth = wp(96) / 3;
+const imageHeight = ip(itemWidth);
+const itemMargin = (viewportWidth - wp(96)) / 4;
 
 
-class BookCover extends React.Component<IProps> {
+class BookCover extends React.PureComponent<IProps> {
     showError = () => {
         const {data} = this.props;
         console.log('error' + data.id);
@@ -34,14 +29,18 @@ class BookCover extends React.Component<IProps> {
         const {data, goBrief} = this.props;
         return (
             <Touchable style={styles.item} onPress={() => goBrief(data)}>
-                <Image
-                    source={{uri: data.image}}
-                    onError={this.showError}
-                    style={styles.image}
-                    resizeMode="stretch"
-                />
-                <Text numberOfLines={1}>{data.title}</Text>
-                <Text numberOfLines={1}>{data.category ? data.category : ''}</Text>
+
+                    <FastImage
+                        source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
+                        onError={this.showError}
+                        style={styles.image}
+                        resizeMode={FastImage.resizeMode.stretch}
+                    />
+                    <View style={styles.titleContainer}>
+                        <Text numberOfLines={1}>{data.title}</Text>
+                        <Text numberOfLines={1}>{data.category ? data.category : ''}</Text>
+                    </View>
+
             </Touchable>
         );
     }
@@ -50,13 +49,23 @@ class BookCover extends React.Component<IProps> {
 const styles = StyleSheet.create({
     item: {
         width: itemWidth,
-        marginLeft: itemMargin,
-        marginTop: itemMargin,
+        marginLeft:itemMargin,
+        backgroundColor: '#fff',
+    },
+    // wrapper: {
+    //     width: itemWidth,
+    //     height: imageHeight + 35,
+    //     marginLeft: itemMargin,
+    // },
+    titleContainer: {
+        flex: 1,
+        height: 35,
     },
     image: {
         width: '100%',
         height: imageHeight,
         borderRadius: 5,
+        // backgroundColor:'yellow'
     },
 })
 

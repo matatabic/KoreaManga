@@ -23,7 +23,7 @@ const mapStateToProps = (state: RootState, {route}: { route: RouteProp<CategoryP
         model,
         activeStatus: categoryState.activeStatus,
         bookList: modelState.bookList,
-        hasMore: modelState.pagination.hasMore,
+        hasMore: modelState.hasMore,
         refreshing: modelState.refreshing,
         hideHeader: categoryState.hideHeader,
         loading: state.loading.effects[`${model}/fetchBookList`],
