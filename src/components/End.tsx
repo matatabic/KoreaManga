@@ -14,6 +14,8 @@ class End extends React.PureComponent {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        height: 100,
         margin: 10,
         alignItems: 'center',
     },

@@ -153,7 +153,6 @@ class SearchBar extends React.PureComponent<IProps, IState> {
             if (searchTitle != '' && this.lastSearchTitle !== searchTitle) {
                 dispatch({
                     type: 'search/addSearch',
-
                     payload: {
                         searchTitle
                     }

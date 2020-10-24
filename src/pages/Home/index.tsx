@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     View, Text, SectionList, NativeSyntheticEvent, NativeScrollEvent,
-    StyleSheet, SectionListRenderItemInfo, FlatList, ListRenderItemInfo
+    StyleSheet, SectionListRenderItemInfo, FlatList, ListRenderItemInfo, Animated, EasingStatic
 } from 'react-native';
 import Carousel, {sideHeight} from "@/pages/Home/Carousel";
 import {RootState} from "@/models/index";
@@ -13,7 +13,6 @@ import CarouselBlurBackground from "@/pages/views/CarouselBlurBackground";
 import {viewportWidth} from "@/utils/index";
 import {Color} from "@/utils/const";
 import BookCover from "@/components/BookCover";
-import {bottomHeight} from "@/navigator/BottomTabs";
 import More from "@/components/More";
 import End from "@/components/End";
 
@@ -39,7 +38,11 @@ interface IState {
     endReached: boolean;
 }
 
-class Home extends React.Component<IProps, IState> {
+const maxScroll = sideHeight + 10;
+
+class Home extends React.PureComponent<IProps, IState> {
+
+    scrollY = new Animated.Value(0)
 
     constructor(props: IProps) {
         super(props);
@@ -63,6 +66,14 @@ class Home extends React.Component<IProps, IState> {
         });
     };
 
+    getTopBarColor = () => {
+        return this.scrollY.interpolate({
+            inputRange: [0, maxScroll],
+            outputRange: ['transparent', Color.white],
+            extrapolate:"clamp",
+        })
+    }
+
     onRefresh = () => {
         this.loadData(true)
     }
@@ -82,13 +93,6 @@ class Home extends React.Component<IProps, IState> {
         });
     };
 
-    onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const offsetY = nativeEvent.contentOffset.y;
-        let newGradientVisible = offsetY < sideHeight;
-        const {dispatch} = this.props;
-
-    };
-
     onEndReached = () => {
         const {hasMore, loading} = this.props;
         if (!hasMore || loading) {
@@ -97,7 +101,6 @@ class Home extends React.Component<IProps, IState> {
         this.setState({
             endReached: true,
         });
-        console.log('onEndReachedonEndReachedonEndReachedonEndReachedonEndReachedonEndReached')
         this.loadData(false, () => {
             this.setState({
                 endReached: false,
@@ -147,11 +150,12 @@ class Home extends React.Component<IProps, IState> {
 
     render() {
         const {commendList, refreshing, navigation} = this.props;
+        const topBarColor = this.getTopBarColor();
         return (
             <View>
                 <CarouselBlurBackground/>
-                <TopBarWrapper navigation={navigation}/>
-                <SectionList
+                <TopBarWrapper navigation={navigation} topBarColor={topBarColor}/>
+                <Animated.SectionList
                     keyExtractor={(item, index) => `section-item-${index}`}
                     ListHeaderComponent={this.header}
                     renderSectionHeader={this.renderSectionHeader}
@@ -160,6 +164,14 @@ class Home extends React.Component<IProps, IState> {
                     sections={commendList}
                     contentContainerStyle={styles.container}
                     stickySectionHeadersEnabled={true}
+                    onScroll={Animated.event(
+                        [{
+                            nativeEvent: {contentOffset: {y: this.scrollY}}
+                        }],
+                        {
+                            useNativeDriver: false
+                        }
+                    )}
                     onEndReached={this.onEndReached}
                     onEndReachedThreshold={0.1}
                     renderItem={this.renderItem}
@@ -172,9 +184,7 @@ class Home extends React.Component<IProps, IState> {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        paddingBottom: bottomHeight,
-    },
+    container: {},
     carouselTop: {
         paddingTop: 10,
     },

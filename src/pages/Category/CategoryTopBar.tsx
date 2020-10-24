@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, Animated} from 'react-native';
 import {
     MaterialTopTabBar,
     MaterialTopTabBarProps,
@@ -30,14 +30,12 @@ type IProps = MaterialTopTabBarProps & ModelState;
 
 class CategoryTopBar extends React.PureComponent<IProps> {
 
-
     goCategorySetting = () => {
         const {navigation} = this.props;
         navigation.navigate('CategorySetting');
     };
 
     onPress = (item: IStatus) => {
-        console.log(item)
         const {dispatch, activeCategory} = this.props;
         dispatch({
             type: 'category/setState',

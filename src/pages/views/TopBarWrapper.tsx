@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {Animated, StyleSheet, View, Text} from 'react-native';
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import Icon from '@/assets/iconfont/index';
 import Touchable from "@/components/Touchable";
@@ -10,6 +10,7 @@ export const TopBarNavigatorHeight = getStatusBarHeight() + NavigatorHeight;
 
 interface IProps {
     navigation: RootStackNavigation;
+    topBarColor: any;
 }
 
 class TopBarWrapper extends React.Component<IProps> {
@@ -20,8 +21,11 @@ class TopBarWrapper extends React.Component<IProps> {
     }
 
     render() {
+        const {topBarColor} = this.props;
         return (
-            <View style={styles.container}>
+            <Animated.View style={[styles.container, {
+                backgroundColor: topBarColor
+            }]}>
                 <View style={styles.header}>
                     <View style={styles.headerLeft}>
                         <View style={styles.headerLeftView}>
@@ -47,14 +51,14 @@ class TopBarWrapper extends React.Component<IProps> {
                         </View>
                     </Touchable>
                 </View>
-            </View>
+            </Animated.View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: getStatusBarHeight() ,
+        paddingTop: getStatusBarHeight(),
         zIndex: 100,
         height: TopBarNavigatorHeight,
     },

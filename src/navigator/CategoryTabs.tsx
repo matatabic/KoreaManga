@@ -4,7 +4,7 @@ import {
     MaterialTopTabBarProps,
 } from '@react-navigation/material-top-tabs';
 import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
-import {LayoutAnimation, Platform, StyleSheet, Text, View, UIManager, Animated} from 'react-native';
+import {StyleSheet, Text, Animated} from 'react-native';
 import Category from "@/pages/Category";
 import CategoryTopBar from "@/pages/Category/CategoryTopBar";
 import {RootState} from "@/models/index";
@@ -15,18 +15,12 @@ import {RootStackNavigation} from "@/navigator/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 import {IBook} from "@/models/home";
 import {viewportHeight} from "@/utils/index";
-import {bottomHeight} from "@/navigator/BottomTabs";
 import {Color} from "@/utils/const";
 
-if (Platform.OS === 'android') {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-}
 
 const mapStateToProps = (state: RootState) => {
     return {
-        statusList:state['categorySetting'].statusList,
+        statusList: state['categorySetting'].statusList,
         myCategories: state['categorySetting'].myCategories,
         hideHeader: state['category'].hideHeader,
         activeCategory: state['category'].activeCategory,
@@ -42,6 +36,7 @@ export type CategoryParamList = {
         namespace: string;
         goBrief: (data: IBook) => void;
         category_id: string;
+        scrollY: any
     };
 };
 const Tab = createMaterialTopTabNavigator<CategoryParamList>();
@@ -51,28 +46,33 @@ interface IProps extends ModelState {
 }
 
 
-interface IState {
-    tabHeight: number,
-    listHeight: number,
-    backgroundColor: string,
-}
+const topBarHeight = 45;
+const listHeight = viewportHeight - topBarHeight - getStatusBarHeight();
 
-class CategoryTabs extends React.PureComponent<IProps, IState> {
+class CategoryTabs extends React.PureComponent<IProps> {
 
-    start = false;
+    translateY = new Animated.Value(0)
 
-    constructor(props: any) {
-        super(props);
-        //设置默认宽高
-        this.state = {
-            tabHeight: 45,
-            listHeight: viewportHeight - getStatusBarHeight() - 45 - bottomHeight,
-            backgroundColor: Color.theme,
-        }
+    getTopColor = () => {
+        return this.translateY.interpolate({
+            inputRange: [-topBarHeight, 0],
+            outputRange: [Color.white, Color.theme],
+            extrapolate: "clamp",
+        })
     }
 
-    componentDidMount() {
-        this.start = true;
+    showTopBar = () => {
+        Animated.timing(this.translateY, {
+            toValue: 0,
+            useNativeDriver: false,
+        }).start();
+    }
+
+    hideTopBar = () => {
+        Animated.timing(this.translateY, {
+            toValue: -topBarHeight,
+            useNativeDriver: false,
+        }).start();
     }
 
     goBrief = (data: IBook) => {
@@ -124,6 +124,7 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
                     namespace: `tab-category-${item.id}`,
                     goBrief: this.goBrief,
                     category_id: item.id,
+                    scrollY: this.translateY,
                 }}
                 options={{
                     tabBarLabel: item.name,
@@ -135,43 +136,35 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
 
     render() {
         const {myCategories, hideHeader} = this.props;
-        const {tabHeight, listHeight, backgroundColor} = this.state;
+        const topColor = this.getTopColor();
 
-        // if (this.start) {
-        //     LayoutAnimation.easeInEaseOut();
-        //     if (hideHeader) {
-        //         this.setState({
-        //             tabHeight: 0,
-        //             listHeight: viewportHeight - getStatusBarHeight() - bottomHeight,
-        //             backgroundColor: Color.white
-        //         })
-        //     } else {
-        //         this.setState({
-        //             tabHeight: 45,
-        //             listHeight: viewportHeight - getStatusBarHeight() - 45 - bottomHeight,
-        //             backgroundColor: Color.theme,
-        //         })
-        //     }
-        // }
+        if (hideHeader) {
+            this.hideTopBar();
+        } else {
+            this.showTopBar();
+        }
 
         return (
             <>
-                <View style={[styles.statusBar, {
-                    backgroundColor: backgroundColor,
+                <Animated.View style={[styles.statusBar, {
+                    backgroundColor: topColor,
                 }
                 ]}/>
-                <View style={[styles.tabView, {
-                    height: tabHeight,
-                    backgroundColor: backgroundColor,
+                <Animated.View style={[styles.tabBarView, {
+                    height: topBarHeight,
+                    backgroundColor: topColor,
+                    transform: [{translateY: this.translateY}]
                 }]}>
                     <Text style={styles.title}>漫画分类</Text>
-                </View>
-                <View style={{height: listHeight}}>
+                </Animated.View>
+                <Animated.View style={{
+                    height: listHeight,
+                    transform: [{translateY: this.translateY}]
+                }}>
                     <Tab.Navigator
                         lazy
                         tabBar={this.renderTabBar}
                         pager={props => <ViewPagerAdapter {...props} />}
-                        sceneContainerStyle={styles.sceneContainer}
                         tabBarOptions={{
                             scrollEnabled: true,
                             tabStyle: {
@@ -197,23 +190,17 @@ class CategoryTabs extends React.PureComponent<IProps, IState> {
                         }}>
                         {myCategories.map(this.renderScreen)}
                     </Tab.Navigator>
-                </View>
+                </Animated.View>
             </>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    sceneContainer: {},
     statusBar: {
-        width: '100%',
         height: getStatusBarHeight(),
     },
-    tabView: {
-        width: '100%',
+    tabBarView: {
         justifyContent: 'center',
         alignItems: 'center',
     },

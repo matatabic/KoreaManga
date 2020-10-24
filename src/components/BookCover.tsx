@@ -30,16 +30,16 @@ class BookCover extends React.PureComponent<IProps> {
         return (
             <Touchable style={styles.item} onPress={() => goBrief(data)}>
 
-                    <FastImage
-                        source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
-                        onError={this.showError}
-                        style={styles.image}
-                        resizeMode={FastImage.resizeMode.stretch}
-                    />
-                    <View style={styles.titleContainer}>
-                        <Text numberOfLines={1}>{data.title}</Text>
-                        <Text numberOfLines={1}>{data.category ? data.category : ''}</Text>
-                    </View>
+                <FastImage
+                    source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
+                    onError={this.showError}
+                    style={styles.image}
+                    resizeMode={FastImage.resizeMode.stretch}
+                />
+                <View style={styles.titleContainer}>
+                    <Text numberOfLines={1}>{data.title}</Text>
+                    <Text numberOfLines={1}>{data.category ? data.category : ''}</Text>
+                </View>
 
             </Touchable>
         );
@@ -49,23 +49,17 @@ class BookCover extends React.PureComponent<IProps> {
 const styles = StyleSheet.create({
     item: {
         width: itemWidth,
-        marginLeft:itemMargin,
-        backgroundColor: '#fff',
+        marginLeft: itemMargin,
+        backgroundColor: Color.white,
     },
-    // wrapper: {
-    //     width: itemWidth,
-    //     height: imageHeight + 35,
-    //     marginLeft: itemMargin,
-    // },
     titleContainer: {
-        flex: 1,
+        width: viewportWidth,
         height: 35,
     },
     image: {
         width: '100%',
         height: imageHeight,
         borderRadius: 5,
-        // backgroundColor:'yellow'
     },
 })
 

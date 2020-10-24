@@ -2,16 +2,27 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import Icon from "@/assets/iconfont";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
+import Touchable from "@/components/Touchable";
 
+interface IProps {
+    goBack: () => void;
+}
 
-class TopBarWrapper extends React.PureComponent {
+class TopBarWrapper extends React.PureComponent<IProps> {
+
+    onPress = () => {
+        const {goBack}  =this.props;
+        console.log(goBack)
+        goBack();
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
-                    <View style={styles.leftView}>
+                    <Touchable onPress={this.onPress} style={styles.leftView}>
                         <Icon name="icon-arrow-left-bold" color='#ccc' size={24}/>
-                    </View>
+                    </Touchable>
                     <View style={styles.rightView}>
                         <Icon style={styles.rightIcon} name="icon-shangbian" color='#ccc' size={22}/>
                         <Icon style={styles.rightIcon} name="icon-xiabian" color='#ccc' size={22}/>
@@ -35,7 +46,9 @@ const styles = StyleSheet.create({
         paddingTop: 15,
     },
     leftView: {
-        marginLeft: 6
+        width:25,
+        height:28,
+        marginLeft: 6,
     },
     rightView: {
         flexDirection: 'row',

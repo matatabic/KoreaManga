@@ -47,6 +47,11 @@ class Brief extends React.PureComponent<IProps> {
         this.loadData();
     }
 
+    goBack = () => {
+        const {navigation} = this.props;
+        navigation.goBack();
+    }
+
     componentWillUnmount() {
         const {dispatch} = this.props;
         dispatch({
@@ -133,9 +138,6 @@ class Brief extends React.PureComponent<IProps> {
 
     render() {
         const {image, chapterList} = this.props;
-        if (!image && image.length == 0) {
-            return false;
-        }
         return (
             <>
                 <ImageBlurBackground image={image}/>
@@ -149,7 +151,7 @@ class Brief extends React.PureComponent<IProps> {
                     keyExtractor={(item, key) => `item-${key}`}
                     ListFooterComponent={this.renderFooter}
                 />
-                <TopBarWrapper/>
+                <TopBarWrapper goBack={this.goBack}/>
             </>
         );
     }

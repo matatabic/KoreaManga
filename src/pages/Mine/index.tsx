@@ -20,6 +20,13 @@ export default class AnimatedAnimationDemo extends Component {
         }
     }
 
+    componentDidMount() {
+        Animated.spring(this.translateY, {
+            toValue: 200,
+            useNativeDriver: true,
+        }).start();
+    }
+
     change = () => {
         Animated.spring(this.translateY, {
             toValue: -200,

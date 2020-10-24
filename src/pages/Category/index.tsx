@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ListRenderItemInfo, StyleSheet, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
+import {FlatList, ListRenderItemInfo, StyleSheet, NativeSyntheticEvent, NativeScrollEvent, Animated} from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {IBook} from "@/models/home";
@@ -12,7 +12,7 @@ import {Color} from "@/utils/const";
 
 
 const mapStateToProps = (state: RootState, {route}: { route: RouteProp<CategoryParamList, string> }) => {
-    const {namespace, category_id, goBrief} = route.params;
+    const {namespace, category_id, goBrief, scrollY} = route.params;
     const categoryState = state['category']
     const model = `${namespace}-status-${categoryState.activeStatus}`;
     const modelState = state[model];
@@ -21,6 +21,7 @@ const mapStateToProps = (state: RootState, {route}: { route: RouteProp<CategoryP
         category_id,
         goBrief,
         model,
+        scrollY,
         activeStatus: categoryState.activeStatus,
         bookList: modelState.bookList,
         hasMore: modelState.hasMore,
@@ -166,7 +167,7 @@ class Category extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {bookList, refreshing} = this.props;
+        const {bookList, refreshing,scrollY} = this.props
         return (
             <FlatList
                 keyExtractor={(item, key) => `item-${key}`}
@@ -175,13 +176,22 @@ class Category extends React.PureComponent<IProps, IState> {
                 renderItem={this.renderItem}
                 refreshing={refreshing}
                 onRefresh={this.onRefresh}
-                style={styles.container}
+                // style={styles.container}
                 ListFooterComponent={this.renderFooter}
                 scrollEventThrottle={1}
                 onScrollBeginDrag={this.onScrollBeginDrag}
                 onScrollEndDrag={this.onScrollEndDrag}
                 onScroll={this.onScroll}
+                // onScroll={Animated.event(
+                //     [{
+                //         nativeEvent: {contentOffset: {y: scrollY}}
+                //     }],
+                //     {
+                //         useNativeDriver: false
+                //     }
+                // )}
                 numColumns={3}
+                // contentContainerStyle={styles.container}
                 onEndReached={this.onEndReached}
                 onEndReachedThreshold={0.1}
             />
@@ -191,7 +201,8 @@ class Category extends React.PureComponent<IProps, IState> {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Color.page_bg,
+        flex:1,
+        backgroundColor: Color.white,
     }
 });
 
