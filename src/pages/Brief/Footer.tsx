@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-
 import {getBottomSpace} from "react-native-iphone-x-helper";
 import {Color} from "@/utils/const";
 
@@ -19,7 +18,7 @@ const style = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 300,
+        height: 1000,
         backgroundColor: Color.page_bg,
         paddingBottom: getBottomSpace()
     }

@@ -69,8 +69,8 @@ class Home extends React.PureComponent<IProps, IState> {
     getTopBarColor = () => {
         return this.scrollY.interpolate({
             inputRange: [0, maxScroll],
-            outputRange: ['transparent', Color.white],
-            extrapolate:"clamp",
+            outputRange: ['transparent', Color.theme],
+            extrapolate: "clamp",
         })
     }
 
@@ -172,6 +172,7 @@ class Home extends React.PureComponent<IProps, IState> {
                             useNativeDriver: false
                         }
                     )}
+                    showsVerticalScrollIndicator={false}
                     onEndReached={this.onEndReached}
                     onEndReachedThreshold={0.1}
                     renderItem={this.renderItem}

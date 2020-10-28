@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, ListRenderItemInfo, StyleSheet, NativeSyntheticEvent, NativeScrollEvent, Animated} from 'react-native';
+import {FlatList, ListRenderItemInfo, StyleSheet, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {IBook} from "@/models/home";
@@ -8,7 +8,6 @@ import {RouteProp} from "@react-navigation/native";
 import {CategoryParamList} from "@/navigator/CategoryTabs";
 import More from "@/components/More";
 import End from "@/components/End";
-import {Color} from "@/utils/const";
 
 
 const mapStateToProps = (state: RootState, {route}: { route: RouteProp<CategoryParamList, string> }) => {
@@ -167,7 +166,7 @@ class Category extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {bookList, refreshing,scrollY} = this.props
+        const {bookList, refreshing, scrollY} = this.props
         return (
             <FlatList
                 keyExtractor={(item, key) => `item-${key}`}
@@ -176,22 +175,13 @@ class Category extends React.PureComponent<IProps, IState> {
                 renderItem={this.renderItem}
                 refreshing={refreshing}
                 onRefresh={this.onRefresh}
-                // style={styles.container}
                 ListFooterComponent={this.renderFooter}
                 scrollEventThrottle={1}
                 onScrollBeginDrag={this.onScrollBeginDrag}
                 onScrollEndDrag={this.onScrollEndDrag}
                 onScroll={this.onScroll}
-                // onScroll={Animated.event(
-                //     [{
-                //         nativeEvent: {contentOffset: {y: scrollY}}
-                //     }],
-                //     {
-                //         useNativeDriver: false
-                //     }
-                // )}
+                showsVerticalScrollIndicator={false}
                 numColumns={3}
-                // contentContainerStyle={styles.container}
                 onEndReached={this.onEndReached}
                 onEndReachedThreshold={0.1}
             />
@@ -199,11 +189,6 @@ class Category extends React.PureComponent<IProps, IState> {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        backgroundColor: Color.white,
-    }
-});
+const styles = StyleSheet.create({});
 
 export default connector(Category);

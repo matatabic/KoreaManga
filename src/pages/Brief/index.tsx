@@ -1,33 +1,38 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList, ListRenderItemInfo, Image} from 'react-native';
+import {View, StyleSheet, FlatList, ListRenderItemInfo, Animated, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import {RootState} from "@/models/index";
 import {RouteProp} from "@react-navigation/native";
 import {RootStackNavigation, RootStackParamList} from "@/navigator/index";
 import {connect, ConnectedProps} from "react-redux";
 import {IChapter, initialState} from "@/models/brief";
-import Item from "./Item";
-import ImageBlurBackground from "@/pages/views/ImageBlurBackground";
-import TopBarWrapper from "./TopBarWrapper";
-import {ip} from "@/utils/index";
+import ImageBlurBackground from "@/pages/Brief/ImageBlurBackground";
+import {hp, ip, viewportWidth, wp} from "@/utils/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
-import Icon from "@/assets/iconfont";
-import Footer from "./Footer";
 import {Color} from "@/utils/const";
+import Item from "./Item";
+import TopBarWrapper from "./TopBarWrapper";
+import Footer from "./Footer";
+import Operate from "./Operate";
+import Information from "./Information";
+import BookInfo from "./BookInfo";
+import Fixed from "./Fixed";
+
+
+export const imageWidth = wp(33);
+export const imageHeight = wp(ip(33));
+export const TopHeight = getStatusBarHeight() + hp(5);
+export const headerHeight = hp(40);
+export const operateHeight = hp(15);
+const startHeight = (headerHeight / 2) - TopHeight;
+const endHeight = headerHeight - operateHeight;
+export const showFixedViewH = headerHeight - operateHeight + hp(5);
 
 
 const mapStateToProps = ({brief}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
     const {id} = route.params;
     return {
         id,
-        title: brief.title,
         image: brief.image,
-        category: brief.category,
-        author: brief.author,
-        description: brief.description,
-        status: brief.status,
-        collected: brief.collected,
-        markChapter: brief.markChapter,
-        markIndex: brief.markChapter,
         chapterList: brief.chapterList,
     };
 };
@@ -41,12 +46,65 @@ interface IProps extends ModelState {
     navigation: RootStackNavigation;
 }
 
-class Brief extends React.PureComponent<IProps> {
+interface IState {
+    showFixed: boolean,
+}
+
+class Brief extends React.PureComponent<IProps, IState> {
+
+    showFixedViewH = showFixedViewH;
+    translateY = new Animated.Value(0)
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            showFixed: false,
+        }
+    }
 
     componentDidMount() {
         this.loadData();
     }
 
+    getOpacity = () => {
+        return this.translateY.interpolate({
+            inputRange: [startHeight, endHeight],
+            outputRange: [1, 0],
+            extrapolate: "clamp",
+        })
+    }
+
+    getLeftViewX = () => {
+        return this.translateY.interpolate({
+            inputRange: [startHeight, endHeight],
+            outputRange: [0, 75],
+            extrapolate: "clamp",
+        })
+    }
+
+    getRightViewX = () => {
+        return this.translateY.interpolate({
+            inputRange: [startHeight, endHeight],
+            outputRange: [0, 35],
+            extrapolate: "clamp",
+        })
+    }
+
+    getRightViewScale = () => {
+        return this.translateY.interpolate({
+            inputRange: [startHeight, endHeight],
+            outputRange: [1, 0.65],
+            extrapolate: "clamp",
+        })
+    }
+
+    getRightViewFontSize = () => {
+        return this.translateY.interpolate({
+            inputRange: [startHeight, endHeight],
+            outputRange: [14, 20],
+            extrapolate: "clamp",
+        })
+    }
     goBack = () => {
         const {navigation} = this.props;
         navigation.goBack();
@@ -84,48 +142,41 @@ class Brief extends React.PureComponent<IProps> {
     }
 
     get header() {
-        const {title, image, status, author, category, collected, description} = this.props;
+        const operateOpacity = this.getOpacity();
+        const leftViewX = this.getLeftViewX();
+        const rightViewX = this.getRightViewX();
+        const rightViewScale = this.getRightViewScale();
+        const rightFontSize = this.getRightViewFontSize();
         return (
-            <View>
+            <>
                 <View>
-                    <View style={styles.operateView}>
-                        <View style={styles.operateLeftView}>
-                            <Icon name="icon-xing"
-                                  color={collected ? Color.red : Color.disable}
-                                  size={22}
-                            />
-                            <Text style={styles.collected}>{collected ? '已收藏' : '收藏'}</Text>
-                        </View>
-                        <View style={styles.operateRightView}>
-                            <Text style={styles.operateRightTitle}>开始阅读</Text>
-                        </View>
-                    </View>
-                    <View style={styles.headerContainer}>
-                        <View style={styles.bulletinView}>
-                            <Image source={{uri: image}} style={styles.image}/>
-                            <View style={styles.bulletinTitleView}>
-                                <Text style={styles.bulletinTitle}>{title}</Text>
-                                <Text style={styles.bulletin}>{status}</Text>
-                                <Text style={styles.bulletin}>{author}</Text>
-                                <Text style={styles.bulletin}>{category}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.descriptionView}>
-                    <Text style={styles.descriptionTitle}>{description}</Text>
-                </View>
-                <View style={styles.itemHeader}>
-                    <View style={styles.itemHeaderLeft}>
-                        <Text style={styles.itemHeaderLeftTitle}>章节</Text>
-                    </View>
-                    <View style={styles.itemHeaderRight}>
-                        <Text style={styles.itemHeaderRightTitle}>2020-09-16更新至第363话</Text>
-                    </View>
-                </View>
-            </View>
+                    <Animated.View style={[styles.shadowView, {
+                        opacity: operateOpacity
+                    }]}>
+                    </Animated.View>
 
+                    <Operate
+                        leftViewX={leftViewX}
+                        rightViewX={rightViewX}
+                        rightViewScale={rightViewScale}
+                        rightFontSize={rightFontSize}
+                    />
+                    <Animated.View style={[styles.headerView, {
+                        opacity: operateOpacity,
+                    }]}>
+                        <Information/>
+                    </Animated.View>
+                </View>
+                <BookInfo/>
+            </>
         );
+    }
+
+    get fixedView() {
+        if (this.state.showFixed) {
+            return <Fixed/>
+        }
+        return null;
     }
 
     renderItem = ({item}: ListRenderItemInfo<IChapter>) => {
@@ -136,128 +187,69 @@ class Brief extends React.PureComponent<IProps> {
         return <Footer/>
     }
 
+    onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        if (event.nativeEvent.contentOffset.y > this.showFixedViewH) {
+            this.setState({
+                showFixed: true
+            })
+        } else {
+            this.setState({
+                showFixed: false
+            })
+        }
+    };
+
     render() {
-        const {image, chapterList} = this.props;
+        const {chapterList} = this.props;
+        const topBarOpacity = this.getOpacity();
         return (
             <>
-                <ImageBlurBackground image={image}/>
+                <ImageBlurBackground/>
                 <FlatList
                     ListHeaderComponent={this.header}
-                    style={styles.container}
                     data={chapterList}
                     numColumns={4}
                     columnWrapperStyle={styles.columnWrapper}
                     renderItem={this.renderItem}
                     keyExtractor={(item, key) => `item-${key}`}
+                    showsVerticalScrollIndicator={false}
+                    onScroll={Animated.event(
+                        [{
+                            nativeEvent: {contentOffset: {y: this.translateY}}
+                        }],
+                        {
+                            useNativeDriver: false,
+                            listener: this.onScroll
+                        },
+                    )}
                     ListFooterComponent={this.renderFooter}
                 />
-                <TopBarWrapper goBack={this.goBack}/>
+                {this.fixedView}
+                <TopBarWrapper goBack={this.goBack} topBarOpacity={topBarOpacity}/>
+
             </>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     columnWrapper: {
         paddingHorizontal: 10,
         backgroundColor: Color.page_bg,
     },
-    headerContainer: {
-        paddingTop: getStatusBarHeight() + 75,
+    headerView: {
+        paddingTop: TopHeight,
         marginHorizontal: 10,
-        height: 330,
+        height: headerHeight,
     },
-    bulletinView: {
-        flexDirection: 'row',
-    },
-    bulletinTitleView: {
-        marginLeft: 10,
-    },
-    bulletinTitle: {
-        color: Color.grey_title,
-        fontSize: 26,
-        marginTop: 5,
-        marginBottom: 12,
-    },
-    bulletin: {
-        color: Color.grey_title,
-        fontSize: 15,
-        marginBottom: 12,
-    },
-    operateView: {
+    shadowView: {
         position: "absolute",
-        width: '100%',
-        height: 80,
+        width: viewportWidth,
+        height: operateHeight,
         bottom: 0,
         backgroundColor: Color.page_bg,
-        flexDirection: 'row'
     },
-    operateLeftView: {
-        marginTop: 330 - ip(120) - getStatusBarHeight() - 75 - 10,
-        marginLeft: 10,
-        width: 120,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    collected: {
-        marginLeft: 5
-    },
-    operateLeftTitle: {
-        marginLeft: 8,
-    },
-    operateRightView: {
-        flex: 1,
-        marginTop: 330 - ip(120) - getStatusBarHeight() - 75 - 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: Color.red,
-        marginHorizontal: 10,
-        borderRadius: 35,
-    },
-    operateRightTitle: {
-        color: Color.grey_title
-    },
-    image: {
-        width: 120,
-        height: ip(120),
-    },
-    descriptionView: {
-        flex: 1,
-        backgroundColor: Color.page_bg,
-        paddingTop: 20,
-        paddingLeft: 10,
-        paddingRight: 5,
-    },
-    descriptionTitle: {
-        color: Color.dark_title,
-    },
-    itemHeader: {
-        flex: 1,
-        height: 45,
-        flexDirection: 'row',
-        backgroundColor: Color.page_bg,
-    },
-    itemHeaderLeft: {
-        flex: 1,
-        marginLeft: 10,
-        justifyContent: 'center',
-    },
-    itemHeaderLeftTitle: {
-        fontSize: 15
-    },
-    itemHeaderRight: {
-        flex: 1,
-        marginRight: 25,
-        justifyContent: 'center',
-    },
-    itemHeaderRightTitle: {
-        fontSize: 12,
-        color: Color.grey_title,
-    },
+
 })
 
 export default connector(Brief);

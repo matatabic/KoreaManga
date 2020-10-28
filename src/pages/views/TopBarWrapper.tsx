@@ -10,7 +10,7 @@ export const TopBarNavigatorHeight = getStatusBarHeight() + NavigatorHeight;
 
 interface IProps {
     navigation: RootStackNavigation;
-    topBarColor: any;
+    topBarColor: Animated.AnimatedInterpolation;
 }
 
 class TopBarWrapper extends React.Component<IProps> {

@@ -111,6 +111,7 @@ class BookList extends React.Component<IProps, IState> {
                 renderItem={this.renderItem}
                 onEndReached={this.onEndReached}
                 onEndReachedThreshold={0.1}
+                showsVerticalScrollIndicator={false}
                 ListFooterComponent={this.renderFooter}
             />
         );
