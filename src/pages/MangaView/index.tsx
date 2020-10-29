@@ -104,7 +104,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     onHeaderReached = () => {
         const {headerHasMore, loading} = this.props;
-        console.log('onHeaderReached')
+
         if (!headerHasMore || loading) {
             return;
         }
