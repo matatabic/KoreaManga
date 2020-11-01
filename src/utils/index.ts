@@ -1,4 +1,4 @@
-import {Dimensions} from 'react-native';
+import {Dimensions, StatusBar} from 'react-native';
 import {NavigationState} from '@react-navigation/native';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
@@ -19,7 +19,6 @@ function hp(percentage: number) {
 function ip(width: number) {
     return width / 0.675;
 }
-
 
 function getActiveRouteName(state: NavigationState) {
     let route;

@@ -24,6 +24,7 @@
     "dva-core-ts": "^2.0.7",
     "dva-loading-ts": "^3.0.23",
     "dva-model-extend": "^0.1.2",
+    "formik": "^2.2.1",
     "react": "16.13.1",
     "react-native": "0.63.2",
     "react-native-config": "^1.3.3",
@@ -31,6 +32,7 @@
     "react-native-fast-image": "^8.3.2",
     "react-native-gesture-handler": "^1.7.0",
     "react-native-reanimated": "^1.13.0",
+    "react-native-root-toast": "^3.2.1",
     "react-native-safe-area-context": "^3.1.7",
     "react-native-screens": "^2.10.1",
     "react-native-snap-carousel": "4.0.0-beta.5",
@@ -39,7 +41,8 @@
     "react-native-tab-view": "^2.15.1",
     "react-native-tab-view-viewpager-adapter": "^1.1.0",
     "react-navigation-header-buttons": "^5.0.2",
-    "react-redux": "^7.2.1"
+    "react-redux": "^7.2.1",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -49,6 +52,7 @@
     "@types/react-native": "^0.63.2",
     "@types/react-native-snap-carousel": "^3.8.2",
     "@types/react-test-renderer": "^16.9.2",
+    "@types/yup": "^0.29.9",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
     "babel-jest": "^25.1.0",

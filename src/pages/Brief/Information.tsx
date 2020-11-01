@@ -24,11 +24,12 @@ type ModelState = ConnectedProps<typeof connector>;
 
 
 const imageWidth = wp(33);
-const imageHeight = wp(ip(33));
+const imageHeight = ip(imageWidth);
 
 class Information extends React.Component<ModelState> {
     render() {
         const {image, title, status, author, category} = this.props;
+        if (!(image&&image.length>0)) return null;
         return (
             <View style={styles.bulletinView}>
                 <Image source={{uri: image}} style={styles.image}/>

@@ -20,6 +20,7 @@ type ModelState = ConnectedProps<typeof connector>;
 class ImageBlurBackground extends React.Component<ModelState> {
     render() {
         const {image} = this.props;
+        if (!(image && image.length > 0)) return null;
         return (
             <View style={styles.container}>
                 <FastImage

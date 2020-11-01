@@ -46,8 +46,8 @@ interface IProps extends ModelState {
 }
 
 
-const topBarHeight = 45;
-const listHeight = viewportHeight - topBarHeight - getStatusBarHeight();
+const statusBarHeight = 45;
+const listHeight = viewportHeight - statusBarHeight - getStatusBarHeight();
 
 class CategoryTabs extends React.PureComponent<IProps> {
 
@@ -55,7 +55,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
 
     getTopColor = () => {
         return this.translateY.interpolate({
-            inputRange: [-topBarHeight, 0],
+            inputRange: [-statusBarHeight, 0],
             outputRange: [Color.white, Color.theme],
             extrapolate: "clamp",
         })
@@ -70,7 +70,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
 
     hideTopBar = () => {
         Animated.timing(this.translateY, {
-            toValue: -topBarHeight,
+            toValue: -statusBarHeight,
             useNativeDriver: false,
         }).start();
     }
@@ -151,7 +151,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
                 }
                 ]}/>
                 <Animated.View style={[styles.tabBarView, {
-                    height: topBarHeight,
+                    height: statusBarHeight,
                     backgroundColor: topColor,
                     transform: [{translateY: this.translateY}]
                 }]}>

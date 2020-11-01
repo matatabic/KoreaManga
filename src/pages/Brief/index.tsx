@@ -18,8 +18,6 @@ import BookInfo from "./BookInfo";
 import Fixed from "./Fixed";
 
 
-export const imageWidth = wp(33);
-export const imageHeight = wp(ip(33));
 export const TopHeight = getStatusBarHeight() + hp(5);
 export const headerHeight = hp(40);
 export const operateHeight = hp(15);
@@ -106,8 +104,7 @@ class Brief extends React.PureComponent<IProps, IState> {
         })
     }
     goBack = () => {
-        const {navigation} = this.props;
-        navigation.goBack();
+        this.props.navigation.goBack();
     }
 
     componentWillUnmount() {
@@ -154,7 +151,6 @@ class Brief extends React.PureComponent<IProps, IState> {
                         opacity: operateOpacity
                     }]}>
                     </Animated.View>
-
                     <Operate
                         leftViewX={leftViewX}
                         rightViewX={rightViewX}
@@ -249,7 +245,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         backgroundColor: Color.page_bg,
     },
-
 })
 
 export default connector(Brief);

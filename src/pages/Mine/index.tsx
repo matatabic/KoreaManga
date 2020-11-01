@@ -1,104 +1,74 @@
 import React, {Component} from 'react';
-import {
-    Animated,
-    Button,
-    StyleSheet, TouchableOpacity,
-    View,
-    Text
-} from 'react-native';
+import {StyleSheet, View, Text, ScrollView, Image} from 'react-native';
+import ImageBackground from './ImageBackground'
+import {getStatusBarHeight} from "react-native-iphone-x-helper";
+import {Color} from "@/utils/const";
+import Dog from "@/assets/image/dog.gif";
 
-export default class AnimatedAnimationDemo extends Component {
-
-    translateY = new Animated.Value(0);
-    fontSize = new Animated.Value(0)
-    viewSize = new Animated.Value(0)
-
-    constructor(Props:any) {
-        super(Props);
-        this.state = {
-            viewSS:1
-        }
-    }
-
-    componentDidMount() {
-        Animated.spring(this.translateY, {
-            toValue: 200,
-            useNativeDriver: true,
-        }).start();
-    }
-
-    change = () => {
-        Animated.spring(this.translateY, {
-            toValue: -200,
-            useNativeDriver: true,
-        }).start();
-    }
-
-    change1 = () => {
-        Animated.spring(this.translateY, {
-            toValue: 0,
-            useNativeDriver: true,
-        }).start();
-    }
-
-    change2 = () => {
-        Animated.spring(this.fontSize, {
-            toValue: 1,
-            useNativeDriver: false,
-        }).start();
-    }
-
-    change3 = () => {
-        // Animated.timing(this.viewSize, {
-        //     toValue: 1,
-        //     useNativeDriver: true
-        // }).start()
-        this.setState({
-            viewSS:1.5
-        })
-    }
+class Mine extends Component {
 
     render() {
         return (
-            <Animated.View style={{transform: [{translateY: this.translateY,}]}}>
-                <View style={[styles.container,]}>
+            <>
+                <ImageBackground/>
+                <View style={styles.spaceView}/>
+                <ScrollView>
+                    <View style={styles.container}>
+                        <View style={styles.detail}>
+                            <View style={styles.information}>
+                                <View style={styles.leftView}>
+                                    <View>
+                                        <Image source={Dog} style={styles.dog}/>
+                                    </View>
+                                    <View>
+                                        <View><Text>漫画人000001</Text></View>
+                                        <View><Text>登录更安全,云端同步记录</Text></View>
+                                    </View>
+                                </View>
+                                <View style={styles.rightView}>
+                                    <Text>登录/注册</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
 
+                </ScrollView>
 
-                </View>
-                {/*<Animated.View style={[styles.view1, {*/}
-                {/*    transform:*/}
-                {/*}]}>*/}
-                <Animated.View style={[styles.view1, {
-                    // transform: ([{ scaleY: this.state.viewSS }])
-                }]}>
-                    <Animated.Text style={{
-                        fontSize: this.fontSize.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [12, 26]
-                        })
-                    }}>fontSize</Animated.Text>
-                    <Button onPress={this.change} title={'change'}/>
-                    <Button onPress={this.change1} title={'change1'}/>
-                    <Button onPress={this.change2} title={'change2'}/>
-                    <Button onPress={this.change3} title={'change3'}/>
-                </Animated.View>
-            </Animated.View>
-
+            </>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        height: 200,
-        backgroundColor: 'green'
+    spaceView: {
+        ...StyleSheet.absoluteFillObject,
+        marginTop: 500,
+        backgroundColor: Color.grey_page_bg
     },
-    view1: {
-        width: '100%',
-        // height: 200,
-        justifyContent: 'center',
-        alignItems: "center",
-        backgroundColor: 'red'
+    container: {
+        height: 800,
+        marginTop: 250,
+        backgroundColor: Color.grey_page_bg,
+    },
+    detail: {
+        ...StyleSheet.absoluteFillObject,
+        top: -100,
+    },
+    information: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginHorizontal: 15,
+        height: 200,
+        backgroundColor: Color.white
+    },
+    leftView: {
+        flexDirection: "row",
+    },
+    rightView: {},
+    dog: {
+        width: 75,
+        height: 75,
     }
 });
+
+export default Mine

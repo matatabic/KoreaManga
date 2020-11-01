@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject
     },
     image: {
-        width: '100%',
+        flex:1,
         height: getStatusBarHeight() + sideHeight + 60,
     }
 })
