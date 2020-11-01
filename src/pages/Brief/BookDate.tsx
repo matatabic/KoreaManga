@@ -6,7 +6,7 @@ import {connect, ConnectedProps} from "react-redux";
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
-        description: brief.description,
+        bookInfo: brief.bookInfo,
     };
 };
 
@@ -14,13 +14,13 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
-class BookInfo extends React.Component<ModelState> {
+class BookDate extends React.Component<ModelState> {
     render() {
-        const {description} = this.props;
+        const {bookInfo} = this.props;
         return (
             <>
                 <View style={styles.description}>
-                    <Text style={styles.descriptionTitle}>{description}</Text>
+                    <Text style={styles.descriptionTitle}>{bookInfo.description}</Text>
                 </View>
                 <View style={styles.itemHeader}>
                     <View style={styles.itemHeaderLeft}>
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default connector(BookInfo);
+export default connector(BookDate);

@@ -6,7 +6,7 @@ import {RootStackNavigation, RootStackParamList} from "@/navigator/index";
 import {connect, ConnectedProps} from "react-redux";
 import {IChapter, initialState} from "@/models/brief";
 import ImageBlurBackground from "@/pages/Brief/ImageBlurBackground";
-import {hp, ip, viewportWidth, wp} from "@/utils/index";
+import {hp, viewportWidth} from "@/utils/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 import {Color} from "@/utils/const";
 import Item from "./Item";
@@ -14,23 +14,19 @@ import TopBarWrapper from "./TopBarWrapper";
 import Footer from "./Footer";
 import Operate from "./Operate";
 import Information from "./Information";
-import BookInfo from "./BookInfo";
+import BookDate from "./BookDate";
 import Fixed from "./Fixed";
 
 
-export const TopHeight = getStatusBarHeight() + hp(5);
-export const headerHeight = hp(40);
-export const operateHeight = hp(15);
-const startHeight = (headerHeight / 2) - TopHeight;
-const endHeight = headerHeight - operateHeight;
-export const showFixedViewH = headerHeight - operateHeight + hp(5);
+const startHeight = hp(17.5);
+const endHeight = hp(35) - getStatusBarHeight();
+const showFixedViewH = endHeight + hp(2.5);
 
 
 const mapStateToProps = ({brief}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
     const {id} = route.params;
     return {
         id,
-        image: brief.image,
         chapterList: brief.chapterList,
     };
 };
@@ -62,6 +58,14 @@ class Brief extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         this.loadData();
+    }
+
+    getBgImageSize = () => {
+        return this.translateY.interpolate({
+            inputRange: [-100, 0],
+            outputRange: [1.2, 1],
+            extrapolate: "clamp",
+        })
     }
 
     getOpacity = () => {
@@ -145,26 +149,17 @@ class Brief extends React.PureComponent<IProps, IState> {
         const rightViewScale = this.getRightViewScale();
         const rightFontSize = this.getRightViewFontSize();
         return (
-            <>
-                <View>
-                    <Animated.View style={[styles.shadowView, {
-                        opacity: operateOpacity
-                    }]}>
-                    </Animated.View>
-                    <Operate
-                        leftViewX={leftViewX}
-                        rightViewX={rightViewX}
-                        rightViewScale={rightViewScale}
-                        rightFontSize={rightFontSize}
-                    />
-                    <Animated.View style={[styles.headerView, {
-                        opacity: operateOpacity,
-                    }]}>
-                        <Information/>
-                    </Animated.View>
-                </View>
-                <BookInfo/>
-            </>
+            <View>
+                <Information opacity={operateOpacity}/>
+                <Operate
+                    opacity={operateOpacity}
+                    leftViewX={leftViewX}
+                    rightViewX={rightViewX}
+                    rightViewScale={rightViewScale}
+                    rightFontSize={rightFontSize}
+                />
+                <BookDate/>
+            </View>
         );
     }
 
@@ -198,9 +193,10 @@ class Brief extends React.PureComponent<IProps, IState> {
     render() {
         const {chapterList} = this.props;
         const topBarOpacity = this.getOpacity();
+        const bgImageSize = this.getBgImageSize();
         return (
-            <>
-                <ImageBlurBackground/>
+            <View>
+                <ImageBlurBackground bgImageSize={bgImageSize}/>
                 <FlatList
                     ListHeaderComponent={this.header}
                     data={chapterList}
@@ -223,7 +219,7 @@ class Brief extends React.PureComponent<IProps, IState> {
                 {this.fixedView}
                 <TopBarWrapper goBack={this.goBack} topBarOpacity={topBarOpacity}/>
 
-            </>
+            </View>
         );
     }
 }
@@ -233,18 +229,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         backgroundColor: Color.page_bg,
     },
-    headerView: {
-        paddingTop: TopHeight,
-        marginHorizontal: 10,
-        height: headerHeight,
-    },
-    shadowView: {
-        position: "absolute",
-        width: viewportWidth,
-        height: operateHeight,
-        bottom: 0,
-        backgroundColor: Color.page_bg,
-    },
+
+
 })
 
 export default connector(Brief);

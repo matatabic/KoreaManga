@@ -3,40 +3,38 @@ import {View, Text, Animated, StyleSheet} from 'react-native';
 import Icon from "@/assets/iconfont";
 import {Color} from "@/utils/const";
 import Touchable from "@/components/Touchable";
-import {hp, viewportWidth, wp} from "@/utils/index";
+import {hp, wp} from "@/utils/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 import ImageTopBar from "@/pages/Brief/ImageTopBar";
-
-export const TopHeight = getStatusBarHeight() + hp(5);
-export const operateHeight = hp(15);
-export const operatePaddingTopView = TopHeight;
 
 
 class Fixed extends React.PureComponent {
     render() {
         return (
-            <View style={styles.container}>
-                <ImageTopBar/>
-                <View style={[styles.leftView, {
-                    left: 75
-                }]}>
-                    <Icon name="icon-shoucang"
-                          color={Color.theme}
-                          size={25}
-                    />
-                    <Text style={styles.collected}>{'已收藏'}</Text>
-                </View>
-                <View style={[styles.rightView, {
-                    left: 35,
-                    transform: [{scale: 0.65}]
-                }]}>
-                    <Touchable onPress={() => {
-                        console.log('开始阅读')
-                    }}>
-                        <Text style={[styles.rightTitle, {
-                            fontSize: 20
-                        }]}>开始阅读</Text>
-                    </Touchable>
+            <View style={styles.wrapper}>
+                <View style={styles.container}>
+                    <ImageTopBar/>
+                    <View style={[styles.leftView, {
+                        left: 75
+                    }]}>
+                        <Icon name="icon-shoucang"
+                              color={Color.theme}
+                              size={25}
+                        />
+                        <Text style={styles.collected}>{'已收藏'}</Text>
+                    </View>
+                    <View style={[styles.rightView, {
+                        left: 35,
+                        transform: [{scale: 0.65}]
+                    }]}>
+                        <Touchable onPress={() => {
+                            console.log('开始阅读')
+                        }}>
+                            <Text style={[styles.rightTitle, {
+                                fontSize: 20
+                            }]}>开始阅读</Text>
+                        </Touchable>
+                    </View>
                 </View>
             </View>
         );
@@ -44,19 +42,20 @@ class Fixed extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    wrapper: {
+        flex: 1,
         ...StyleSheet.absoluteFillObject,
-        width: viewportWidth,
+        height: hp(7),
+    },
+    container: {
         paddingTop: getStatusBarHeight(),
-        height: operateHeight - operatePaddingTopView,
-        backgroundColor: 'red',
         flexDirection: 'row',
-        justifyContent: "space-between"
+        justifyContent: "space-around",
+        alignItems: 'center',
     },
     leftView: {
-        marginLeft: 25,
         width: 75,
-        height: operateHeight - operatePaddingTopView,
+        height: hp(7),
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -68,8 +67,8 @@ const styles = StyleSheet.create({
         marginLeft: 8,
     },
     rightView: {
-        width: wp(65),
-        height: operateHeight - operatePaddingTopView,
+        width: wp(50),
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Color.red,

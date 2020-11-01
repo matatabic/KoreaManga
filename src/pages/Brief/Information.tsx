@@ -1,20 +1,15 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Animated} from 'react-native';
 import {Color} from "@/utils/const";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-import {ip, wp} from "@/utils/index";
+import {hp, ip, wp} from "@/utils/index";
+import {getStatusBarHeight} from "react-native-iphone-x-helper";
 
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
-        title: brief.title,
-        image: brief.image,
-        category: brief.category,
-        author: brief.author,
-        description: brief.description,
-        status: brief.status,
-        collected: brief.collected,
+        bookInfo: brief.bookInfo,
     };
 };
 
@@ -22,41 +17,56 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
+interface IProps extends ModelState {
+    opacity: Animated.AnimatedInterpolation;
+}
 
 const imageWidth = wp(33);
 const imageHeight = ip(imageWidth);
 
-class Information extends React.Component<ModelState> {
+class Information extends React.Component<IProps> {
     render() {
-        const {image, title, status, author, category} = this.props;
-        if (!(image&&image.length>0)) return null;
+        const {bookInfo, opacity} = this.props;
         return (
-            <View style={styles.bulletinView}>
-                <Image source={{uri: image}} style={styles.image}/>
-                <View style={styles.bulletinTitleView}>
-                    <Text style={styles.bulletinTitle}>{title}</Text>
-                    <Text style={styles.bulletin}>{status}</Text>
-                    <Text style={styles.bulletin}>{author}</Text>
-                    <Text style={styles.bulletin}>{category}</Text>
+            <Animated.View style={[styles.wrapper, {
+                opacity: opacity
+            }]}>
+                <View style={styles.container}>
+                    <View style={styles.leftView}>
+                        <Image source={{uri: bookInfo.image}} style={styles.image}/>
+                    </View>
+                    <View style={styles.rightView}>
+                        <Text style={styles.title}>{bookInfo.title}</Text>
+                        <Text style={styles.bulletin}>{bookInfo.status}</Text>
+                        <Text style={styles.bulletin}>{bookInfo.author}</Text>
+                        <Text style={styles.bulletin}>{bookInfo.category}</Text>
+                    </View>
                 </View>
-            </View>
+            </Animated.View>
         );
     }
 }
 
 
 const styles = StyleSheet.create({
-    image: {
-        width: imageWidth,
-        height: imageHeight,
+    wrapper: {
+        paddingTop: getStatusBarHeight(),
+        height: hp(25),
+        zIndex: 99999,
     },
-    bulletinView: {
-        flexDirection: 'row',
+    container: {
+        flexDirection: "row",
+        position: "absolute",
+        left: 0,
+        bottom: -hp(13),
     },
-    bulletinTitleView: {
-        marginLeft: 10,
+    leftView: {
+        marginLeft: 20,
     },
-    bulletinTitle: {
+    rightView: {
+        marginLeft: 20,
+    },
+    title: {
         color: Color.grey_title,
         fontSize: 18,
         marginTop: 5,
@@ -66,6 +76,11 @@ const styles = StyleSheet.create({
         color: Color.grey_title,
         fontSize: 15,
         marginBottom: 12,
+    },
+    image: {
+
+        width: imageWidth,
+        height: imageHeight,
     },
 })
 

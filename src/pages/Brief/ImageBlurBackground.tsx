@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Animated} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import {ip, viewportWidth} from "@/utils/index";
 import {RootState} from "@/models/index";
@@ -8,7 +8,7 @@ import FastImage from "react-native-fast-image";
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
-        image: brief.image,
+        bookInfo: brief.bookInfo,
     };
 };
 
@@ -16,24 +16,31 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
+interface IProps extends ModelState {
+    bgImageSize: Animated.AnimatedInterpolation;
+}
 
-class ImageBlurBackground extends React.Component<ModelState> {
+class ImageBlurBackground extends React.Component<IProps> {
     render() {
-        const {image} = this.props;
-        if (!(image && image.length > 0)) return null;
+        const {bookInfo,bgImageSize} = this.props;
+
         return (
-            <View style={styles.container}>
-                <FastImage
-                    source={{uri: image}}
-                    style={styles.image}
-                    resizeMode={FastImage.resizeMode.cover}
-                />
-                <BlurView
-                    blurType="dark"
-                    blurAmount={10}
-                    style={StyleSheet.absoluteFillObject}
-                />
-            </View>
+            bookInfo && (
+                <View style={styles.container}>
+                    <Animated.Image
+                        source={{uri: bookInfo.image}}
+                        style={[styles.image,{
+                            transform: [{scale: bgImageSize}]
+                        }]}
+                        resizeMode={"cover"}
+                    />
+                    <BlurView
+                        blurType="dark"
+                        blurAmount={10}
+                        style={StyleSheet.absoluteFillObject}
+                    />
+                </View>
+            )
         );
     }
 }

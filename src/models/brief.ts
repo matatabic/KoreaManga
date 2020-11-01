@@ -9,13 +9,17 @@ export interface IChapter {
     sort: string;
 }
 
-export interface BriefState {
+export interface IInfo {
     title: string,
     image: string,
     category: string,
     author: string,
     description: string,
     status: string,
+}
+
+export interface BriefState {
+    bookInfo: IInfo;
     collected: boolean;
     markChapter: string;
     markIndex: string;
@@ -34,12 +38,14 @@ interface CategoryModel extends Model {
 }
 
 export const initialState = {
-    title: '',
-    image: '',
-    category: '',
-    author: '',
-    description: '',
-    status: '',
+    bookInfo: {
+        title: '',
+        image: '',
+        category: '',
+        author: '',
+        description: '',
+        status: '',
+    },
     collected: false,
     markChapter: '',
     markIndex: '',

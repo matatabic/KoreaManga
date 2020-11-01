@@ -9,12 +9,12 @@ export const Color = { //App通用颜色
     text: '#000000',    //默认字体颜色
     light_btn: '#F3F6F6',     //按钮颜色
     night_btn: '',
-    grey_title: '#F3F6F6',
+    grey_title: '#A9A9A9',
     dark_title: '#5B5B5B',
     disable: '#7F7F7F', //不可用颜色
     split_line: '#D0D0D1',//分割线色值
     page_bg: '#F5F5F5',   //默认页面背景色
-    grey_page_bg: '#EEEFEA',
+    grey_page_bg: '#F5F5F5',
     transparent: 'transparent',
 };
 

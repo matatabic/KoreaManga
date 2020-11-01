@@ -3,16 +3,11 @@ import {View, Text, Animated, StyleSheet} from 'react-native';
 import Icon from "@/assets/iconfont";
 import {Color} from "@/utils/const";
 import Touchable from "@/components/Touchable";
-import {hp, viewportWidth, wp} from "@/utils/index";
-import {getStatusBarHeight} from "react-native-iphone-x-helper";
-
-
-export const TopHeight = getStatusBarHeight() + hp(5);
-export const operateHeight = hp(15);
-export const operatePaddingTopView = TopHeight;
+import {hp, wp} from "@/utils/index";
 
 
 interface IProps {
+    opacity: Animated.AnimatedInterpolation;
     leftViewX: Animated.AnimatedInterpolation;
     rightViewX: Animated.AnimatedInterpolation;
     rightViewScale: Animated.AnimatedInterpolation;
@@ -21,51 +16,63 @@ interface IProps {
 
 class Operate extends React.Component<IProps> {
     render() {
-        const {leftViewX, rightViewX, rightViewScale, rightFontSize} = this.props;
+        const {opacity, leftViewX, rightViewX, rightViewScale, rightFontSize} = this.props;
         return (
-            <View style={styles.container}>
-                <Animated.View style={[styles.leftView, {
-                    left: leftViewX
-                }]}>
-                    <Icon name="icon-shoucang"
-                          color={Color.theme}
-                          size={25}
-                    />
-                    <Text style={styles.collected}>{'已收藏'}</Text>
-                </Animated.View>
-
-                <Animated.View style={[styles.rightView, {
-                    left: rightViewX,
-                    transform: [{scale: rightViewScale}]
-                }]}>
-                    <Touchable onPress={() => {
-                        console.log('开始阅读')
-                    }}>
-                        <Animated.Text style={[styles.rightTitle, {
-                            fontSize: rightFontSize
-                        }]}>开始阅读</Animated.Text>
-                    </Touchable>
-                </Animated.View>
-            </View>
+            <>
+                <Animated.View style={[styles.shadowView, {opacity: opacity}]}/>
+                <View style={styles.container}>
+                    <View style={styles.spaceView}/>
+                    <View style={styles.contentContainer}>
+                        <Animated.View style={[styles.leftView, {
+                            left: leftViewX
+                        }]}>
+                            <Icon name="icon-shoucang"
+                                  color={Color.theme}
+                                  size={25}
+                            />
+                            <Text style={styles.collected}>{'已收藏'}</Text>
+                        </Animated.View>
+                        <Animated.View style={[styles.rightView, {
+                            left: rightViewX,
+                            transform: [{scale: rightViewScale}]
+                        }]}>
+                            <Touchable onPress={() => {
+                                console.log('开始阅读')
+                            }}>
+                                <Animated.Text style={[styles.rightTitle, {
+                                    fontSize: rightFontSize
+                                }]}>开始阅读</Animated.Text>
+                            </Touchable>
+                        </Animated.View>
+                    </View>
+                </View>
+            </>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        position: "absolute",
-        width: viewportWidth,
-        height: operateHeight,
-        bottom: 0,
-        backgroundColor: 'transparent',
+        height: hp(10),
+    },
+    spaceView: {
+        height: hp(3),
+    },
+    shadowView: {
+        height: hp(10),
+        position: "relative",
+        top: hp(10),
+        left: 0,
+        backgroundColor: Color.grey_page_bg,
+    },
+    contentContainer: {
+        height: hp(7),
         flexDirection: 'row',
-        justifyContent: "space-between"
+        justifyContent: "space-around",
+        alignItems: 'center',
     },
     leftView: {
-        marginTop: operatePaddingTopView,
-        marginLeft: 25,
         width: 75,
-        height: operateHeight - operatePaddingTopView,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -77,9 +84,8 @@ const styles = StyleSheet.create({
         marginLeft: 8,
     },
     rightView: {
-        width: wp(65),
-        marginTop: operatePaddingTopView,
-        height: operateHeight - operatePaddingTopView,
+        width: wp(50),
+        height: hp(6),
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Color.red,

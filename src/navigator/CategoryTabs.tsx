@@ -155,7 +155,9 @@ class CategoryTabs extends React.PureComponent<IProps> {
                     backgroundColor: topColor,
                     transform: [{translateY: this.translateY}]
                 }]}>
-                    <Text style={styles.title}>漫画分类</Text>
+                    <Animated.Text style={[styles.title,
+                        // opacity: opacity
+                    ]}>漫画分类</Animated.Text>
                 </Animated.View>
                 <Animated.View style={{
                     height: listHeight,

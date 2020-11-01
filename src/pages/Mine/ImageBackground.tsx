@@ -2,14 +2,11 @@ import React, {Component} from 'react';
 import FastImage from 'react-native-fast-image';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import {viewportWidth} from "@/utils/index";
-
 import moon from '@/assets/image/moon.png';
 
 class ImageBackground extends Component {
 
-
     render() {
-        console.log(moon)
         return (
             <FastImage
                 source={moon}
