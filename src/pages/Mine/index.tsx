@@ -1,13 +1,22 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, ScrollView, Image} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import ImageBackground from './ImageBackground'
 import {Color} from "@/utils/const";
 import Information from "./Information";
+import BuyList from "./BuyList";
+import Balance from "./Balance";
+import {ModalStackNavigation} from "@/navigator/index";
 
 
-class Mine extends Component {
+interface IProps {
+    navigation: ModalStackNavigation;
+}
+
+class Mine extends Component<IProps> {
+
 
     render() {
+        const {navigation} = this.props;
         return (
             <>
                 <ImageBackground/>
@@ -15,11 +24,12 @@ class Mine extends Component {
                 <ScrollView>
                     <View style={styles.container}>
                         <View style={styles.detail}>
-                            <Information/>
+                            <Information navigation={navigation}/>
+                            <BuyList/>
+                            <Balance/>
                         </View>
                     </View>
                 </ScrollView>
-
             </>
         );
     }
@@ -38,9 +48,14 @@ const styles = StyleSheet.create({
     },
     detail: {
         ...StyleSheet.absoluteFillObject,
+        flex: 1,
+        height: 200,
         top: -100,
+        marginHorizontal: 15,
+        marginBottom: 25,
+        backgroundColor: Color.white
     },
 
 });
 
-export default Mine
+export default Mine;

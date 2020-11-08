@@ -1,17 +1,20 @@
 import {Model, Effect, SubscriptionsMapObject} from 'dva-core-ts';
 import {Reducer} from 'redux';
-import {RootState} from "@/models/index";
-import storage, {load} from '@/config/storage';
-import Toast from 'react-native-root-toast';
 import UserServices from "@/services/user";
+import Toast from "react-native-root-toast";
+import {StatusCode} from "@/utils/const";
+import storage, {load} from "@/config/storage";
 
 interface IUser {
-    account: string;
-    password: string;
+    isLogin: boolean;
+    mobile: string;
+    username: string;
+    nickname: string;
+    token: string;
 }
 
 export interface UserState {
-    user: IUser[],
+    userInfo: IUser,
 }
 
 interface UserModel extends Model {
@@ -21,17 +24,24 @@ interface UserModel extends Model {
         setState: Reducer<UserState>;
     };
     effects: {
+        loadData: Effect;
         login: Effect;
+        logout: Effect;
     };
     subscriptions: SubscriptionsMapObject;
 }
 
-
-export const initialState = {
-    user: [],
+const initialState = {
+    userInfo: {
+        isLogin: false,
+        mobile: '',
+        username: '',
+        nickname: '',
+        token: '',
+    }
 };
 
-const UserModel: UserModel = {
+const userModel: UserModel = {
     namespace: 'user',
     state: initialState,
     reducers: {
@@ -43,18 +53,77 @@ const UserModel: UserModel = {
         },
     },
     effects: {
-        *login({payload}, {call, put}) {
+        *loadData(_, {call, put}) {
+            const userInfo = yield call(load, {key: 'userInfo'});
+            if (userInfo) {
+                yield put({
+                    type: 'setState',
+                    payload: {
+                        userInfo
+                    }
+                })
+            }
+        },
+        *login(action, {call, put}) {
+            const {payload} = action;
             const data = yield call(UserServices.Login, payload);
-            console.log(data)
-            Toast.show(data.msg,{
-                duration:Toast.durations.LONG,
-                position:Toast.positions.CENTER,
-                shadow:true,
-                animation:true,
+            let isGoBack = false;
+
+            Toast.show(data.msg, {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.CENTER,
+                shadow: true,
+                animation: true,
+            })
+
+            if (data.code === StatusCode.SUCCESS) {
+                isGoBack = true;
+                const userInfo = {
+                    isLogin: true,
+                    mobile: data.data.mobile,
+                    username: data.data.username,
+                    nickname: data.data.nickname,
+                    token: data.data.sid,
+                }
+                yield put({
+                    type: 'setState',
+                    payload: {
+                        userInfo
+                    }
+                })
+                storage.save({
+                    key: 'userInfo',
+                    data: userInfo,
+                })
+            }
+            if (action.callback) {
+                action.callback(isGoBack);
+            }
+        },
+        *logout(_, {call, put}) {
+            const data = yield call(UserServices.logout);
+            yield put({
+                type: 'setState',
+                payload: {
+                    userInfo:''
+                }
+            })
+            storage.save({
+                key: 'userInfo',
+                data: undefined,
             })
         },
     },
-    subscriptions: {},
+    subscriptions: {
+        setup({dispatch}) {
+            dispatch({type: 'loadData'});
+        },
+        asyncStorage() {
+            storage.sync.userInfo = async () => {
+                return null;
+            };
+        },
+    },
 };
 
-export default UserModel;
+export default userModel;

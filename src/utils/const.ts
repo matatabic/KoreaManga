@@ -3,14 +3,17 @@ export const Color = { //App通用颜色
     white: '#FFFFFF',
     theme: '#FBDB3F',   //App主题颜色
     yellow: '#F79A17',  //按钮颜色
-    yellow_title: '#FBDB3F',
+    pink: '#F87187',
     red: '#FF1D1D',
     icon: '#F86442',
     text: '#000000',    //默认字体颜色
     light_btn: '#F3F6F6',     //按钮颜色
-    night_btn: '',
+    purple_btn: '#874EFD',
+    night_btn: '#696969',
+    yellow_btn: '#FDC841',
     grey_title: '#A9A9A9',
     dark_title: '#5B5B5B',
+    yellow_title: '#FBDB3F',
     disable: '#7F7F7F', //不可用颜色
     split_line: '#D0D0D1',//分割线色值
     page_bg: '#F5F5F5',   //默认页面背景色
@@ -18,3 +21,8 @@ export const Color = { //App通用颜色
     transparent: 'transparent',
 };
 
+export const StatusCode = {
+    SUCCESS: 200,
+    ERR_EXCEPTION: 3001, //业务逻辑异常！
+    ERR_EXCEPTION_UPLOAD: 3003, //文件上传异常！
+}

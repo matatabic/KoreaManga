@@ -1,18 +1,20 @@
 import React, {Component} from 'react';
-import FastImage from 'react-native-fast-image';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import {viewportWidth} from "@/utils/index";
 import moon from '@/assets/image/moon.png';
+
 
 class ImageBackground extends Component {
 
     render() {
         return (
-            <FastImage
-                source={moon}
-                style={styles.container}
-                resizeMode={FastImage.resizeMode.center}
-            />
+            <View style={styles.container}>
+                <Image
+                    source={moon}
+                    style={styles.image}
+                    resizeMode={"cover"}
+                />
+            </View>
         )
     }
 }
@@ -23,6 +25,10 @@ const styles = StyleSheet.create({
         width: viewportWidth,
         height: 600,
     },
+    image: {
+        width: viewportWidth,
+        height: 600,
+    }
 
 });
 

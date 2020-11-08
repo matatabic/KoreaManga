@@ -10,16 +10,15 @@ import {IEpisode, initialState} from "@/models/mangaView";
 import Item from "./item/Item";
 import More from "@/components/More";
 import End from "@/components/End";
-import {viewportWidth} from "@/utils/index";
 
-const mapStateToProps = (state: RootState) => {
-    const {mangaView} = state;
+
+const mapStateToProps = ({mangaView, loading}: RootState) => {
     return {
         episodeList: mangaView.episodeList,
         refreshing: mangaView.refreshing,
         headerHasMore: mangaView.headerHasMore,
         endHasMore: mangaView.endHasMore,
-        loading: state.loading.effects['mangaView/fetchEpisodeList']
+        loading: loading.effects['mangaView/fetchEpisodeList']
     };
 };
 

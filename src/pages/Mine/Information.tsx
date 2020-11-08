@@ -2,23 +2,72 @@ import React from 'react';
 import {Image, StyleSheet, Text, View} from "react-native";
 import Dog from "@/assets/image/dog.gif";
 import {Color} from "@/utils/const";
+import Touchable from "@/components/Touchable";
+import {RootState} from "@/models/index";
+import {connect, ConnectedProps} from "react-redux";
+import {ModalStackNavigation} from "@/navigator/index";
 
-class Information extends React.Component {
+const mapStateToProps = ({user}: RootState) => {
+    return {
+        userInfo: user.userInfo
+    };
+};
+
+const connector = connect(mapStateToProps);
+
+type ModelState = ConnectedProps<typeof connector>;
+
+interface IProps extends ModelState {
+    navigation: ModalStackNavigation;
+}
+
+class Information extends React.Component<IProps> {
+
+    logout = () =>{
+        const {dispatch} = this.props;
+        dispatch({
+            type:'user/logout'
+        })
+    }
+
+    goLogin = () => {
+        const {navigation} = this.props;
+        navigation.navigate("Login")
+    }
+
     render() {
+        const {userInfo} = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.leftView}>
                     <Image source={Dog} style={styles.dog}/>
                     <View style={styles.titleView}>
-                        <View><Text style={styles.name}>漫画人000001</Text></View>
-                        <View><Text style={styles.tips}>登录更安全,云端同步记录</Text></View>
+                        <View>
+                            <Text style={styles.name}>
+                                {userInfo.nickname.length > 0 ? userInfo.nickname : '未登录'}
+                            </Text>
+                        </View>
+                        <View>
+                            <Text style={styles.tips}>
+                                {userInfo.isLogin ? 'vip已经过期' : '登录更安全,云端同步记录'}
+                            </Text>
+                        </View>
                     </View>
                 </View>
-                <View style={styles.rightView}>
-                    <View style={styles.login}>
-                        <Text style={styles.loginTitle}>登录/注册</Text>
-                    </View>
-                </View>
+                {
+                    userInfo.isLogin ?
+                        <Touchable onPress={this.logout} style={styles.rightView}>
+                            <View style={styles.login}>
+                                <Text style={styles.loginTitle}>退出登录</Text>
+                            </View>
+                        </Touchable> :
+                        <Touchable onPress={this.goLogin} style={styles.rightView}>
+                            <View style={styles.login}>
+                                <Text style={styles.loginTitle}>登录/注册</Text>
+                            </View>
+                        </Touchable>
+                }
+
             </View>
         )
     }
@@ -26,21 +75,20 @@ class Information extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         flexDirection: "row",
         justifyContent: "space-between",
-        marginHorizontal: 15,
-        marginBottom: 25,
-        height: 200,
-        backgroundColor: Color.white
+        alignItems: 'center',
+        marginHorizontal: 10,
     },
     leftView: {
-        flexDirection: "row",
+        flex: 7,
         height: 65,
+        flexDirection: "row",
         alignItems: 'center',
     },
     rightView: {
-        marginRight: 15,
-        width: 90,
+        flex: 3,
         height: 65,
         justifyContent: 'center',
     },
@@ -49,10 +97,11 @@ const styles = StyleSheet.create({
         height: 65,
     },
     titleView: {
-        marginLeft: 8,
+        marginLeft: 5,
     },
     name: {
         fontSize: 17,
+        paddingBottom: 5,
     },
     tips: {
         fontSize: 13,
@@ -61,10 +110,9 @@ const styles = StyleSheet.create({
     login: {
         height: 46,
         borderRadius: 23,
-        borderWidth:2,
+        borderWidth: StyleSheet.hairlineWidth,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'green'
     },
     loginTitle: {
         fontSize: 15,
@@ -72,4 +120,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default Information;
+export default connector(Information);

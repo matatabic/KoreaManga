@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const LOGIN_URL = '/passport/login';
-
+const LOGOUT_URL = '/passport/logout';
 
 export interface IParams {
-    account:string;
-    password:string;
+    account: string;
+    password: string;
 }
 
 export async function Login(params: IParams) {
@@ -14,6 +14,11 @@ export async function Login(params: IParams) {
     );
 }
 
+export async function logout() {
+    return axios.post(LOGOUT_URL);
+}
+
 export default {
     Login,
+    logout,
 };
