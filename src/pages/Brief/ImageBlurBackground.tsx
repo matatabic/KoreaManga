@@ -17,20 +17,19 @@ const connector = connect(mapStateToProps);
 type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
-    bgImageSize: Animated.AnimatedInterpolation;
+    imageSize: Animated.AnimatedInterpolation;
 }
 
 class ImageBlurBackground extends React.Component<IProps> {
     render() {
-        const {bookInfo,bgImageSize} = this.props;
-
+        const {bookInfo, imageSize} = this.props;
         return (
-            bookInfo && (
+            bookInfo && bookInfo.image.length > 0 && (
                 <View style={styles.container}>
                     <Animated.Image
                         source={{uri: bookInfo.image}}
-                        style={[styles.image,{
-                            transform: [{scale: bgImageSize}]
+                        style={[styles.image, {
+                            transform: [{scale: imageSize}]
                         }]}
                         resizeMode={"cover"}
                     />

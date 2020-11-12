@@ -83,7 +83,7 @@ const userModel: UserModel = {
                     mobile: data.data.mobile,
                     username: data.data.username,
                     nickname: data.data.nickname,
-                    token: data.data.sid,
+                    token: data.data.token,
                 }
                 yield put({
                     type: 'setState',
@@ -105,12 +105,18 @@ const userModel: UserModel = {
             yield put({
                 type: 'setState',
                 payload: {
-                    userInfo:''
+                    userInfo: initialState
                 }
+            })
+            Toast.show(data.msg, {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.CENTER,
+                shadow: true,
+                animation: true,
             })
             storage.save({
                 key: 'userInfo',
-                data: undefined,
+                data: '',
             })
         },
     },

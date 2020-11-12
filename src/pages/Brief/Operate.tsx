@@ -4,9 +4,25 @@ import Icon from "@/assets/iconfont";
 import {Color} from "@/utils/const";
 import Touchable from "@/components/Touchable";
 import {hp, wp} from "@/utils/index";
+import {RootState} from "@/models/index";
+import {connect, ConnectedProps} from "react-redux";
+import {ModalStackNavigation} from "@/navigator/index";
 
 
-interface IProps {
+const mapStateToProps = ({user, brief}: RootState) => {
+    return {
+        isLogin: user.userInfo.isLogin,
+        book_id: brief.bookInfo.id,
+        collection: brief.collection,
+    };
+};
+
+const connector = connect(mapStateToProps);
+
+type ModelState = ConnectedProps<typeof connector>;
+
+interface IProps extends ModelState {
+    navigation: ModalStackNavigation;
     opacity: Animated.AnimatedInterpolation;
     leftViewX: Animated.AnimatedInterpolation;
     rightViewX: Animated.AnimatedInterpolation;
@@ -15,23 +31,69 @@ interface IProps {
 }
 
 class Operate extends React.Component<IProps> {
+
+    addUserCollection = () => {
+        const {dispatch, navigation, isLogin, book_id} = this.props;
+        if (isLogin) {
+            dispatch({
+                type: 'brief/addUserCollection',
+                payload: {
+                    book_id
+                }
+            })
+        } else {
+            navigation.navigate("Login");
+        }
+    }
+
+    delUserCollection = () => {
+        const {dispatch, navigation, isLogin, book_id} = this.props;
+        if (isLogin) {
+            dispatch({
+                type: 'brief/delUserCollection',
+                payload: {
+                    book_id
+                }
+            })
+        } else {
+            navigation.navigate("Login");
+        }
+    }
+
     render() {
-        const {opacity, leftViewX, rightViewX, rightViewScale, rightFontSize} = this.props;
+        const {opacity, leftViewX, rightViewX, rightViewScale, rightFontSize, collection} = this.props;
         return (
             <>
                 <Animated.View style={[styles.shadowView, {opacity: opacity}]}/>
                 <View style={styles.container}>
                     <View style={styles.spaceView}/>
                     <View style={styles.contentContainer}>
-                        <Animated.View style={[styles.leftView, {
-                            left: leftViewX
-                        }]}>
-                            <Icon name="icon-shoucang"
-                                  color={Color.theme}
-                                  size={25}
-                            />
-                            <Text style={styles.collected}>{'已收藏'}</Text>
-                        </Animated.View>
+                        {
+                            collection ?
+                                <Touchable onPress={this.delUserCollection}>
+                                    <Animated.View style={[styles.leftView, {
+                                        left: leftViewX
+                                    }]}>
+                                        <Icon name="icon-xin"
+                                              color={Color.theme}
+                                              size={25}
+                                        />
+                                        <Text style={styles.collection}>已收藏</Text>
+                                    </Animated.View>
+                                </Touchable> :
+                                <Touchable onPress={this.addUserCollection}>
+                                    <Animated.View style={[styles.leftView, {
+                                        left: leftViewX
+                                    }]}>
+                                        <Icon name="icon-xin"
+                                              color={Color.red}
+                                              size={25}
+                                        />
+                                        <Text style={styles.collection}>收藏</Text>
+                                    </Animated.View>
+                                </Touchable>
+                        }
+
                         <Animated.View style={[styles.rightView, {
                             left: rightViewX,
                             transform: [{scale: rightViewScale}]
@@ -77,7 +139,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    collected: {
+    collection: {
         marginLeft: 5
     },
     leftTitle: {
@@ -97,4 +159,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default Operate;
+export default connector(Operate);

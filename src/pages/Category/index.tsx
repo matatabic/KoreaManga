@@ -180,7 +180,6 @@ class Category extends React.PureComponent<IProps, IState> {
                 onScrollBeginDrag={this.onScrollBeginDrag}
                 onScrollEndDrag={this.onScrollEndDrag}
                 onScroll={this.onScroll}
-                showsVerticalScrollIndicator={false}
                 numColumns={3}
                 onEndReached={this.onEndReached}
                 onEndReachedThreshold={0.1}

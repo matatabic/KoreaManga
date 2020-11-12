@@ -24,7 +24,7 @@ const initialValues: Values = {
     password: '',
 }
 
-const mapStateToProps = ({user, loading}: RootState) => {
+const mapStateToProps = ({loading}: RootState) => {
     return {
         loading: loading.effects['user/login'],
     };
@@ -68,11 +68,11 @@ class Login extends React.Component<IProps, IState> {
             payload: values,
             callback: (isGoBack: boolean) => {
                 isGoBack ? navigation.goBack()
-                    :setTimeout(() => {
-                    this.setState({
-                        disable: true
-                    })
-                }, 2000);
+                    : setTimeout(() => {
+                        this.setState({
+                            disable: true
+                        })
+                    }, 2000);
             },
         });
     }

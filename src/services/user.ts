@@ -1,7 +1,6 @@
 import axios from "axios";
+import {LOGIN_URL, LOGOUT_URL} from "@/config/api";
 
-const LOGIN_URL = '/passport/login';
-const LOGOUT_URL = '/passport/logout';
 
 export interface IParams {
     account: string;

@@ -4,6 +4,8 @@
 import React, { FunctionComponent } from 'react';
 import { ViewProps } from 'react-native';
 import { GProps } from 'react-native-svg';
+import IconXin from './IconXin';
+import IconAddxin from './IconAddxin';
 import Icon3 from './Icon3';
 import IconJinbi from './IconJinbi';
 import IconGuanggao from './IconGuanggao';
@@ -16,7 +18,6 @@ import IconLianluojilu from './IconLianluojilu';
 import IconQuan from './IconQuan';
 import IconMima from './IconMima';
 import IconAccount from './IconAccount';
-import IconShoucang from './IconShoucang';
 import IconChacha from './IconChacha';
 import IconTime1 from './IconTime1';
 import IconCha from './IconCha';
@@ -132,7 +133,7 @@ import IconChartPie from './IconChartPie';
 import IconDelete from './IconDelete';
 import IconDirectionDown from './IconDirectionDown';
 
-export type IconNames = 'icon-3' | 'icon-jinbi' | 'icon-guanggao___' | 'icon-cuxiaozhekou' | 'icon-saleordertempSend' | 'icon-bizhongguanli' | 'icon-gouwuche' | 'icon-tubiaozhizuomoEban' | 'icon-lianluojilu' | 'icon-quan' | 'icon-mima' | 'icon-account' | 'icon-shoucang' | 'icon-chacha' | 'icon-time1' | 'icon-cha' | 'icon-xing' | 'icon-shangbian' | 'icon-xiabian' | 'icon-jubao' | 'icon-gengxin' | 'icon-paihang' | 'icon-paihangbang' | 'icon-weibiaoti-' | 'icon-update' | 'icon-VIP' | 'icon-shizhong' | 'icon-gengxin1' | 'icon-dingdan' | 'icon-mine' | 'icon-shujiashugui' | 'icon-category' | 'icon-copy' | 'icon-direction-down-circle' | 'icon-direction-right' | 'icon-direction-up' | 'icon-discount' | 'icon-direction-left' | 'icon-download' | 'icon-electronics' | 'icon-elipsis' | 'icon-export' | 'icon-explain' | 'icon-edit' | 'icon-eye-close' | 'icon-error' | 'icon-favorite' | 'icon-fabulous' | 'icon-file' | 'icon-good' | 'icon-hide' | 'icon-home' | 'icon-history' | 'icon-file-open' | 'icon-forward' | 'icon-fullscreen-shrink' | 'icon-layers' | 'icon-lock' | 'icon-fullscreen-expand' | 'icon-map' | 'icon-menu' | 'icon-loading' | 'icon-minus-circle' | 'icon-modular' | 'icon-notification' | 'icon-more' | 'icon-operation' | 'icon-mobile-phone' | 'icon-navigation' | 'icon-pdf' | 'icon-prompt' | 'icon-move' | 'icon-refresh' | 'icon-picture' | 'icon-pin' | 'icon-save' | 'icon-search' | 'icon-share' | 'icon-scanning' | 'icon-select' | 'icon-stop' | 'icon-success' | 'icon-smile' | 'icon-switch' | 'icon-setting' | 'icon-task' | 'icon-time' | 'icon-toggle-left' | 'icon-telephone' | 'icon-top' | 'icon-unlock' | 'icon-warning' | 'icon-zoom-in' | 'icon-zoom-out' | 'icon-add-bold' | 'icon-arrow-left-bold' | 'icon-arrow-up-bold' | 'icon-close-bold' | 'icon-arrow-down-bold' | 'icon-minus-bold' | 'icon-arrow-right-bold' | 'icon-select-bold' | 'icon-sorting' | 'icon-add' | 'icon-add-circle' | 'icon-arrow-up-circle' | 'icon-arrow-right-circle' | 'icon-arrow-down' | 'icon-ashbin' | 'icon-arrow-right' | 'icon-browse' | 'icon-bottom' | 'icon-back' | 'icon-bad' | 'icon-arrow-left-circle' | 'icon-arrow-double-right' | 'icon-caps-lock' | 'icon-camera' | 'icon-code' | 'icon-close' | 'icon-check-item' | 'icon-calendar' | 'icon-comment' | 'icon-complete' | 'icon-chart-pie' | 'icon-delete' | 'icon-direction-down';
+export type IconNames = 'icon-xin' | 'icon-addxin' | 'icon-3' | 'icon-jinbi' | 'icon-guanggao___' | 'icon-cuxiaozhekou' | 'icon-saleordertempSend' | 'icon-bizhongguanli' | 'icon-gouwuche' | 'icon-tubiaozhizuomoEban' | 'icon-lianluojilu' | 'icon-quan' | 'icon-mima' | 'icon-account' | 'icon-chacha' | 'icon-time1' | 'icon-cha' | 'icon-xing' | 'icon-shangbian' | 'icon-xiabian' | 'icon-jubao' | 'icon-gengxin' | 'icon-paihang' | 'icon-paihangbang' | 'icon-weibiaoti-' | 'icon-update' | 'icon-VIP' | 'icon-shizhong' | 'icon-gengxin1' | 'icon-dingdan' | 'icon-mine' | 'icon-shujiashugui' | 'icon-category' | 'icon-copy' | 'icon-direction-down-circle' | 'icon-direction-right' | 'icon-direction-up' | 'icon-discount' | 'icon-direction-left' | 'icon-download' | 'icon-electronics' | 'icon-elipsis' | 'icon-export' | 'icon-explain' | 'icon-edit' | 'icon-eye-close' | 'icon-error' | 'icon-favorite' | 'icon-fabulous' | 'icon-file' | 'icon-good' | 'icon-hide' | 'icon-home' | 'icon-history' | 'icon-file-open' | 'icon-forward' | 'icon-fullscreen-shrink' | 'icon-layers' | 'icon-lock' | 'icon-fullscreen-expand' | 'icon-map' | 'icon-menu' | 'icon-loading' | 'icon-minus-circle' | 'icon-modular' | 'icon-notification' | 'icon-more' | 'icon-operation' | 'icon-mobile-phone' | 'icon-navigation' | 'icon-pdf' | 'icon-prompt' | 'icon-move' | 'icon-refresh' | 'icon-picture' | 'icon-pin' | 'icon-save' | 'icon-search' | 'icon-share' | 'icon-scanning' | 'icon-select' | 'icon-stop' | 'icon-success' | 'icon-smile' | 'icon-switch' | 'icon-setting' | 'icon-task' | 'icon-time' | 'icon-toggle-left' | 'icon-telephone' | 'icon-top' | 'icon-unlock' | 'icon-warning' | 'icon-zoom-in' | 'icon-zoom-out' | 'icon-add-bold' | 'icon-arrow-left-bold' | 'icon-arrow-up-bold' | 'icon-close-bold' | 'icon-arrow-down-bold' | 'icon-minus-bold' | 'icon-arrow-right-bold' | 'icon-select-bold' | 'icon-sorting' | 'icon-add' | 'icon-add-circle' | 'icon-arrow-up-circle' | 'icon-arrow-right-circle' | 'icon-arrow-down' | 'icon-ashbin' | 'icon-arrow-right' | 'icon-browse' | 'icon-bottom' | 'icon-back' | 'icon-bad' | 'icon-arrow-left-circle' | 'icon-arrow-double-right' | 'icon-caps-lock' | 'icon-camera' | 'icon-code' | 'icon-close' | 'icon-check-item' | 'icon-calendar' | 'icon-comment' | 'icon-complete' | 'icon-chart-pie' | 'icon-delete' | 'icon-direction-down';
 
 interface Props extends GProps, ViewProps {
   name: IconNames;
@@ -142,260 +143,262 @@ interface Props extends GProps, ViewProps {
 
 const IconFont: FunctionComponent<Props> = ({ name, ...rest }) => {
   switch (name) {
+    case 'icon-xin':
+      return <IconXin key="1" {...rest} />;
+    case 'icon-addxin':
+      return <IconAddxin key="2" {...rest} />;
     case 'icon-3':
-      return <Icon3 key="1" {...rest} />;
+      return <Icon3 key="3" {...rest} />;
     case 'icon-jinbi':
-      return <IconJinbi key="2" {...rest} />;
+      return <IconJinbi key="4" {...rest} />;
     case 'icon-guanggao___':
-      return <IconGuanggao key="3" {...rest} />;
+      return <IconGuanggao key="5" {...rest} />;
     case 'icon-cuxiaozhekou':
-      return <IconCuxiaozhekou key="4" {...rest} />;
+      return <IconCuxiaozhekou key="6" {...rest} />;
     case 'icon-saleordertempSend':
-      return <IconSaleordertempSend key="5" {...rest} />;
+      return <IconSaleordertempSend key="7" {...rest} />;
     case 'icon-bizhongguanli':
-      return <IconBizhongguanli key="6" {...rest} />;
+      return <IconBizhongguanli key="8" {...rest} />;
     case 'icon-gouwuche':
-      return <IconGouwuche key="7" {...rest} />;
+      return <IconGouwuche key="9" {...rest} />;
     case 'icon-tubiaozhizuomoEban':
-      return <IconTubiaozhizuomoEban key="8" {...rest} />;
+      return <IconTubiaozhizuomoEban key="10" {...rest} />;
     case 'icon-lianluojilu':
-      return <IconLianluojilu key="9" {...rest} />;
+      return <IconLianluojilu key="11" {...rest} />;
     case 'icon-quan':
-      return <IconQuan key="10" {...rest} />;
+      return <IconQuan key="12" {...rest} />;
     case 'icon-mima':
-      return <IconMima key="11" {...rest} />;
+      return <IconMima key="13" {...rest} />;
     case 'icon-account':
-      return <IconAccount key="12" {...rest} />;
-    case 'icon-shoucang':
-      return <IconShoucang key="13" {...rest} />;
+      return <IconAccount key="14" {...rest} />;
     case 'icon-chacha':
-      return <IconChacha key="14" {...rest} />;
+      return <IconChacha key="15" {...rest} />;
     case 'icon-time1':
-      return <IconTime1 key="15" {...rest} />;
+      return <IconTime1 key="16" {...rest} />;
     case 'icon-cha':
-      return <IconCha key="16" {...rest} />;
+      return <IconCha key="17" {...rest} />;
     case 'icon-xing':
-      return <IconXing key="17" {...rest} />;
+      return <IconXing key="18" {...rest} />;
     case 'icon-shangbian':
-      return <IconShangbian key="18" {...rest} />;
+      return <IconShangbian key="19" {...rest} />;
     case 'icon-xiabian':
-      return <IconXiabian key="19" {...rest} />;
+      return <IconXiabian key="20" {...rest} />;
     case 'icon-jubao':
-      return <IconJubao key="20" {...rest} />;
+      return <IconJubao key="21" {...rest} />;
     case 'icon-gengxin':
-      return <IconGengxin key="21" {...rest} />;
+      return <IconGengxin key="22" {...rest} />;
     case 'icon-paihang':
-      return <IconPaihang key="22" {...rest} />;
+      return <IconPaihang key="23" {...rest} />;
     case 'icon-paihangbang':
-      return <IconPaihangbang key="23" {...rest} />;
+      return <IconPaihangbang key="24" {...rest} />;
     case 'icon-weibiaoti-':
-      return <IconWeibiaoti key="24" {...rest} />;
+      return <IconWeibiaoti key="25" {...rest} />;
     case 'icon-update':
-      return <IconUpdate key="25" {...rest} />;
+      return <IconUpdate key="26" {...rest} />;
     case 'icon-VIP':
-      return <IconVip key="26" {...rest} />;
+      return <IconVip key="27" {...rest} />;
     case 'icon-shizhong':
-      return <IconShizhong key="27" {...rest} />;
+      return <IconShizhong key="28" {...rest} />;
     case 'icon-gengxin1':
-      return <IconGengxin1 key="28" {...rest} />;
+      return <IconGengxin1 key="29" {...rest} />;
     case 'icon-dingdan':
-      return <IconDingdan key="29" {...rest} />;
+      return <IconDingdan key="30" {...rest} />;
     case 'icon-mine':
-      return <IconMine key="30" {...rest} />;
+      return <IconMine key="31" {...rest} />;
     case 'icon-shujiashugui':
-      return <IconShujiashugui key="31" {...rest} />;
+      return <IconShujiashugui key="32" {...rest} />;
     case 'icon-category':
-      return <IconCategory key="32" {...rest} />;
+      return <IconCategory key="33" {...rest} />;
     case 'icon-copy':
-      return <IconCopy key="33" {...rest} />;
+      return <IconCopy key="34" {...rest} />;
     case 'icon-direction-down-circle':
-      return <IconDirectionDownCircle key="34" {...rest} />;
+      return <IconDirectionDownCircle key="35" {...rest} />;
     case 'icon-direction-right':
-      return <IconDirectionRight key="35" {...rest} />;
+      return <IconDirectionRight key="36" {...rest} />;
     case 'icon-direction-up':
-      return <IconDirectionUp key="36" {...rest} />;
+      return <IconDirectionUp key="37" {...rest} />;
     case 'icon-discount':
-      return <IconDiscount key="37" {...rest} />;
+      return <IconDiscount key="38" {...rest} />;
     case 'icon-direction-left':
-      return <IconDirectionLeft key="38" {...rest} />;
+      return <IconDirectionLeft key="39" {...rest} />;
     case 'icon-download':
-      return <IconDownload key="39" {...rest} />;
+      return <IconDownload key="40" {...rest} />;
     case 'icon-electronics':
-      return <IconElectronics key="40" {...rest} />;
+      return <IconElectronics key="41" {...rest} />;
     case 'icon-elipsis':
-      return <IconElipsis key="41" {...rest} />;
+      return <IconElipsis key="42" {...rest} />;
     case 'icon-export':
-      return <IconExport key="42" {...rest} />;
+      return <IconExport key="43" {...rest} />;
     case 'icon-explain':
-      return <IconExplain key="43" {...rest} />;
+      return <IconExplain key="44" {...rest} />;
     case 'icon-edit':
-      return <IconEdit key="44" {...rest} />;
+      return <IconEdit key="45" {...rest} />;
     case 'icon-eye-close':
-      return <IconEyeClose key="45" {...rest} />;
+      return <IconEyeClose key="46" {...rest} />;
     case 'icon-error':
-      return <IconError key="46" {...rest} />;
+      return <IconError key="47" {...rest} />;
     case 'icon-favorite':
-      return <IconFavorite key="47" {...rest} />;
+      return <IconFavorite key="48" {...rest} />;
     case 'icon-fabulous':
-      return <IconFabulous key="48" {...rest} />;
+      return <IconFabulous key="49" {...rest} />;
     case 'icon-file':
-      return <IconFile key="49" {...rest} />;
+      return <IconFile key="50" {...rest} />;
     case 'icon-good':
-      return <IconGood key="50" {...rest} />;
+      return <IconGood key="51" {...rest} />;
     case 'icon-hide':
-      return <IconHide key="51" {...rest} />;
+      return <IconHide key="52" {...rest} />;
     case 'icon-home':
-      return <IconHome key="52" {...rest} />;
+      return <IconHome key="53" {...rest} />;
     case 'icon-history':
-      return <IconHistory key="53" {...rest} />;
+      return <IconHistory key="54" {...rest} />;
     case 'icon-file-open':
-      return <IconFileOpen key="54" {...rest} />;
+      return <IconFileOpen key="55" {...rest} />;
     case 'icon-forward':
-      return <IconForward key="55" {...rest} />;
+      return <IconForward key="56" {...rest} />;
     case 'icon-fullscreen-shrink':
-      return <IconFullscreenShrink key="56" {...rest} />;
+      return <IconFullscreenShrink key="57" {...rest} />;
     case 'icon-layers':
-      return <IconLayers key="57" {...rest} />;
+      return <IconLayers key="58" {...rest} />;
     case 'icon-lock':
-      return <IconLock key="58" {...rest} />;
+      return <IconLock key="59" {...rest} />;
     case 'icon-fullscreen-expand':
-      return <IconFullscreenExpand key="59" {...rest} />;
+      return <IconFullscreenExpand key="60" {...rest} />;
     case 'icon-map':
-      return <IconMap key="60" {...rest} />;
+      return <IconMap key="61" {...rest} />;
     case 'icon-menu':
-      return <IconMenu key="61" {...rest} />;
+      return <IconMenu key="62" {...rest} />;
     case 'icon-loading':
-      return <IconLoading key="62" {...rest} />;
+      return <IconLoading key="63" {...rest} />;
     case 'icon-minus-circle':
-      return <IconMinusCircle key="63" {...rest} />;
+      return <IconMinusCircle key="64" {...rest} />;
     case 'icon-modular':
-      return <IconModular key="64" {...rest} />;
+      return <IconModular key="65" {...rest} />;
     case 'icon-notification':
-      return <IconNotification key="65" {...rest} />;
+      return <IconNotification key="66" {...rest} />;
     case 'icon-more':
-      return <IconMore key="66" {...rest} />;
+      return <IconMore key="67" {...rest} />;
     case 'icon-operation':
-      return <IconOperation key="67" {...rest} />;
+      return <IconOperation key="68" {...rest} />;
     case 'icon-mobile-phone':
-      return <IconMobilePhone key="68" {...rest} />;
+      return <IconMobilePhone key="69" {...rest} />;
     case 'icon-navigation':
-      return <IconNavigation key="69" {...rest} />;
+      return <IconNavigation key="70" {...rest} />;
     case 'icon-pdf':
-      return <IconPdf key="70" {...rest} />;
+      return <IconPdf key="71" {...rest} />;
     case 'icon-prompt':
-      return <IconPrompt key="71" {...rest} />;
+      return <IconPrompt key="72" {...rest} />;
     case 'icon-move':
-      return <IconMove key="72" {...rest} />;
+      return <IconMove key="73" {...rest} />;
     case 'icon-refresh':
-      return <IconRefresh key="73" {...rest} />;
+      return <IconRefresh key="74" {...rest} />;
     case 'icon-picture':
-      return <IconPicture key="74" {...rest} />;
+      return <IconPicture key="75" {...rest} />;
     case 'icon-pin':
-      return <IconPin key="75" {...rest} />;
+      return <IconPin key="76" {...rest} />;
     case 'icon-save':
-      return <IconSave key="76" {...rest} />;
+      return <IconSave key="77" {...rest} />;
     case 'icon-search':
-      return <IconSearch key="77" {...rest} />;
+      return <IconSearch key="78" {...rest} />;
     case 'icon-share':
-      return <IconShare key="78" {...rest} />;
+      return <IconShare key="79" {...rest} />;
     case 'icon-scanning':
-      return <IconScanning key="79" {...rest} />;
+      return <IconScanning key="80" {...rest} />;
     case 'icon-select':
-      return <IconSelect key="80" {...rest} />;
+      return <IconSelect key="81" {...rest} />;
     case 'icon-stop':
-      return <IconStop key="81" {...rest} />;
+      return <IconStop key="82" {...rest} />;
     case 'icon-success':
-      return <IconSuccess key="82" {...rest} />;
+      return <IconSuccess key="83" {...rest} />;
     case 'icon-smile':
-      return <IconSmile key="83" {...rest} />;
+      return <IconSmile key="84" {...rest} />;
     case 'icon-switch':
-      return <IconSwitch key="84" {...rest} />;
+      return <IconSwitch key="85" {...rest} />;
     case 'icon-setting':
-      return <IconSetting key="85" {...rest} />;
+      return <IconSetting key="86" {...rest} />;
     case 'icon-task':
-      return <IconTask key="86" {...rest} />;
+      return <IconTask key="87" {...rest} />;
     case 'icon-time':
-      return <IconTime key="87" {...rest} />;
+      return <IconTime key="88" {...rest} />;
     case 'icon-toggle-left':
-      return <IconToggleLeft key="88" {...rest} />;
+      return <IconToggleLeft key="89" {...rest} />;
     case 'icon-telephone':
-      return <IconTelephone key="89" {...rest} />;
+      return <IconTelephone key="90" {...rest} />;
     case 'icon-top':
-      return <IconTop key="90" {...rest} />;
+      return <IconTop key="91" {...rest} />;
     case 'icon-unlock':
-      return <IconUnlock key="91" {...rest} />;
+      return <IconUnlock key="92" {...rest} />;
     case 'icon-warning':
-      return <IconWarning key="92" {...rest} />;
+      return <IconWarning key="93" {...rest} />;
     case 'icon-zoom-in':
-      return <IconZoomIn key="93" {...rest} />;
+      return <IconZoomIn key="94" {...rest} />;
     case 'icon-zoom-out':
-      return <IconZoomOut key="94" {...rest} />;
+      return <IconZoomOut key="95" {...rest} />;
     case 'icon-add-bold':
-      return <IconAddBold key="95" {...rest} />;
+      return <IconAddBold key="96" {...rest} />;
     case 'icon-arrow-left-bold':
-      return <IconArrowLeftBold key="96" {...rest} />;
+      return <IconArrowLeftBold key="97" {...rest} />;
     case 'icon-arrow-up-bold':
-      return <IconArrowUpBold key="97" {...rest} />;
+      return <IconArrowUpBold key="98" {...rest} />;
     case 'icon-close-bold':
-      return <IconCloseBold key="98" {...rest} />;
+      return <IconCloseBold key="99" {...rest} />;
     case 'icon-arrow-down-bold':
-      return <IconArrowDownBold key="99" {...rest} />;
+      return <IconArrowDownBold key="100" {...rest} />;
     case 'icon-minus-bold':
-      return <IconMinusBold key="100" {...rest} />;
+      return <IconMinusBold key="101" {...rest} />;
     case 'icon-arrow-right-bold':
-      return <IconArrowRightBold key="101" {...rest} />;
+      return <IconArrowRightBold key="102" {...rest} />;
     case 'icon-select-bold':
-      return <IconSelectBold key="102" {...rest} />;
+      return <IconSelectBold key="103" {...rest} />;
     case 'icon-sorting':
-      return <IconSorting key="103" {...rest} />;
+      return <IconSorting key="104" {...rest} />;
     case 'icon-add':
-      return <IconAdd key="104" {...rest} />;
+      return <IconAdd key="105" {...rest} />;
     case 'icon-add-circle':
-      return <IconAddCircle key="105" {...rest} />;
+      return <IconAddCircle key="106" {...rest} />;
     case 'icon-arrow-up-circle':
-      return <IconArrowUpCircle key="106" {...rest} />;
+      return <IconArrowUpCircle key="107" {...rest} />;
     case 'icon-arrow-right-circle':
-      return <IconArrowRightCircle key="107" {...rest} />;
+      return <IconArrowRightCircle key="108" {...rest} />;
     case 'icon-arrow-down':
-      return <IconArrowDown key="108" {...rest} />;
+      return <IconArrowDown key="109" {...rest} />;
     case 'icon-ashbin':
-      return <IconAshbin key="109" {...rest} />;
+      return <IconAshbin key="110" {...rest} />;
     case 'icon-arrow-right':
-      return <IconArrowRight key="110" {...rest} />;
+      return <IconArrowRight key="111" {...rest} />;
     case 'icon-browse':
-      return <IconBrowse key="111" {...rest} />;
+      return <IconBrowse key="112" {...rest} />;
     case 'icon-bottom':
-      return <IconBottom key="112" {...rest} />;
+      return <IconBottom key="113" {...rest} />;
     case 'icon-back':
-      return <IconBack key="113" {...rest} />;
+      return <IconBack key="114" {...rest} />;
     case 'icon-bad':
-      return <IconBad key="114" {...rest} />;
+      return <IconBad key="115" {...rest} />;
     case 'icon-arrow-left-circle':
-      return <IconArrowLeftCircle key="115" {...rest} />;
+      return <IconArrowLeftCircle key="116" {...rest} />;
     case 'icon-arrow-double-right':
-      return <IconArrowDoubleRight key="116" {...rest} />;
+      return <IconArrowDoubleRight key="117" {...rest} />;
     case 'icon-caps-lock':
-      return <IconCapsLock key="117" {...rest} />;
+      return <IconCapsLock key="118" {...rest} />;
     case 'icon-camera':
-      return <IconCamera key="118" {...rest} />;
+      return <IconCamera key="119" {...rest} />;
     case 'icon-code':
-      return <IconCode key="119" {...rest} />;
+      return <IconCode key="120" {...rest} />;
     case 'icon-close':
-      return <IconClose key="120" {...rest} />;
+      return <IconClose key="121" {...rest} />;
     case 'icon-check-item':
-      return <IconCheckItem key="121" {...rest} />;
+      return <IconCheckItem key="122" {...rest} />;
     case 'icon-calendar':
-      return <IconCalendar key="122" {...rest} />;
+      return <IconCalendar key="123" {...rest} />;
     case 'icon-comment':
-      return <IconComment key="123" {...rest} />;
+      return <IconComment key="124" {...rest} />;
     case 'icon-complete':
-      return <IconComplete key="124" {...rest} />;
+      return <IconComplete key="125" {...rest} />;
     case 'icon-chart-pie':
-      return <IconChartPie key="125" {...rest} />;
+      return <IconChartPie key="126" {...rest} />;
     case 'icon-delete':
-      return <IconDelete key="126" {...rest} />;
+      return <IconDelete key="127" {...rest} />;
     case 'icon-direction-down':
-      return <IconDirectionDown key="127" {...rest} />;
+      return <IconDirectionDown key="128" {...rest} />;
   }
 
   return null;

@@ -1,9 +1,5 @@
 import axios from "axios";
-
-
-const CATEGORY_URL = '/category/getList';
-const STATUS_URL = '/status/getList';
-const CATEGORY_TREE_URL = '/category/getTreeList';
+import {CATEGORY_TREE_URL, CATEGORY_URL, STATUS_URL} from "@/config/api";
 
 
 async function getList() {

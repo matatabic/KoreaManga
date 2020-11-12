@@ -2,11 +2,11 @@ import React from 'react';
 import {View, StyleSheet, FlatList, ListRenderItemInfo, Animated, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import {RootState} from "@/models/index";
 import {RouteProp} from "@react-navigation/native";
-import {RootStackNavigation, RootStackParamList} from "@/navigator/index";
+import {ModalStackNavigation, RootStackNavigation, RootStackParamList} from "@/navigator/index";
 import {connect, ConnectedProps} from "react-redux";
 import {IChapter, initialState} from "@/models/brief";
 import ImageBlurBackground from "@/pages/Brief/ImageBlurBackground";
-import {hp, viewportWidth} from "@/utils/index";
+import {hp, wp} from "@/utils/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 import {Color} from "@/utils/const";
 import Item from "./Item";
@@ -20,13 +20,13 @@ import Fixed from "./Fixed";
 
 const startHeight = hp(17.5);
 const endHeight = hp(35) - getStatusBarHeight();
-const showFixedViewH = endHeight + hp(2.5);
+const showFixedViewH = endHeight + hp(2.8);
 
 
 const mapStateToProps = ({brief}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
     const {id} = route.params;
     return {
-        id,
+        book_id: id,
         chapterList: brief.chapterList,
     };
 };
@@ -37,7 +37,7 @@ type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
     route: RouteProp<RootStackParamList, 'Brief'>
-    navigation: RootStackNavigation;
+    navigation: RootStackNavigation & ModalStackNavigation;
 }
 
 interface IState {
@@ -79,7 +79,7 @@ class Brief extends React.PureComponent<IProps, IState> {
     getLeftViewX = () => {
         return this.translateY.interpolate({
             inputRange: [startHeight, endHeight],
-            outputRange: [0, 75],
+            outputRange: [0, wp(30)],
             extrapolate: "clamp",
         })
     }
@@ -87,7 +87,7 @@ class Brief extends React.PureComponent<IProps, IState> {
     getRightViewX = () => {
         return this.translateY.interpolate({
             inputRange: [startHeight, endHeight],
-            outputRange: [0, 35],
+            outputRange: [0, wp(10)],
             extrapolate: "clamp",
         })
     }
@@ -122,27 +122,28 @@ class Brief extends React.PureComponent<IProps, IState> {
     }
 
     loadData = () => {
-        const {dispatch, id} = this.props;
+        const {dispatch, book_id} = this.props;
         dispatch({
             type: 'brief/fetchBrief',
             payload: {
-                book_id: id
+                book_id
             }
         })
     }
 
     goMangaView = (item: IChapter) => {
-        const {navigation, id} = this.props;
+        const {navigation, book_id} = this.props;
         navigation.navigate('MangaView', {
             data: {
+                book_id,
                 sort: item.sort,
                 title: item.title,
-                book_id: id,
             }
         });
     }
 
     get header() {
+        const {navigation} = this.props;
         const operateOpacity = this.getOpacity();
         const leftViewX = this.getLeftViewX();
         const rightViewX = this.getRightViewX();
@@ -152,6 +153,7 @@ class Brief extends React.PureComponent<IProps, IState> {
             <View>
                 <Information opacity={operateOpacity}/>
                 <Operate
+                    navigation={navigation}
                     opacity={operateOpacity}
                     leftViewX={leftViewX}
                     rightViewX={rightViewX}
@@ -164,8 +166,9 @@ class Brief extends React.PureComponent<IProps, IState> {
     }
 
     get fixedView() {
+        const {navigation} = this.props;
         if (this.state.showFixed) {
-            return <Fixed/>
+            return <Fixed navigation={navigation}/>
         }
         return null;
     }
@@ -193,10 +196,10 @@ class Brief extends React.PureComponent<IProps, IState> {
     render() {
         const {chapterList} = this.props;
         const topBarOpacity = this.getOpacity();
-        const bgImageSize = this.getBgImageSize();
+        const imageSize = this.getBgImageSize();
         return (
             <View>
-                <ImageBlurBackground bgImageSize={bgImageSize}/>
+                <ImageBlurBackground imageSize={imageSize}/>
                 <FlatList
                     ListHeaderComponent={this.header}
                     data={chapterList}
@@ -218,7 +221,6 @@ class Brief extends React.PureComponent<IProps, IState> {
                 />
                 {this.fixedView}
                 <TopBarWrapper goBack={this.goBack} topBarOpacity={topBarOpacity}/>
-
             </View>
         );
     }

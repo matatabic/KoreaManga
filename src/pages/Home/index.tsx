@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-    View, Text, SectionList, NativeSyntheticEvent, NativeScrollEvent,
-    StyleSheet, SectionListRenderItemInfo, FlatList, ListRenderItemInfo, Animated, EasingStatic
-} from 'react-native';
+import {View, Text, StyleSheet,SectionList, SectionListRenderItemInfo, FlatList, ListRenderItemInfo, Animated,} from 'react-native';
 import Carousel, {sideHeight} from "@/pages/Home/Carousel";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
@@ -155,7 +152,7 @@ class Home extends React.PureComponent<IProps, IState> {
             <View>
                 <CarouselBlurBackground/>
                 <TopBarWrapper navigation={navigation} topBarColor={topBarColor}/>
-                <Animated.SectionList
+                <SectionList
                     keyExtractor={(item, index) => `section-item-${index}`}
                     ListHeaderComponent={this.header}
                     renderSectionHeader={this.renderSectionHeader}
@@ -172,7 +169,6 @@ class Home extends React.PureComponent<IProps, IState> {
                             useNativeDriver: false
                         }
                     )}
-                    showsVerticalScrollIndicator={false}
                     onEndReached={this.onEndReached}
                     onEndReachedThreshold={0.1}
                     renderItem={this.renderItem}

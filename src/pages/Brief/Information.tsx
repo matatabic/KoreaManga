@@ -28,6 +28,7 @@ class Information extends React.Component<IProps> {
     render() {
         const {bookInfo, opacity} = this.props;
         return (
+            bookInfo && bookInfo.image.length > 0 &&
             <Animated.View style={[styles.wrapper, {
                 opacity: opacity
             }]}>

@@ -1,9 +1,7 @@
 import axios from "axios";
+import {BOOK_URL, CAROUSEL_URL, COMMEND_URL, INTRO_URL} from "@/config/api";
 
-const BOOK_URL = '/book/getList';
-const CAROUSEL_URL = '/carousel/getList';
-const COMMEND_URL = '/book/getCommend';
-const INTRO_URL = '/book/getIntro';
+
 
 interface params {
     category_id: string;

@@ -29,7 +29,7 @@ class IntroItem extends React.Component<IProps> {
 const styles = StyleSheet.create({
     item: {
         height: '100%',
-        backgroundColor: Color.grey_title,
+        backgroundColor: Color.light_btn,
         justifyContent: 'center',
         borderRadius: 5,
         margin: 5

@@ -1,17 +1,23 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Animated} from 'react-native';
 import {viewportWidth} from "@/utils/index";
 import moon from '@/assets/image/moon.png';
 
+interface IProps {
+    imageSize: Animated.AnimatedInterpolation;
+}
 
-class ImageBackground extends Component {
+class ImageBackground extends Component<IProps> {
 
     render() {
+        const {imageSize} = this.props;
         return (
             <View style={styles.container}>
-                <Image
+                <Animated.Image
                     source={moon}
-                    style={styles.image}
+                    style={[styles.image, {
+                        transform: [{scale: imageSize}]
+                    }]}
                     resizeMode={"cover"}
                 />
             </View>

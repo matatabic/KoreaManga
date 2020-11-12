@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const EPISODE_URL = '/episode/getList';
+import {EPISODE_URL} from "@/config/api";
 
 
 export interface IParams {
