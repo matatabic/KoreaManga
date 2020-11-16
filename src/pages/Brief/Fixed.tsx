@@ -5,10 +5,10 @@ import {Color} from "@/utils/const";
 import Touchable from "@/components/Touchable";
 import {hp, wp} from "@/utils/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
-import ImageTopBar from "@/pages/Brief/ImageTopBar";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-import {ModalStackNavigation, ModalStackParamList} from "@/navigator/index";
+import {ModalStackNavigation} from "@/navigator/index";
+import ImageTopBar from "./ImageTopBar";
 
 
 const mapStateToProps = ({user, brief}: RootState) => {
@@ -63,9 +63,11 @@ class Fixed extends React.PureComponent<IProps> {
             <View style={styles.wrapper}>
                 <View style={styles.container}>
                     <ImageTopBar/>
-                    <Touchable style={styles.backIcon}>
-                        <Icon name="icon-arrow-left-bold" color='#ccc' size={24}/>
-                    </Touchable>
+                    <View style={styles.backIconView}>
+                        <Touchable style={styles.backIcon}>
+                            <Icon name="icon-arrow-left-bold" color='#ccc' size={24}/>
+                        </Touchable>
+                    </View>
                     {
                         collection ?
                             <Touchable onPress={this.delUserCollection}>
@@ -74,7 +76,7 @@ class Fixed extends React.PureComponent<IProps> {
                                           color={Color.theme}
                                           size={25}
                                     />
-                                    <Text style={styles.collected}>已收藏</Text>
+                                    <Text style={styles.collection}>已收藏</Text>
                                 </View>
                             </Touchable> :
                             <Touchable onPress={this.addUserCollection}>
@@ -83,7 +85,7 @@ class Fixed extends React.PureComponent<IProps> {
                                           color={Color.red}
                                           size={25}
                                     />
-                                    <Text style={styles.collected}>收藏</Text>
+                                    <Text style={styles.collection}>收藏</Text>
                                 </View>
                             </Touchable>
                     }
@@ -112,26 +114,26 @@ const styles = StyleSheet.create({
         zIndex: 99999,
     },
     container: {
-        paddingTop: getStatusBarHeight(),
+        paddingTop: getStatusBarHeight() + hp(1),
         flexDirection: 'row',
-        justifyContent: "space-around",
         alignItems: 'center',
     },
+    backIconView: {
+        width: wp(6),
+    },
     backIcon: {
-        position: "absolute",
+        marginLeft: 6,
         width: 25,
         height: 28,
-        left: 6,
-        bottom: hp(1.7),
     },
     leftView: {
         width: 75,
-        height: hp(7),
+        marginLeft: wp(6),
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    collected: {
+    collection: {
         marginLeft: 5
     },
     leftTitle: {
@@ -140,6 +142,7 @@ const styles = StyleSheet.create({
     rightView: {
         width: wp(50),
         height: hp(6),
+        marginLeft: wp(15),
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Color.red,

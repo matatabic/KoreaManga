@@ -47,7 +47,7 @@ interface IProps extends ModelState {
 
 
 const statusBarHeight = 45;
-const listHeight = viewportHeight - statusBarHeight - getStatusBarHeight();
+const listHeight = viewportHeight - statusBarHeight;
 
 class CategoryTabs extends React.PureComponent<IProps> {
 
@@ -70,7 +70,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
 
     hideTopBar = () => {
         Animated.timing(this.translateY, {
-            toValue: -statusBarHeight,
+            toValue: -(statusBarHeight + getStatusBarHeight()),
             useNativeDriver: false,
         }).start();
     }
@@ -92,7 +92,6 @@ class CategoryTabs extends React.PureComponent<IProps> {
             createCategoryModel(`tab-category-${id}-status-${item.id}`);
         })
     }
-
 
     renderScreen = (item: ICategory) => {
         const {dispatch} = this.props;
@@ -155,9 +154,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
                     backgroundColor: topColor,
                     transform: [{translateY: this.translateY}]
                 }]}>
-                    <Animated.Text style={[styles.title,
-                        // opacity: opacity
-                    ]}>漫画分类</Animated.Text>
+                    <Animated.Text style={[styles.title]}>漫画分类</Animated.Text>
                 </Animated.View>
                 <Animated.View style={{
                     height: listHeight,

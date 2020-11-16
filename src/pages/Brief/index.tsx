@@ -14,13 +14,13 @@ import TopBarWrapper from "./TopBarWrapper";
 import Footer from "./Footer";
 import Operate from "./Operate";
 import Information from "./Information";
-import BookDate from "./BookDate";
+import BookIntro from "./BookIntro";
 import Fixed from "./Fixed";
 
 
 const startHeight = hp(17.5);
 const endHeight = hp(35) - getStatusBarHeight();
-const showFixedViewH = endHeight + hp(2.8);
+const showFixedViewH = endHeight + hp(3.5);
 
 
 const mapStateToProps = ({brief}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
@@ -160,7 +160,7 @@ class Brief extends React.PureComponent<IProps, IState> {
                     rightViewScale={rightViewScale}
                     rightFontSize={rightFontSize}
                 />
-                <BookDate/>
+                <BookIntro/>
             </View>
         );
     }

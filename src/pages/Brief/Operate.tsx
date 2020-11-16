@@ -12,7 +12,7 @@ import {ModalStackNavigation} from "@/navigator/index";
 const mapStateToProps = ({user, brief}: RootState) => {
     return {
         isLogin: user.userInfo.isLogin,
-        book_id: brief.bookInfo.id,
+        book_id: brief.bookInfo,
         collection: brief.collection,
     };
 };
@@ -68,6 +68,7 @@ class Operate extends React.Component<IProps> {
                 <View style={styles.container}>
                     <View style={styles.spaceView}/>
                     <View style={styles.contentContainer}>
+                        <View style={styles.seize}/>
                         {
                             collection ?
                                 <Touchable onPress={this.delUserCollection}>
@@ -118,23 +119,25 @@ const styles = StyleSheet.create({
         height: hp(10),
     },
     spaceView: {
-        height: hp(3),
+        height: hp(4),
     },
     shadowView: {
         height: hp(10),
         position: "relative",
         top: hp(10),
         left: 0,
-        backgroundColor: Color.grey_page_bg,
+        backgroundColor: Color.page_bg,
     },
     contentContainer: {
-        height: hp(7),
         flexDirection: 'row',
-        justifyContent: "space-around",
         alignItems: 'center',
+    },
+    seize: {
+        width: wp(6),
     },
     leftView: {
         width: 75,
+        marginLeft: wp(6),
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -148,6 +151,7 @@ const styles = StyleSheet.create({
     rightView: {
         width: wp(50),
         height: hp(6),
+        marginLeft: wp(15),
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Color.red,

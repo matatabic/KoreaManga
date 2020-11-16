@@ -14,7 +14,7 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
-class BookDate extends React.Component<ModelState> {
+class BookIntro extends React.Component<ModelState> {
     render() {
         const {bookInfo} = this.props;
         return (
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default connector(BookDate);
+export default connector(BookIntro);

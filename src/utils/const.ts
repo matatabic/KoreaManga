@@ -16,7 +16,7 @@ export const Color = { //App通用颜色
     yellow_title: '#FBDB3F',
     disable: '#7F7F7F', //不可用颜色
     split_line: '#D0D0D1',//分割线色值
-    page_bg: '#F5F5F5',   //默认页面背景色
+    page_bg: '#FFFFFF',   //默认页面背景色
     grey_page_bg: '#F5F5F5',
     transparent: 'transparent',
 };
