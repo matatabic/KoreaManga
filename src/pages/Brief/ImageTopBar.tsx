@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
         width: viewportWidth,
-        height: hp(7) + getStatusBarHeight(),
+        height: hp(6) + getStatusBarHeight(),
         overflow: "hidden"
     },
     image: {

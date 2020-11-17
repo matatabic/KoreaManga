@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
         zIndex: 99999,
     },
     container: {
-        paddingTop: getStatusBarHeight() + hp(1),
+        paddingTop: getStatusBarHeight() + hp(0.4),
         flexDirection: 'row',
         alignItems: 'center',
     },

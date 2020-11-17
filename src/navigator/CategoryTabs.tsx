@@ -61,6 +61,14 @@ class CategoryTabs extends React.PureComponent<IProps> {
         })
     }
 
+    getTopOpacity = () => {
+        return this.translateY.interpolate({
+            inputRange: [-statusBarHeight, 0],
+            outputRange: [0, 1],
+            extrapolate: "clamp",
+        })
+    }
+
     showTopBar = () => {
         Animated.timing(this.translateY, {
             toValue: 0,
@@ -70,7 +78,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
 
     hideTopBar = () => {
         Animated.timing(this.translateY, {
-            toValue: -(statusBarHeight + getStatusBarHeight()),
+            toValue: -statusBarHeight,
             useNativeDriver: false,
         }).start();
     }
@@ -136,7 +144,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
     render() {
         const {myCategories, hideHeader} = this.props;
         const topColor = this.getTopColor();
-
+        const topOpacity = this.getTopOpacity();
         if (hideHeader) {
             this.hideTopBar();
         } else {
@@ -151,7 +159,8 @@ class CategoryTabs extends React.PureComponent<IProps> {
                 ]}/>
                 <Animated.View style={[styles.tabBarView, {
                     height: statusBarHeight,
-                    backgroundColor: topColor,
+                    backgroundColor: Color.theme,
+                    opacity: topOpacity,
                     transform: [{translateY: this.translateY}]
                 }]}>
                     <Animated.Text style={[styles.title]}>漫画分类</Animated.Text>
