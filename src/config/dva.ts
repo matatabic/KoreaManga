@@ -3,9 +3,20 @@ import createLoading from 'dva-loading-ts';
 import modelExtend from 'dva-model-extend';
 import models from '@/models/index';
 import categoryModel from "@/models/category";
+import Toast from "react-native-root-toast";
 
 //1.创建实例
-const app = create();
+const app = create({
+    onError: (e) => {
+        Toast.show('network error!', {
+            position: Toast.positions.CENTER,
+            duration: Toast.durations.LONG,
+            shadow: true,
+            animation: true,
+        })
+    }
+});
+
 //2.加载model对象
 models.forEach(model => {
     app.model(model);

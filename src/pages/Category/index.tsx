@@ -166,7 +166,7 @@ class Category extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {bookList, refreshing, scrollY} = this.props
+        const {bookList, refreshing} = this.props
         return (
             <FlatList
                 keyExtractor={(item, key) => `item-${key}`}
@@ -187,7 +187,5 @@ class Category extends React.PureComponent<IProps, IState> {
         );
     }
 }
-
-const styles = StyleSheet.create({});
 
 export default connector(Category);

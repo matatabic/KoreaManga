@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text, ScrollView, TextInput, View, StyleSheet, Button} from 'react-native';
-import {Formik, Field, FormikHelpers} from 'formik';
+import {Text, ScrollView, View, StyleSheet} from 'react-native';
+import {Formik, Field} from 'formik';
 import * as Yup from 'yup';
 import Input from "@/components/Input";
 import {Color} from "@/utils/const";
@@ -39,7 +39,7 @@ interface IProps extends ModelState {
 }
 
 interface IState {
-    disable: boolean;
+    disabled: boolean;
 }
 
 class Login extends React.Component<IProps, IState> {
@@ -47,20 +47,20 @@ class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            disable: true
+            disabled: false,
         }
     }
 
     onSubmit = (values: Values) => {
         const {dispatch, navigation, loading} = this.props;
-        const {disable} = this.state;
+        const {disabled} = this.state;
 
-        if (!disable || loading) {
+        if (disabled || loading) {
             return;
         }
 
         this.setState({
-            disable: false
+            disabled: true
         })
 
         dispatch({
@@ -70,7 +70,7 @@ class Login extends React.Component<IProps, IState> {
                 isGoBack ? navigation.goBack()
                     : setTimeout(() => {
                         this.setState({
-                            disable: true
+                            disabled: false
                         })
                     }, 2000);
             },
@@ -78,8 +78,7 @@ class Login extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {disable} = this.state;
-        const btnColor = disable ? Color.yellow_btn : Color.night_btn;
+        const {disabled} = this.state;
         return (
             <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
                 <Formik
@@ -105,7 +104,7 @@ class Login extends React.Component<IProps, IState> {
                                 <Text style={styles.jumpTitle}>忘记密码?</Text>
                                 <Text style={styles.jumpTitle}>注册账号</Text>
                             </View>
-                            <Touchable onPress={handleSubmit} style={[styles.login, {backgroundColor: btnColor}]}>
+                            <Touchable disabled={disabled} onPress={handleSubmit} style={styles.login}>
                                 <Text style={styles.loginText}>登录</Text>
                             </Touchable>
                         </View>
