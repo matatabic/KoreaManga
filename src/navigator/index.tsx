@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavigationContainer, RouteProp, NavigationState} from '@react-navigation/native';
+import {NavigationContainer, NavigationState} from '@react-navigation/native';
 import {
     createStackNavigator,
     StackNavigationProp,
@@ -15,6 +15,7 @@ import MangaView from "@/pages/MangaView";
 import Search from "@/pages/Search";
 import {Color} from "@/utils/const";
 import Login from "@/pages/Login";
+import {statusBarHeight} from "@/utils/index";
 
 
 export type RootStackParamList = {
@@ -44,7 +45,7 @@ interface IState {
     navigationState: NavigationState | undefined;
 }
 
-const statusBarHeight = 45;
+
 
 function RootStackScreen() {
     return (
@@ -57,7 +58,6 @@ function RootStackScreen() {
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                 gestureEnabled: true,
                 gestureDirection: 'horizontal',
-                headerStatusBarHeight: statusBarHeight,
                 ...Platform.select({
                     android: {
                         headerStatusBarHeight: statusBarHeight,
@@ -77,9 +77,6 @@ function RootStackScreen() {
             <RootStack.Screen
                 name="BottomTabs"
                 component={BottomTabs}
-                options={{
-                    headerTitle: '首页',
-                }}
             />
             <RootStack.Screen
                 name="Brief"
@@ -148,7 +145,11 @@ function ModalStackScreen() {
                 cardOverlayEnabled: true,
                 gestureEnabled: true,
                 headerTitleAlign: 'center',
-                headerStatusBarHeight: statusBarHeight,
+                ...Platform.select({
+                    android: {
+                        headerStatusBarHeight: statusBarHeight,
+                    },
+                }),
                 headerBackTitleVisible: false,
                 headerTintColor: Color.white,
                 headerStyle: {

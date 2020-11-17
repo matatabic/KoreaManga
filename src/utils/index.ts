@@ -3,6 +3,8 @@ import {NavigationState} from '@react-navigation/native';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 
+const statusBarHeight = StatusBar.currentHeight;
+
 //百分比获取宽度
 function wp(percentage: number) {
     const value = (percentage * viewportWidth) / 100;
@@ -29,4 +31,4 @@ function getActiveRouteName(state: NavigationState) {
     return route.name;
 }
 
-export {viewportWidth, viewportHeight, wp, hp, ip, getActiveRouteName};
+export {viewportWidth, viewportHeight, statusBarHeight, wp, hp, ip, getActiveRouteName};
