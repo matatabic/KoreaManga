@@ -6,14 +6,13 @@ import {StatusCode} from "@/utils/const";
 import storage, {load} from "@/config/storage";
 
 interface IUser {
-    isLogin: boolean;
     mobile: string;
     username: string;
     nickname: string;
-    token: string;
 }
 
 export interface UserState {
+    isLogin: boolean,
     userInfo: IUser,
 }
 
@@ -21,7 +20,8 @@ interface UserModel extends Model {
     namespace: 'user';
     state: UserState;
     reducers: {
-        setState: Reducer<UserState>;
+        userLogin: Reducer<UserState>;
+        userLogout: Reducer<UserState>;
     };
     effects: {
         loadData: Effect;
@@ -32,12 +32,11 @@ interface UserModel extends Model {
 }
 
 const initialState = {
+    isLogin: false,
     userInfo: {
-        isLogin: false,
         mobile: '',
         username: '',
         nickname: '',
-        token: '',
     }
 };
 
@@ -45,19 +44,28 @@ const userModel: UserModel = {
     namespace: 'user',
     state: initialState,
     reducers: {
-        setState(state = initialState, {payload}) {
+        userLogin(state = initialState, {payload}) {
             return {
                 ...state,
                 ...payload,
+                isLogin: true,
+            };
+        },
+        userLogout(state = initialState, {payload}) {
+            return {
+                ...state,
+                ...payload,
+                isLogin: false,
             };
         },
     },
     effects: {
         *loadData(_, {call, put}) {
+            const isLogin = yield call(load, {key: 'isLogin'});
             const userInfo = yield call(load, {key: 'userInfo'});
-            if (userInfo) {
+            if (isLogin) {
                 yield put({
-                    type: 'setState',
+                    type: 'userLogin',
                     payload: {
                         userInfo
                     }
@@ -79,21 +87,28 @@ const userModel: UserModel = {
             if (data.code === StatusCode.SUCCESS) {
                 isGoBack = true;
                 const userInfo = {
-                    isLogin: true,
                     mobile: data.data.mobile,
                     username: data.data.username,
                     nickname: data.data.nickname,
-                    token: data.data.token,
                 }
                 yield put({
-                    type: 'setState',
+                    type: 'userLogin',
                     payload: {
                         userInfo
                     }
                 })
+
+                storage.save({
+                    key: 'isLogin',
+                    data: true
+                })
+                storage.save({
+                    key: 'token',
+                    data: data.data.token
+                })
                 storage.save({
                     key: 'userInfo',
-                    data: userInfo,
+                    data: userInfo
                 })
             }
             if (action.callback) {
@@ -103,7 +118,7 @@ const userModel: UserModel = {
         *logout(_, {call, put}) {
             const data = yield call(UserServices.logout);
             yield put({
-                type: 'setState',
+                type: 'userLogout',
                 payload: {
                     userInfo: initialState
                 }
@@ -114,9 +129,14 @@ const userModel: UserModel = {
                 shadow: true,
                 animation: true,
             })
-            storage.save({
+            storage.remove({
+                key: 'isLogin',
+            })
+            storage.remove({
+                key: 'token',
+            })
+            storage.remove({
                 key: 'userInfo',
-                data: '',
             })
         },
     },
@@ -125,6 +145,12 @@ const userModel: UserModel = {
             dispatch({type: 'loadData'});
         },
         asyncStorage() {
+            storage.sync.token = async () => {
+                return null;
+            };
+            storage.sync.isLogin = async () => {
+                return null;
+            };
             storage.sync.userInfo = async () => {
                 return null;
             };

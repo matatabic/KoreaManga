@@ -2,7 +2,6 @@ import axios from "axios";
 import {BOOK_URL, CAROUSEL_URL, COMMEND_URL, INTRO_URL} from "@/config/api";
 
 
-
 interface params {
     category_id: string;
     page_size: number;
@@ -18,7 +17,7 @@ async function getList(params: params) {
 }
 
 async function getCarousel() {
-    return axios.get(CAROUSEL_URL);
+    return axios.get(CAROUSEL_URL,{});
 }
 
 async function getCommend(params: any) {

@@ -4,7 +4,7 @@ import {EPISODE_URL} from "@/config/api";
 
 export interface IParams {
     book_id: number,
-    sort: number,
+    roast: number,
     page_size: number,
     current_page: number,
 }

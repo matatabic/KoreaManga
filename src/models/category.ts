@@ -26,8 +26,8 @@ export interface CategoryState {
     categoryList: ICategory[];
     bookList: IBook[];
     statusList: IStatus[];
+    loadDataList: string[];
     activeStatus: string;
-    activeModel: string;
     activeCategory: string;
     refreshing: boolean;
     hideHeader: boolean;
@@ -40,6 +40,8 @@ interface CategoryModel extends Model {
     state: CategoryState;
     reducers: {
         setState: Reducer<CategoryState>;
+        setActiveCategory: Reducer<CategoryState>;
+        setActiveStatus: Reducer<CategoryState>;
     };
     effects: {
         fetchCategoryList: Effect;
@@ -51,8 +53,8 @@ const initialState = {
     categoryList: [],
     bookList: [],
     statusList: [],
+    loadDataList: [],
     activeStatus: '1',
-    activeModel: '',
     activeCategory: '0',
     refreshing: false,
     hideHeader: false,
@@ -74,6 +76,18 @@ const categoryModel: CategoryModel = {
                 ...payload,
             };
         },
+        setActiveCategory(state = initialState, {payload}) {
+            return {
+                ...state,
+                activeCategory: payload.activeCategory
+            };
+        },
+        setActiveStatus(state = initialState, {payload}) {
+            return {
+                ...state,
+                activeStatus: payload.activeStatus
+            };
+        },
     },
     effects: {
         *fetchCategoryList(_, {call, put}) {
@@ -87,13 +101,29 @@ const categoryModel: CategoryModel = {
         },
         *fetchBookList(action, {call, put, select}) {
             const {payload, type} = action;
-            const {refreshing} = payload;
+            const {refreshing, onRefresh} = payload;
 
             const namespace = type.split('/')[0];
 
-            const {bookList: list, pagination} = yield select(
+            const {bookList: list, activeStatus, loadDataList, pagination} = yield select(
                 (state: RootState) => state[namespace],
             );
+
+            const status = payload.status ? payload.status : activeStatus;
+
+            if (!onRefresh && refreshing) {
+                if (loadDataList.indexOf(`tab-category-${payload.category_id}-status-${status}`) > -1) {
+                    return;
+                } else {
+                    loadDataList.push(`tab-category-${payload.category_id}-status-${status}`)
+                    yield put({
+                        type: 'setState',
+                        payload: {
+                            loadDataList
+                        }
+                    })
+                }
+            }
 
             yield put({
                 type: 'setState',
@@ -102,13 +132,11 @@ const categoryModel: CategoryModel = {
                 },
             });
 
-            const page = refreshing ? 1 : pagination.current_page + 1;
-
             const {data} = yield call(BookServices.getList, {
                 page_size: 9,
-                current_page: page,
+                current_page: refreshing ? 1 : pagination.current_page + 1,
                 category_id: payload.category_id,
-                status: payload.status,
+                status,
             });
 
             const newList = refreshing ? data.list : [...list, ...data.list];

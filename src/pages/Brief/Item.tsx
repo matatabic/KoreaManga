@@ -18,10 +18,17 @@ const itemHeight = 48;
 
 
 class Item extends React.Component<IProps> {
+
+    onPress = () => {
+        const {goMangaView, data} = this.props;
+        goMangaView(data);
+    }
+
+
     render() {
         const {data, goMangaView} = this.props;
         return (
-            <Touchable onPress={() => goMangaView(data)}>
+            <Touchable onPress={this.onPress}>
                 <View style={styles.itemWrapper}>
                     <View style={styles.item}>
                         <Text>{data.name}</Text>

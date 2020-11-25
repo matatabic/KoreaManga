@@ -14,7 +14,6 @@ import {IStatus} from "@/models/category";
 const mapStateToProps = (state: RootState) => {
     const {category, categorySetting} = state;
     return {
-        activeModel: category.activeModel,
         activeStatus: category.activeStatus,
         activeCategory: category.activeCategory,
         statusList: categorySetting.statusList,
@@ -38,7 +37,7 @@ class CategoryTopBar extends React.PureComponent<IProps> {
     onPress = (item: IStatus) => {
         const {dispatch, activeCategory} = this.props;
         dispatch({
-            type: 'category/setState',
+            type: 'category/setActiveStatus',
             payload: {
                 activeStatus: item.id
             }

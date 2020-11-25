@@ -9,6 +9,7 @@ import {ModalStackNavigation} from "@/navigator/index";
 
 const mapStateToProps = ({user}: RootState) => {
     return {
+        isLogin: user.isLogin,
         userInfo: user.userInfo
     };
 };
@@ -23,10 +24,10 @@ interface IProps extends ModelState {
 
 class Information extends React.Component<IProps> {
 
-    logout = () =>{
+    logout = () => {
         const {dispatch} = this.props;
         dispatch({
-            type:'user/logout'
+            type: 'user/logout'
         })
     }
 
@@ -36,7 +37,7 @@ class Information extends React.Component<IProps> {
     }
 
     render() {
-        const {userInfo} = this.props;
+        const {isLogin, userInfo} = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.leftView}>
@@ -44,18 +45,18 @@ class Information extends React.Component<IProps> {
                     <View style={styles.titleView}>
                         <View>
                             <Text style={styles.name}>
-                                {userInfo.isLogin ? userInfo.nickname : '未登录'}
+                                {isLogin ? userInfo.nickname : '未登录'}
                             </Text>
                         </View>
                         <View>
                             <Text style={styles.tips}>
-                                {userInfo.isLogin ? 'vip已经过期' : '登录更安全,云端同步记录'}
+                                {isLogin ? 'vip已经过期' : '登录更安全,云端同步记录'}
                             </Text>
                         </View>
                     </View>
                 </View>
                 {
-                    userInfo.isLogin ?
+                    isLogin ?
                         <Touchable onPress={this.logout} style={styles.rightView}>
                             <View style={styles.login}>
                                 <Text style={styles.loginTitle}>退出登录</Text>

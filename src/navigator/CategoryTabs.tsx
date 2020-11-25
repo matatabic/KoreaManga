@@ -1,10 +1,7 @@
 import React from 'react';
-import {
-    createMaterialTopTabNavigator,
-    MaterialTopTabBarProps,
-} from '@react-navigation/material-top-tabs';
+import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
 import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
-import {StyleSheet, Text, Animated} from 'react-native';
+import {StyleSheet, Animated} from 'react-native';
 import Category from "@/pages/Category";
 import CategoryTopBar from "@/pages/Category/CategoryTopBar";
 import {RootState} from "@/models/index";
@@ -18,12 +15,12 @@ import {viewportHeight} from "@/utils/index";
 import {Color} from "@/utils/const";
 
 
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = ({category, categorySetting}: RootState) => {
     return {
-        statusList: state['categorySetting'].statusList,
-        myCategories: state['categorySetting'].myCategories,
-        hideHeader: state['category'].hideHeader,
-        activeCategory: state['category'].activeCategory,
+        statusList: categorySetting.statusList,
+        myCategories: categorySetting.myCategories,
+        hideHeader: category.hideHeader,
+        activeCategory: category.activeCategory,
     };
 };
 
@@ -39,14 +36,16 @@ export type CategoryParamList = {
         scrollY: any
     };
 };
-const Tab = createMaterialTopTabNavigator<CategoryParamList>();
+
 
 interface IProps extends ModelState {
     navigation: RootStackNavigation;
 }
 
+const Tab = createMaterialTopTabNavigator<CategoryParamList>();
 
-const statusBarHeight = 45;
+const statusBarHeight = getStatusBarHeight();
+const tabBarViewHeight = 45;
 const listHeight = viewportHeight - statusBarHeight;
 
 class CategoryTabs extends React.PureComponent<IProps> {
@@ -55,7 +54,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
 
     getTopColor = () => {
         return this.translateY.interpolate({
-            inputRange: [-statusBarHeight, 0],
+            inputRange: [-tabBarViewHeight, 0],
             outputRange: [Color.white, Color.theme],
             extrapolate: "clamp",
         })
@@ -63,7 +62,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
 
     getTopOpacity = () => {
         return this.translateY.interpolate({
-            inputRange: [-statusBarHeight, 0],
+            inputRange: [-tabBarViewHeight, 0],
             outputRange: [0, 1],
             extrapolate: "clamp",
         })
@@ -78,7 +77,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
 
     hideTopBar = () => {
         Animated.timing(this.translateY, {
-            toValue: -statusBarHeight,
+            toValue: -tabBarViewHeight,
             useNativeDriver: false,
         }).start();
     }
@@ -102,36 +101,16 @@ class CategoryTabs extends React.PureComponent<IProps> {
     }
 
     renderScreen = (item: ICategory) => {
-        const {dispatch} = this.props;
         this.createModel(item.id);
         return (
             <Tab.Screen
                 key={item.id}
-                name={item.id.toString()}
+                name={item.id}
                 component={Category}
-                listeners={{
-                    tabPress: e => {
-                        dispatch({
-                            type: 'category/setState',
-                            payload: {
-                                activeCategory: item.id,
-                            },
-                        });
-                    },
-                    swipeEnd: e => {
-                        dispatch({
-                            type: 'category/setState',
-                            payload: {
-                                activeCategory: item.id,
-                            },
-                        });
-                    }
-                }}
                 initialParams={{
                     namespace: `tab-category-${item.id}`,
                     goBrief: this.goBrief,
                     category_id: item.id,
-                    scrollY: this.translateY,
                 }}
                 options={{
                     tabBarLabel: item.name,
@@ -139,7 +118,6 @@ class CategoryTabs extends React.PureComponent<IProps> {
             />
         );
     };
-
 
     render() {
         const {myCategories, hideHeader} = this.props;
@@ -158,7 +136,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
                 }
                 ]}/>
                 <Animated.View style={[styles.tabBarView, {
-                    height: statusBarHeight,
+                    height: tabBarViewHeight,
                     backgroundColor: Color.theme,
                     opacity: topOpacity,
                     transform: [{translateY: this.translateY}]
@@ -172,7 +150,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
                     <Tab.Navigator
                         lazy
                         tabBar={this.renderTabBar}
-                        pager={props => <ViewPagerAdapter {...props} />}
+                        pager={(props) => <ViewPagerAdapter {...props}/>}
                         tabBarOptions={{
                             scrollEnabled: true,
                             tabStyle: {

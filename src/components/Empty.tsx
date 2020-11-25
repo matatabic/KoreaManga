@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import {Color} from "@/utils/const";
 
 class Empty extends React.PureComponent {
     render() {
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
-        color: '#eee',
+        color: Color.light_btn,
     },
 });
 

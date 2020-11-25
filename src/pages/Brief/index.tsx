@@ -136,7 +136,7 @@ class Brief extends React.PureComponent<IProps, IState> {
         navigation.navigate('MangaView', {
             data: {
                 book_id,
-                sort: item.sort,
+                roast: item.roast,
                 title: item.title,
             }
         });

@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     itemContainer: {
-        backgroundColor: Color.white
+        backgroundColor: Color.page_bg
     },
     sectionHeader: {
         width: viewportWidth,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
         paddingVertical: 8,
-        backgroundColor: Color.white
+        backgroundColor: Color.page_bg
     },
     cell: {
         width: 6,

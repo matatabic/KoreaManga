@@ -9,6 +9,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {BlurView} from '@react-native-community/blur';
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 import {sideHeight} from "@/pages/Home/Carousel";
+import {hp, viewportHeight} from "@/utils/index";
 
 
 const mapStateToProps = ({home}: RootState) => {
@@ -47,7 +48,8 @@ class CarouselBlurBackground extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
     container:{
-        ...StyleSheet.absoluteFillObject
+        ...StyleSheet.absoluteFillObject,
+        height: hp(55),
     },
     image: {
         flex:1,

@@ -1,5 +1,11 @@
 import React from 'react';
-import {FlatList, ListRenderItemInfo, StyleSheet, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
+import {
+    FlatList,
+    ListRenderItemInfo,
+    NativeSyntheticEvent,
+    NativeScrollEvent,
+    StyleSheet,
+} from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {IBook} from "@/models/home";
@@ -8,25 +14,31 @@ import {RouteProp} from "@react-navigation/native";
 import {CategoryParamList} from "@/navigator/CategoryTabs";
 import More from "@/components/More";
 import End from "@/components/End";
+import {Color} from "@/utils/const";
+import {RootStackNavigation} from "@/navigator/index";
 
 
 const mapStateToProps = (state: RootState, {route}: { route: RouteProp<CategoryParamList, string> }) => {
-    const {namespace, category_id, goBrief, scrollY} = route.params;
-    const categoryState = state['category']
-    const model = `${namespace}-status-${categoryState.activeStatus}`;
-    const modelState = state[model];
+    const {namespace, category_id, goBrief} = route.params;
+    const activeStatus = state['category'].activeStatus;
+    const activeCategory = state['category'].activeCategory;
+    const activeModel = `${namespace}-status-${activeStatus}`;
+    const bookList = state[activeModel] ? state[activeModel].bookList : []
+    const refreshing = state[activeModel] ? state[activeModel].refreshing : false
+    const hasMore = state[activeModel] ? state[activeModel].hasMore : false
+    const hideHeader = state[activeModel] ? state[activeModel].hideHeader : false
+
     return {
-        namespace,
+        activeModel,
         category_id,
         goBrief,
-        model,
-        scrollY,
-        activeStatus: categoryState.activeStatus,
-        bookList: modelState.bookList,
-        hasMore: modelState.hasMore,
-        refreshing: modelState.refreshing,
-        hideHeader: categoryState.hideHeader,
-        loading: state.loading.effects[`${model}/fetchBookList`],
+        activeCategory,
+        activeStatus,
+        bookList,
+        hasMore,
+        refreshing,
+        hideHeader,
+        loading: state.loading.effects[`${activeModel}/fetchBookList`],
     };
 };
 
@@ -36,6 +48,7 @@ type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
     route: RouteProp<CategoryParamList, string>;
+    navigation: RootStackNavigation;
 }
 
 interface IState {
@@ -53,6 +66,7 @@ class Category extends React.PureComponent<IProps, IState> {
     scrollViewStartOffsetY = 0;         //用于记录手指开始滑动时FlatList组件的Y轴偏移量，通过这个变量可以判断滚动方向
     scrollViewScrollDirection = 0;      //FlatList组件滚动的方向：0往上；1往下
     hideHearer = false;
+    navListener: any = {};
 
     constructor(props: IProps) {
         super(props);
@@ -64,16 +78,25 @@ class Category extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        this.loadData(true);
+        const {dispatch, navigation, category_id} = this.props;
+        this.navListener = navigation.addListener('focus', () => {
+            dispatch({
+                type: 'category/setActiveCategory',
+                payload: {
+                    activeCategory: category_id
+                }
+            })
+            this.loadData(true);
+        });
     }
 
-
-    loadData = (refreshing: boolean, callback?: () => void) => {
-        const {dispatch, model, category_id, activeStatus} = this.props;
+    loadData = (refreshing: boolean, callback?: () => void, onRefresh: boolean = false) => {
+        const {dispatch, activeModel, category_id, activeStatus} = this.props;
         dispatch({
-            type: `${model}/fetchBookList`,
+            type: `${activeModel}/fetchBookList`,
             payload: {
                 refreshing: refreshing,
+                onRefresh: onRefresh,
                 category_id: category_id,
                 status: activeStatus,
             },
@@ -82,7 +105,7 @@ class Category extends React.PureComponent<IProps, IState> {
     }
 
     onRefresh = () => {
-        this.loadData(true);
+        this.loadData(true, undefined, true);
     };
 
     onEndReached = () => {
@@ -168,12 +191,16 @@ class Category extends React.PureComponent<IProps, IState> {
     render() {
         const {bookList, refreshing} = this.props
         return (
+            // <View>
+            //     <Text>{activeCategory}+{activeStatus}</Text>
+            // </View>
             <FlatList
                 keyExtractor={(item, key) => `item-${key}`}
                 data={bookList}
                 extraData={this.state}
                 renderItem={this.renderItem}
                 refreshing={refreshing}
+                style={styles.container}
                 onRefresh={this.onRefresh}
                 ListFooterComponent={this.renderFooter}
                 scrollEventThrottle={1}
@@ -187,5 +214,11 @@ class Category extends React.PureComponent<IProps, IState> {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: Color.page_bg
+    }
+})
 
 export default connector(Category);

@@ -2,18 +2,16 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Touchable from '@/components/Touchable';
 import {ip, viewportWidth, wp} from "@/utils/index";
-import {IBook} from "@/models/home";
+import {ICollection} from "@/models/shelf";
 import {Color} from "@/utils/const";
 import FastImage from 'react-native-fast-image';
 
 
 export interface IProps {
-    data: IBook;
-    goBrief: (data: IBook) => void;
+    data: ICollection;
+    goBrief: (data: ICollection) => void;
 }
 
-const DEFAULT_IMAGE =
-    'https://jiecaomh.com/media/uploads/a/目標就是妳內褲完結/cover.jpg';
 
 const itemWidth = wp(90) / 3;
 const imageHeight = ip(itemWidth);
@@ -38,7 +36,7 @@ class BookCover extends React.PureComponent<IProps> {
                 />
                 <View style={styles.titleView}>
                     <Text style={styles.title} numberOfLines={1}>{data.title}</Text>
-                    <Text style={styles.category} numberOfLines={1}>{data.category}</Text>
+                    <Text style={styles.chapter_info} numberOfLines={1}>{data.chapter_info}</Text>
                 </View>
             </Touchable>
         );
@@ -64,8 +62,9 @@ const styles = StyleSheet.create({
     title: {
         textAlign: 'center'
     },
-    category: {
+    chapter_info: {
         fontSize: 14,
+        textAlign: 'center',
         color: Color.grey_title,
     },
 })

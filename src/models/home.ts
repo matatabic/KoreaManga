@@ -95,11 +95,9 @@ const homeModel: HomeModel = {
                 },
             });
 
-            const current_page = refreshing ? 1 : pagination.current_page + 1;
-
             const {data} = yield call(BookServices.getCommend, {
                 page_size: 2,
-                current_page: current_page
+                current_page: refreshing ? 1 : pagination.current_page + 1
             });
 
             const newList = refreshing ? data.list : [...list, ...data.list];

@@ -13,7 +13,7 @@ import ImageTopBar from "./ImageTopBar";
 
 const mapStateToProps = ({user, brief}: RootState) => {
     return {
-        isLogin: user.userInfo.isLogin,
+        isLogin: user.isLogin,
         book_id: brief.bookInfo.id,
         collection: brief.collection,
     };

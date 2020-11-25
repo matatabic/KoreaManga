@@ -8,7 +8,7 @@ export interface IChapter {
     id: string;
     title: string;
     name: string;
-    sort: string;
+    roast: string;
 }
 
 export interface IInfo {

@@ -24,7 +24,7 @@ interface IProps extends ModelState {
 }
 
 interface IState {
-    initData: Boolean;
+    reloadData: Boolean;
     searchTitle: string;
 }
 
@@ -36,7 +36,7 @@ class SearchBar extends React.PureComponent<IProps, IState> {
     constructor(Props: IProps) {
         super(Props);
         this.state = {
-            initData: true,
+            reloadData: true,
             searchTitle: '',
         }
     }
@@ -44,14 +44,14 @@ class SearchBar extends React.PureComponent<IProps, IState> {
     static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
         if (nextProps.searchTitle === '') {
             return {
-                initData: true,
+                reloadData: true,
             }
         }
 
-        if (prevState.initData && nextProps.searchTitle !== '') {
+        if (prevState.reloadData && nextProps.searchTitle !== '') {
             return {
                 searchTitle: nextProps.searchTitle,
-                initData: false,
+                reloadData: false,
             }
         }
 

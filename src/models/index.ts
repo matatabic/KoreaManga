@@ -4,11 +4,12 @@ import categorySetting from './categorySetting';
 import brief from "./brief";
 import mangaView from "./mangaView";
 import search from "./search";
+import shelf from './shelf';
 import user from "./user";
 import {DvaLoadingState} from 'dva-loading-ts';
 
 
-const models = [home, category, categorySetting, brief, mangaView, search, user];
+const models = [home, category, categorySetting, brief, mangaView, search, shelf, user];
 
 export type RootState = {
     home: typeof home.state;
@@ -17,6 +18,7 @@ export type RootState = {
     brief: typeof brief.state;
     mangaView: typeof mangaView.state;
     search: typeof search.state;
+    shelf: typeof shelf.state;
     user: typeof user.state;
     loading: DvaLoadingState;
 } & {

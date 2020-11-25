@@ -30,7 +30,7 @@ export type RootStackParamList = {
     };
     MangaView: {
         data: {
-            sort: string;
+            roast: string;
             title: string;
             book_id: string;
         }
@@ -76,6 +76,10 @@ function RootStackScreen() {
             }}>
             <RootStack.Screen
                 name="BottomTabs"
+                options={{
+                    headerTransparent: true,
+                    headerTitle: '',
+                }}
                 component={BottomTabs}
             />
             <RootStack.Screen

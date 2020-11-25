@@ -28,21 +28,23 @@ class Information extends React.Component<IProps> {
     render() {
         const {bookInfo, opacity} = this.props;
         return (
-            <Animated.View style={[styles.wrapper, {
-                opacity: opacity
-            }]}>
-                <View style={styles.container}>
-                    <View style={styles.leftView}>
-                        <Image source={{uri: bookInfo.image}} style={styles.image}/>
+            bookInfo && bookInfo.image.length > 0 && (
+                <Animated.View style={[styles.wrapper, {
+                    opacity: opacity
+                }]}>
+                    <View style={styles.container}>
+                        <View style={styles.leftView}>
+                            <Image source={{uri: bookInfo.image}} style={styles.image}/>
+                        </View>
+                        <View style={styles.rightView}>
+                            <Text style={styles.title}>{bookInfo.title}</Text>
+                            <Text style={styles.bulletin}>{bookInfo.status}</Text>
+                            <Text style={styles.bulletin}>{bookInfo.author}</Text>
+                            <Text style={styles.bulletin}>{bookInfo.category}</Text>
+                        </View>
                     </View>
-                    <View style={styles.rightView}>
-                        <Text style={styles.title}>{bookInfo.title}</Text>
-                        <Text style={styles.bulletin}>{bookInfo.status}</Text>
-                        <Text style={styles.bulletin}>{bookInfo.author}</Text>
-                        <Text style={styles.bulletin}>{bookInfo.category}</Text>
-                    </View>
-                </View>
-            </Animated.View>
+                </Animated.View>
+            )
         );
     }
 }

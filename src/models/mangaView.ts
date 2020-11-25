@@ -69,13 +69,13 @@ const mangaViewModel: MangaViewModel = {
             const {payload, type} = action;
             const {refreshing, direction} = payload;
 
-            let {episodeList: list, book_id, sort, headerIndex, endIndex} = yield select(
+            let {episodeList: list, book_id, roast, headerIndex, endIndex} = yield select(
                 (state: RootState) => state['mangaView'],
             );
 
             const {data} = yield call(EpisodeServices.getList, {
                 book_id,
-                sort: refreshing ? sort : direction ? endIndex + 1 : headerIndex - 6 > 0
+                roast: refreshing ? roast : direction ? endIndex + 1 : headerIndex - 6 > 0
                     ? headerIndex - 6 : 1,
                 current_page: 1,
                 page_size: refreshing ? 6 : direction ? 6 : headerIndex - 6 > 0 ?
@@ -89,10 +89,10 @@ const mangaViewModel: MangaViewModel = {
                 type: 'setState',
                 payload: {
                     episodeList: newList,
-                    headerIndex: newList[0].sort,
-                    endIndex: newList[newList.length - 1].sort,
-                    headerHasMore: newList[0].sort > 1,
-                    endHasMore: newList[newList.length - 1].sort < data.pages.total,
+                    headerIndex: newList[0].roast,
+                    endIndex: newList[newList.length - 1].roast,
+                    headerHasMore: newList[0].roast > 1,
+                    endHasMore: newList[newList.length - 1].roast < data.pages.total,
                     pagination: {
                         current_page: data.pages.current_page,
                         page_size: data.pages.page_size,

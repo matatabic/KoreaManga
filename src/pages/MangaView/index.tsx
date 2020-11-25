@@ -50,12 +50,12 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         const {dispatch} = this.props;
-        const {sort, book_id} = this.props.route.params.data;
+        const {roast, book_id} = this.props.route.params.data;
         dispatch({
             type: 'mangaView/setState',
             payload: {
                 book_id,
-                sort,
+                roast,
             }
         });
         this.loadData(true, true);
