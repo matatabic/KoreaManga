@@ -159,7 +159,6 @@ class Home extends React.PureComponent<IProps, IState> {
                     onRefresh={this.onRefresh}
                     refreshing={refreshing}
                     sections={commendList}
-                    contentContainerStyle={styles.container}
                     stickySectionHeadersEnabled={true}
                     onScroll={Animated.event(
                         [{
@@ -181,7 +180,6 @@ class Home extends React.PureComponent<IProps, IState> {
 }
 
 const styles = StyleSheet.create({
-    container: {},
     carouselTop: {
         paddingTop: 10,
     },

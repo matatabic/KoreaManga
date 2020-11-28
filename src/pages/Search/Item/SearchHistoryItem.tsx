@@ -31,8 +31,6 @@ class SearchHistoryItem extends React.PureComponent<IProps> {
                     <Text style={styles.title}>{title}</Text>
                 </Touchable>
                 <Touchable onPress={this.clearHistory}>
-
-
                     <View style={styles.itemRight}>
                         <Icon name="icon-cha"/>
                     </View>

@@ -3,7 +3,7 @@ export const Color = { //App通用颜色
     white: '#FFFFFF',
     theme: '#F9DB49',   //App主题颜色
     yellow: '#FCEF87',  //按钮颜色
-    pink: '#F87187',
+    pink: '#E09CB3',
     red: '#FF5168',
     icon: '#F86442',
     text: '#000000',    //默认字体颜色

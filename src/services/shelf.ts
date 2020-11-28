@@ -1,5 +1,5 @@
 import axios from "axios";
-import {COLLECTION_URL} from "@/config/api";
+import {COLLECTION_URL,HISTORY_URL} from "@/config/api";
 
 
 export async function getCollection(params: any) {
@@ -8,7 +8,13 @@ export async function getCollection(params: any) {
     });
 }
 
+export async function getHistory(params: any) {
+    return axios.get(HISTORY_URL, {
+        params
+    });
+}
 
 export default {
-    getCollection
+    getCollection,
+    getHistory,
 };

@@ -28,17 +28,18 @@ class Item extends React.PureComponent<IProps> {
         const {data} = this.props;
         return (
             <Touchable style={styles.item} onPress={this.onPress}>
-                <View>
-                    <FastImage
-                        source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
-                        style={styles.image}
-                        resizeMode={FastImage.resizeMode.stretch}
-                    />
-                </View>
+                <FastImage
+                    source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
+                    style={styles.image}
+                    resizeMode={FastImage.resizeMode.stretch}
+                />
                 <View style={styles.mainView}>
-                    <Text style={styles.titleText}>{data.title}</Text>
-                    <Text style={styles.authorText}>{data.author}</Text>
-                    <Text style={styles.categoryText}>{data.category}</Text>
+                    <Text numberOfLines={2} style={styles.titleText}>{data.title}</Text>
+                    <View>
+                        <Text style={styles.infoTitle}>{data.author}</Text>
+                        <Text style={styles.infoTitle}>{data.category}</Text>
+                    </View>
+
                 </View>
                 <View style={styles.rightView}>
                     <Text style={{color: data.statusColor}}>{data.status}</Text>
@@ -62,25 +63,21 @@ const styles = StyleSheet.create({
         height: imageHeight,
     },
     mainView: {
-        flex: 4,
-        marginTop: 25,
-        marginLeft: 10,
-        height: imageHeight + 20,
+        flex: 1,
+        justifyContent: "space-between",
+        padding: 10,
     },
     titleText: {
-        fontSize: 16,
+        fontSize: 15,
     },
-    authorText: {
-        marginTop: 5,
-        color: Color.dark_title,
-    },
-    categoryText: {
-        marginTop: 5,
+    infoTitle: {
+        paddingVertical: 5,
         color: Color.dark_title,
     },
     rightView: {
-        flex: 1,
+        width: imageWidth,
         justifyContent: 'center',
+        alignItems: 'center',
     },
 
 })

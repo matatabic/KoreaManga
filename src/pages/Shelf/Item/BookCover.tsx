@@ -7,9 +7,10 @@ import {Color} from "@/utils/const";
 import FastImage from 'react-native-fast-image';
 
 
-export interface IProps {
+interface IProps {
+    isEdit: boolean;
     data: ICollection;
-    goBrief: (data: ICollection) => void;
+    goView: (data: ICollection) => void;
 }
 
 
@@ -25,9 +26,9 @@ class BookCover extends React.PureComponent<IProps> {
     };
 
     render() {
-        const {data, goBrief} = this.props;
+        const {data, goView} = this.props;
         return (
-            <Touchable style={styles.item} onPress={() => goBrief(data)}>
+            <Touchable style={styles.item} onPress={() => goView(data)}>
                 <FastImage
                     source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
                     onError={this.showError}

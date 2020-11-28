@@ -9,6 +9,8 @@ const ADD_COLLECTION_URL = 'collection/addUserCollection';
 const DEL_COLLECTION_URL = 'collection/delUserCollection';
 //shelf
 const COLLECTION_URL = 'collection/getList';
+//mark
+const HISTORY_URL = 'mark/getList';
 //category
 const CATEGORY_URL = '/category/getList';
 const STATUS_URL = '/status/getList';
@@ -29,6 +31,7 @@ export {
     ADD_COLLECTION_URL,
     DEL_COLLECTION_URL,
     COLLECTION_URL,
+    HISTORY_URL,
     CATEGORY_URL,
     STATUS_URL,
     CATEGORY_TREE_URL,

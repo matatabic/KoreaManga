@@ -46,7 +46,6 @@ interface IState {
 }
 
 
-
 function RootStackScreen() {
     return (
         <RootStack.Navigator

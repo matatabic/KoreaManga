@@ -6,16 +6,16 @@ import BookCover from "./Item/BookCover";
 import {ModalStackNavigation, RootStackNavigation} from "@/navigator/index";
 import LoginPending from "./LoginPending";
 import {ICollection} from "@/models/shelf";
-import {Color} from "@/utils/const";
 import More from "@/components/More";
 import End from "@/components/End";
 
 const mapStateToProps = ({user, shelf, loading}: RootState) => {
     return {
         isLogin: user.isLogin,
+        isEdit: shelf.isEdit,
         collectionList: shelf.collectionList,
         refreshing: shelf.refreshing,
-        hasMore: shelf.hasMore,
+        hasMore: shelf.collectionHasMore,
         loading: loading.effects['shelf/fetchCollectionList']
     };
 };
@@ -81,7 +81,7 @@ class Shelf extends React.PureComponent<IProps, IState> {
         });
     }
 
-    goBrief = (data: ICollection) => {
+    goView = (data: ICollection) => {
         const {navigation} = this.props;
         navigation.navigate('Brief', {
             id: data.book_id,
@@ -89,10 +89,12 @@ class Shelf extends React.PureComponent<IProps, IState> {
     };
 
     renderItem = ({item}: ListRenderItemInfo<ICollection>) => {
+        const {isEdit} = this.props
         return (
             <BookCover
                 data={item}
-                goBrief={this.goBrief}
+                isEdit={isEdit}
+                goView={this.goView}
                 key={item.id}
             />
         )
