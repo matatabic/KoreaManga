@@ -13,7 +13,7 @@ const mapStateToProps = ({user, brief}: RootState) => {
     return {
         isLogin: user.isLogin,
         bookInfo: brief.bookInfo,
-        collection: brief.collection,
+        collection_id: brief.collection_id,
     };
 };
 
@@ -47,12 +47,12 @@ class Operate extends React.Component<IProps> {
     }
 
     delUserCollection = () => {
-        const {dispatch, navigation, isLogin, bookInfo} = this.props;
+        const {dispatch, navigation, isLogin, collection_id} = this.props;
         if (isLogin) {
             dispatch({
                 type: 'brief/delUserCollection',
                 payload: {
-                    book_id: bookInfo.id
+                    id: collection_id.toString()
                 }
             })
         } else {
@@ -61,7 +61,7 @@ class Operate extends React.Component<IProps> {
     }
 
     render() {
-        const {opacity, leftViewX, rightViewX, rightViewScale, rightFontSize, collection} = this.props;
+        const {opacity, leftViewX, rightViewX, rightViewScale, rightFontSize, collection_id} = this.props;
         return (
             <>
                 <Animated.View style={[styles.shadowView, {opacity: opacity}]}/>
@@ -70,7 +70,7 @@ class Operate extends React.Component<IProps> {
                     <View style={styles.contentContainer}>
                         <View style={styles.seize}/>
                         {
-                            collection ?
+                            collection_id > 0 ?
                                 <Touchable onPress={this.delUserCollection}>
                                     <Animated.View style={[styles.leftView, {
                                         left: leftViewX

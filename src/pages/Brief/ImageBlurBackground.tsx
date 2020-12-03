@@ -4,7 +4,7 @@ import {BlurView} from '@react-native-community/blur';
 import {ip, viewportWidth} from "@/utils/index";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-import FastImage from "react-native-fast-image";
+
 
 const mapStateToProps = ({brief}: RootState) => {
     return {

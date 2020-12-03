@@ -26,7 +26,7 @@ class Item extends React.Component<IProps> {
 
 
     render() {
-        const {data, goMangaView} = this.props;
+        const {data} = this.props;
         return (
             <Touchable onPress={this.onPress}>
                 <View style={styles.itemWrapper}>

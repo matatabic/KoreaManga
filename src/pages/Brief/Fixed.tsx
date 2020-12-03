@@ -15,7 +15,7 @@ const mapStateToProps = ({user, brief}: RootState) => {
     return {
         isLogin: user.isLogin,
         book_id: brief.bookInfo.id,
-        collection: brief.collection,
+        collection_id: brief.collection_id,
     };
 };
 
@@ -44,12 +44,12 @@ class Fixed extends React.PureComponent<IProps> {
     }
 
     delUserCollection = () => {
-        const {dispatch, navigation, isLogin, book_id} = this.props;
+        const {dispatch, navigation, isLogin, collection_id} = this.props;
         if (isLogin) {
             dispatch({
                 type: 'brief/delUserCollection',
                 payload: {
-                    book_id
+                    id: collection_id.toString()
                 }
             })
         } else {
@@ -58,7 +58,7 @@ class Fixed extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {collection} = this.props;
+        const {collection_id} = this.props;
         return (
             <View style={styles.wrapper}>
                 <View style={styles.container}>
@@ -69,7 +69,7 @@ class Fixed extends React.PureComponent<IProps> {
                         </Touchable>
                     </View>
                     {
-                        collection ?
+                        collection_id > 0 ?
                             <Touchable onPress={this.delUserCollection}>
                                 <View style={[styles.leftView, {left: wp(30)}]}>
                                     <Icon name="icon-xin"

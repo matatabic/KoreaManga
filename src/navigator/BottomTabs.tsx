@@ -7,8 +7,11 @@ import CategoryTabs from "@/navigator/CategoryTabs";
 import ShelfTabs from "@/navigator/ShelfTabs";
 import {getBottomSpace} from "react-native-iphone-x-helper";
 import {Color} from "@/utils/const";
+import {RootState} from "@/models/index";
+import {connect, ConnectedProps} from "react-redux";
 
-export const bottomHeight = getBottomSpace() + 49;
+
+const bottomHeight = getBottomSpace() + 49;
 
 export type BottomTabParamList = {
     Home: undefined;
@@ -19,9 +22,34 @@ export type BottomTabParamList = {
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
-class BottomTabs extends React.Component {
+const mapStateToProps = ({shelf}: RootState) => {
+    return {
+        activePage: shelf.activePage,
+        isEditHistory: shelf.isEditHistory,
+        isEditCollection: shelf.isEditCollection,
+    };
+};
+
+const connector = connect(mapStateToProps);
+
+type ModelState = ConnectedProps<typeof connector>;
+
+class BottomTabs extends React.Component<ModelState> {
 
     render() {
+        let {activePage, isEditCollection, isEditHistory} = this.props;
+        let isEdit = false;
+        switch (activePage) {
+            case 1:
+                isEdit = isEditCollection;
+                break;
+            case 2:
+                isEdit = isEditHistory;
+                break;
+            case 3:
+                isEdit = false
+                break;
+        }
         return (
             <Tab.Navigator
                 tabBarOptions={{
@@ -55,6 +83,7 @@ class BottomTabs extends React.Component {
                     component={ShelfTabs}
                     options={{
                         tabBarLabel: '书架',
+                        tabBarVisible: !isEdit,
                         tabBarIcon: ({color, size}) => (
                             <Icon name="icon-shujiashugui" color={color} size={size}/>
                         ),
@@ -75,4 +104,4 @@ class BottomTabs extends React.Component {
     }
 }
 
-export default BottomTabs;
+export default connector(BottomTabs);

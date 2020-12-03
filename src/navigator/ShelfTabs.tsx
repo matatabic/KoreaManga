@@ -6,29 +6,13 @@ import {
 import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
 import {StyleSheet, View} from 'react-native';
 import ShelfTopBar from "@/pages/Shelf/ShelfTopBar";
-import {RootState} from "@/models/index";
-import {connect, ConnectedProps} from "react-redux";
 import {ICategory} from "@/models/categorySetting";
-import {RootStackNavigation} from "@/navigator/index";
 import {Color} from "@/utils/const";
 import {CategoryParamList} from "@/navigator/CategoryTabs";
 import Shelf from "@/pages/Shelf";
-import History from "@/pages/Shelf/history";
+import History from "@/pages/Shelf/History";
+import Download from "@/pages/Shelf/Download";
 
-
-const mapStateToProps = (state: RootState) => {
-    return {};
-};
-
-
-const connector = connect(mapStateToProps);
-
-type ModelState = ConnectedProps<typeof connector>;
-
-
-interface IProps extends ModelState {
-    navigation: RootStackNavigation;
-}
 
 const Tab = createMaterialTopTabNavigator<CategoryParamList>();
 
@@ -39,13 +23,11 @@ class ShelfTabs extends React.Component {
     };
 
     renderScreen = (item: ICategory) => {
-
         return (
             <Tab.Screen
                 key={item.id}
                 name={item.id.toString()}
                 component={Shelf}
-                initialParams={{}}
             />
         );
     };
@@ -56,7 +38,7 @@ class ShelfTabs extends React.Component {
                 <Tab.Navigator
                     lazy
                     tabBar={this.renderTabBar}
-                    pager={props => <ViewPagerAdapter {...props} />}
+                    pager={props => <ViewPagerAdapter {...props}/>}
                     tabBarOptions={{
                         scrollEnabled: true,
                         tabStyle: {
@@ -95,7 +77,7 @@ class ShelfTabs extends React.Component {
                     <Tab.Screen
                         key={3}
                         name={'下载'}
-                        component={Shelf}
+                        component={Download}
                     />
                 </Tab.Navigator>
             </View>
@@ -109,4 +91,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connector(ShelfTabs);
+export default ShelfTabs;

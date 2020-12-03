@@ -5,8 +5,6 @@ import {
     StyleSheet,
     SectionList,
     SectionListRenderItemInfo,
-    FlatList,
-    ListRenderItemInfo, Animated
 } from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
@@ -16,11 +14,13 @@ import {Color} from "@/utils/const";
 import HistoryItem from "@/pages/Shelf/Item/HistoryItem";
 import More from "@/components/More";
 import End from "@/components/End";
+import EditView from "@/pages/Shelf/EditView";
 
 const mapStateToProps = ({user, shelf, loading}: RootState) => {
     return {
         isLogin: user.isLogin,
         historyList: shelf.historyList,
+        isEdit: shelf.isEditHistory,
         refreshing: shelf.refreshing,
         hasMore: shelf.historyHasMore,
         loading: loading.effects['shelf/fetchHistoryList']
@@ -41,6 +41,9 @@ interface IState {
 
 class History extends React.PureComponent<IProps, IState> {
 
+    _unsubscribe: () => void = () => {
+    };
+
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -50,6 +53,21 @@ class History extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         this.loadData(true);
+        const {navigation, dispatch} = this.props;
+        this._unsubscribe = navigation.addListener('focus', () => {
+            dispatch({
+                type: 'shelf/setActivePage',
+                payload: {
+                    activePage: 2,
+                    isEditHistory: false,
+                    isEditCollection: false,
+                }
+            })
+        });
+    }
+
+    componentWillUnmount() {
+        this._unsubscribe();
     }
 
     loadData = (refreshing: boolean, callback?: () => void) => {
@@ -112,29 +130,45 @@ class History extends React.PureComponent<IProps, IState> {
         return null;
     }
 
+    checkAll = () => {
+
+    }
+
+    destroy = () => {
+
+    }
+
     render() {
-        const {refreshing, historyList} = this.props;
+        const {refreshing, historyList, isEdit} = this.props;
         return (
-            <SectionList
-                keyExtractor={(item, index) => `section-item-${index}`}
-                renderSectionHeader={this.renderSectionHeader}
-                onRefresh={this.onRefresh}
-                refreshing={refreshing}
-                sections={historyList}
-                style={styles.container}
-                stickySectionHeadersEnabled={true}
-                onEndReached={this.onEndReached}
-                onEndReachedThreshold={0.1}
-                renderItem={this.renderItem}
-                extraData={this.state}
-                ListFooterComponent={this.renderFooter}
-            />
+            <View style={styles.container}>
+                <SectionList
+                    keyExtractor={(item, index) => `section-item-${index}`}
+                    renderSectionHeader={this.renderSectionHeader}
+                    onRefresh={this.onRefresh}
+                    refreshing={refreshing}
+                    sections={historyList}
+                    style={styles.container}
+                    contentContainerStyle={styles.contentContainer}
+                    stickySectionHeadersEnabled={true}
+                    onEndReached={this.onEndReached}
+                    onEndReachedThreshold={0.1}
+                    renderItem={this.renderItem}
+                    extraData={this.state}
+                    ListFooterComponent={this.renderFooter}
+                />
+                <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
+            </View>
+
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+    },
+    contentContainer: {
         paddingHorizontal: 15,
         backgroundColor: Color.page_bg,
     },

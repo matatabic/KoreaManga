@@ -2,11 +2,13 @@ import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
 import ShelfServices from "@/services/shelf";
 import {RootState} from "@/models/index";
-import _ from 'lodash';
+import BriefServices from "@/services/brief";
+import {StatusCode} from "@/utils/const";
+
 
 export interface ICollection {
-    id: string;
-    book_id: string;
+    id: number;
+    book_id: number;
     title: string;
     image: string;
     chapter_info: string;
@@ -42,7 +44,10 @@ export interface ShelfState {
     historyHasMore: boolean;
     historyPagination: IPagination;
     refreshing: boolean;
-    isEdit: boolean;
+    ids: number[];
+    isEditCollection: boolean;
+    isEditHistory: boolean;
+    activePage: number,
 }
 
 interface ShelfModel extends Model {
@@ -50,10 +55,13 @@ interface ShelfModel extends Model {
     state: ShelfState;
     reducers: {
         setState: Reducer<ShelfState>;
+        setIds: Reducer<ShelfState>;
+        setActivePage: Reducer<ShelfState>;
     };
     effects: {
         fetchCollectionList: Effect;
         fetchHistoryList: Effect;
+        delUserCollection: Effect;
     };
 }
 
@@ -73,8 +81,11 @@ const initialState = {
         page_size: 0,
         total: 0,
     },
+    ids: [],
     refreshing: false,
-    isEdit: false,
+    isEditCollection: false,
+    isEditHistory: false,
+    activePage: 1,
 };
 
 const shelfModel: ShelfModel = {
@@ -85,6 +96,21 @@ const shelfModel: ShelfModel = {
             return {
                 ...state,
                 ...payload,
+            };
+        },
+        setIds(state = initialState, {payload}) {
+            return {
+                ...state,
+                ids: payload.ids,
+            };
+        },
+        setActivePage(state = initialState, {payload}) {
+            return {
+                ...state,
+                activePage: payload.activePage,
+                isEditCollection: payload.isEditCollection,
+                isEditHistory: payload.isEditHistory,
+                ids: [],
             };
         },
     },
@@ -187,6 +213,34 @@ const shelfModel: ShelfModel = {
 
             if (action.callback) {
                 action.callback();
+            }
+        },
+        *delUserCollection(action, {call, put, select}) {
+            const {payload, type} = action;
+
+            const namespace = type.split('/')[0];
+
+            const {collectionList: list, isEditCollection: isEdit} = yield select(
+                (state: RootState) => state[namespace],
+            );
+
+            let newData = '';
+            for (let i of payload.ids) {
+                newData += `${i},`;
+            }
+
+            const data = yield call(BriefServices.delUserCollection, {id: newData});
+            if (data.code === StatusCode.SUCCESS) {
+                const newList = list.filter((item: ICollection) => {
+                    return payload.ids.indexOf(item.id) === -1
+                })
+                yield put({
+                    type: 'setState',
+                    payload: {
+                        collectionList: newList,
+                        isEditCollection: !isEdit
+                    }
+                })
             }
         },
     },

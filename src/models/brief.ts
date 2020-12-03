@@ -23,7 +23,7 @@ export interface IInfo {
 
 export interface BriefState {
     bookInfo: IInfo;
-    collection: boolean;
+    collection_id: number;
     markChapter: string;
     markIndex: string;
     chapterList: IChapter[];
@@ -34,7 +34,7 @@ interface CategoryModel extends Model {
     state: BriefState;
     reducers: {
         setState: Reducer<BriefState>;
-        setCollection: Reducer<BriefState>;
+        setCollectionId: Reducer<BriefState>;
     };
     effects: {
         fetchBrief: Effect;
@@ -53,7 +53,7 @@ export const initialState = {
         description: '',
         status: '',
     },
-    collection: false,
+    collection_id: 0,
     markChapter: '',
     markIndex: '',
     chapterList: []
@@ -69,10 +69,10 @@ const briefModel: CategoryModel = {
                 ...payload,
             };
         },
-        setCollection(state = initialState, {payload}) {
-            state.collection = !state.collection;
+        setCollectionId(state = initialState, {payload}) {
             return {
                 ...state,
+                collection_id: payload.collection_id,
             };
         },
     },
@@ -90,29 +90,23 @@ const briefModel: CategoryModel = {
             const data = yield call(BriefServices.addUserCollection, payload);
             if (data.code === StatusCode.SUCCESS) {
                 yield put({
-                    type: 'setCollection',
+                    type: 'setCollectionId',
+                    payload: {
+                        collection_id: data.data
+                    }
                 })
             }
-            Toast.show(data.msg, {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.CENTER,
-                shadow: true,
-                animation: true,
-            })
         },
         *delUserCollection({payload}, {call, put}) {
             const data = yield call(BriefServices.delUserCollection, payload);
             if (data.code === StatusCode.SUCCESS) {
                 yield put({
-                    type: 'setCollection',
+                    type: 'setCollectionId',
+                    payload: {
+                        collection_id: 0
+                    }
                 })
             }
-            Toast.show(data.msg, {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.CENTER,
-                shadow: true,
-                animation: true,
-            })
         },
     },
 };

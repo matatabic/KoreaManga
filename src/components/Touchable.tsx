@@ -7,7 +7,7 @@ const Touchable: React.FC<TouchableOpacityProps> = React.memo(({style, onPress, 
         let throttleOnPress = undefined;
         if (typeof onPress === 'function') {
             throttleOnPress = useCallback(
-                _.throttle(onPress, 1000, {leading: true, trailing: false}), [onPress]
+                _.throttle(onPress, 300, {leading: true, trailing: false}), [onPress]
             )
         }
         return (

@@ -11,6 +11,7 @@ export async function addUserCollection(params: any) {
 }
 
 export async function delUserCollection(params: any) {
+    console.log(params)
     return axios.post(DEL_COLLECTION_URL, params);
 }
 

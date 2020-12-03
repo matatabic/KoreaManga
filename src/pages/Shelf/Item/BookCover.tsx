@@ -1,16 +1,16 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import Touchable from '@/components/Touchable';
 import {ip, viewportWidth, wp} from "@/utils/index";
 import {ICollection} from "@/models/shelf";
 import {Color} from "@/utils/const";
 import FastImage from 'react-native-fast-image';
+import Icon from "@/assets/iconfont";
 
 
 interface IProps {
-    isEdit: boolean;
     data: ICollection;
-    goView: (data: ICollection) => void;
+    isEdit: boolean;
+    selected: boolean;
 }
 
 
@@ -26,20 +26,37 @@ class BookCover extends React.PureComponent<IProps> {
     };
 
     render() {
-        const {data, goView} = this.props;
+        const {data, isEdit, selected} = this.props;
         return (
-            <Touchable style={styles.item} onPress={() => goView(data)}>
+            <View style={styles.item}>
                 <FastImage
                     source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
                     onError={this.showError}
                     style={styles.image}
                     resizeMode={FastImage.resizeMode.stretch}
                 />
+                {isEdit &&
+                <>
+                    <View style={styles.cover}/>
+                    {
+                        selected ?
+                            <View style={[styles.circle, {
+                                backgroundColor: Color.red
+                            }]}>
+                                <Icon name="icon-gou" color={Color.white} size={18}/>
+                            </View> :
+                            <View style={[styles.circle, {
+                                opacity: 0.7,
+                                backgroundColor: Color.black
+                            }]}/>
+                    }
+                </>
+                }
                 <View style={styles.titleView}>
-                    <Text style={styles.title} numberOfLines={1}>{data.title}</Text>
+                    <Text style={styles.title} numberOfLines={1}>{data.title}{data.id}</Text>
                     <Text style={styles.chapter_info} numberOfLines={1}>{data.chapter_info}</Text>
                 </View>
-            </Touchable>
+            </View>
         );
     }
 }
@@ -50,6 +67,28 @@ const styles = StyleSheet.create({
         marginTop: itemMargin,
         marginLeft: itemMargin,
         backgroundColor: Color.white,
+    },
+    cover: {
+        width: itemWidth,
+        height: imageHeight,
+        backgroundColor: Color.black,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        opacity: 0.5,
+    },
+    circle: {
+        width: itemWidth / 5,
+        height: itemWidth / 5,
+        borderRadius: itemWidth / 5,
+        position: "absolute",
+        top: 7,
+        right: 7,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: "hidden",
+        borderWidth: 1,
+        borderColor: Color.white,
     },
     titleView: {
         width: itemWidth,

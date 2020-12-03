@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, ListRenderItemInfo, FlatList, Text, View, Animated} from 'react-native';
+import {StyleSheet, ListRenderItemInfo, FlatList, View, Animated} from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import BookCover from "./Item/BookCover";
@@ -8,11 +8,15 @@ import LoginPending from "./LoginPending";
 import {ICollection} from "@/models/shelf";
 import More from "@/components/More";
 import End from "@/components/End";
+import Touchable from "@/components/Touchable";
+import EditView from "./EditView";
+
 
 const mapStateToProps = ({user, shelf, loading}: RootState) => {
     return {
         isLogin: user.isLogin,
-        isEdit: shelf.isEdit,
+        isEdit: shelf.isEditCollection,
+        ids: shelf.ids,
         collectionList: shelf.collectionList,
         refreshing: shelf.refreshing,
         hasMore: shelf.collectionHasMore,
@@ -35,6 +39,8 @@ interface IState {
 class Shelf extends React.PureComponent<IProps, IState> {
 
     scrollY = new Animated.Value(0)
+    _unsubscribe: () => void = () => {
+    };
 
     constructor(props: IProps) {
         super(props);
@@ -45,6 +51,21 @@ class Shelf extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         this.loadData(true);
+        const {navigation, dispatch} = this.props;
+        this._unsubscribe = navigation.addListener('focus', () => {
+            dispatch({
+                type: 'shelf/setActivePage',
+                payload: {
+                    activePage: 1,
+                    isEditHistory: false,
+                    isEditCollection: false,
+                }
+            })
+        });
+    }
+
+    componentWillUnmount() {
+        this._unsubscribe();
     }
 
     loadData = (refreshing: boolean, callback?: () => void) => {
@@ -81,22 +102,77 @@ class Shelf extends React.PureComponent<IProps, IState> {
         });
     }
 
-    goView = (data: ICollection) => {
-        const {navigation} = this.props;
-        navigation.navigate('Brief', {
-            id: data.book_id,
-        });
-    };
+    onClickItem = (item: ICollection, index: number) => {
+        const {dispatch, isEdit, navigation, ids} = this.props
+        if (isEdit) {
+            let i = ids.indexOf(item.id)
+            if (i > -1) {
+                ids.splice(i, 1);
+                dispatch({
+                    type: 'shelf/setIds',
+                    payload: {
+                        ids: [...ids]
+                    }
+                })
+            } else {
+                dispatch({
+                    type: 'shelf/setIds',
+                    payload: {
+                        ids: [...ids, item.id]
+                    }
+                })
+            }
+        } else {
+            navigation.navigate('Brief', {
+                id: item.book_id.toString()
+            });
+        }
+    }
 
-    renderItem = ({item}: ListRenderItemInfo<ICollection>) => {
-        const {isEdit} = this.props
+    checkAll = () => {
+        const {dispatch, collectionList, ids} = this.props;
+        const newData = collectionList.map(item => item.id);
+        if (collectionList.length === ids.length) {
+            dispatch({
+                type: 'shelf/setState',
+                payload: {
+                    ids: []
+                }
+            })
+        } else {
+            dispatch({
+                type: 'shelf/setState',
+                payload: {
+                    ids: newData
+                }
+            })
+        }
+    }
+
+    destroy = () => {
+        const {dispatch, ids} = this.props;
+        dispatch({
+            type: 'shelf/delUserCollection',
+            payload: {
+                ids
+            }
+        })
+    }
+
+    renderItem = ({item, index}: ListRenderItemInfo<ICollection>) => {
+        const {isEdit, ids} = this.props;
+        const selected = ids.indexOf(item.id) > -1;
         return (
-            <BookCover
-                data={item}
-                isEdit={isEdit}
-                goView={this.goView}
+            <Touchable
                 key={item.id}
-            />
+                onPress={() => this.onClickItem(item, index)}
+            >
+                <BookCover
+                    data={item}
+                    isEdit={isEdit}
+                    selected={selected}
+                />
+            </Touchable>
         )
     }
 
@@ -122,11 +198,11 @@ class Shelf extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {navigation, isLogin, collectionList} = this.props;
+        const {navigation, isLogin, collectionList, isEdit} = this.props;
         const headerOpacity = this.getHeaderOpacity();
         return (
             isLogin ?
-                <View style={{flex: 1}}>
+                <View style={styles.container}>
                     <View style={styles.totalView}>
                         <Animated.Text style={[{
                             opacity: headerOpacity,
@@ -147,10 +223,12 @@ class Shelf extends React.PureComponent<IProps, IState> {
                             }
                         )}
                         renderItem={this.renderItem}
+                        extraData={this.state}
                         ListFooterComponent={this.renderFooter}
                         onEndReached={this.onEndReached}
                         onEndReachedThreshold={0.1}
                     />
+                    <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
                 </View> :
                 <LoginPending navigation={navigation}/>
         )

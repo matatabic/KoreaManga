@@ -1,27 +1,67 @@
 import React from 'react';
-import {StyleSheet, View, Text, Animated} from 'react-native';
-import {
-    MaterialTopTabBar,
-    MaterialTopTabBarProps,
-} from '@react-navigation/material-top-tabs';
+import {StyleSheet, View, Text} from 'react-native';
+import {MaterialTopTabBar, MaterialTopTabBarProps,} from '@react-navigation/material-top-tabs';
 import Touchable from '@/components/Touchable';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {Color} from "@/utils/const";
-import TopBatItem from "@/pages/Category/Item/TopBatItem";
-import {IStatus} from "@/models/category";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 
+const mapStateToProps = ({shelf}: RootState) => {
+    return {
+        activePage: shelf.activePage,
+        isEditHistory: shelf.isEditHistory,
+        isEditCollection: shelf.isEditCollection,
+    };
+};
 
-class ShelfTopBar extends React.PureComponent<MaterialTopTabBarProps> {
+const connector = connect(mapStateToProps);
+
+type ModelState = ConnectedProps<typeof connector> & MaterialTopTabBarProps;
+
+class ShelfTopBar extends React.PureComponent<ModelState> {
 
     editBtn = () => {
-        console.log('editBtn')
+        const {dispatch, activePage, isEditCollection, isEditHistory} = this.props;
+        switch (activePage) {
+            case 1:
+                dispatch({
+                    type: 'shelf/setState',
+                    payload: {
+                        isEditCollection: !isEditCollection,
+                        ids: [],
+                    }
+                })
+                break;
+            case 2:
+                dispatch({
+                    type: 'shelf/setState',
+                    payload: {
+                        isEditHistory: !isEditHistory,
+                        ids: [],
+                    }
+                })
+                break;
+            case 3:
+
+                break;
+        }
     };
 
     render() {
-        let {indicatorStyle, activeTintColor, ...restProps} = this.props;
-
+        let {indicatorStyle, activeTintColor, activePage, isEditCollection, isEditHistory, ...restProps} = this.props;
+        let isEdit = false;
+        switch (activePage) {
+            case 1:
+                isEdit = isEditCollection;
+                break;
+            case 2:
+                isEdit = isEditHistory;
+                break;
+            case 3:
+                isEdit = false
+                break;
+        }
         return (
             <View style={styles.container}>
                 <View style={styles.topTabBarView}>
@@ -34,7 +74,7 @@ class ShelfTopBar extends React.PureComponent<MaterialTopTabBarProps> {
                     <Touchable
                         style={styles.editBtn}
                         onPress={this.editBtn}>
-                        <Text style={styles.text}>编辑</Text>
+                        <Text style={styles.text}>{isEdit ? '取消' : '编辑'}</Text>
                     </Touchable>
                 </View>
             </View>
@@ -71,4 +111,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ShelfTopBar;
+export default connector(ShelfTopBar);
