@@ -5,6 +5,7 @@ import {
     StyleSheet,
     SectionList,
     SectionListRenderItemInfo,
+    Animated,
 } from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
@@ -15,12 +16,15 @@ import HistoryItem from "@/pages/Shelf/Item/HistoryItem";
 import More from "@/components/More";
 import End from "@/components/End";
 import EditView from "@/pages/Shelf/EditView";
+import Touchable from "@/components/Touchable";
+import {wp} from "@/utils/index";
 
 const mapStateToProps = ({user, shelf, loading}: RootState) => {
     return {
         isLogin: user.isLogin,
         historyList: shelf.historyList,
         isEdit: shelf.isEditHistory,
+        ids: shelf.ids,
         refreshing: shelf.refreshing,
         hasMore: shelf.historyHasMore,
         loading: loading.effects['shelf/fetchHistoryList']
@@ -40,6 +44,8 @@ interface IState {
 }
 
 class History extends React.PureComponent<IProps, IState> {
+
+    translateX = new Animated.Value(0)
 
     _unsubscribe: () => void = () => {
     };
@@ -91,10 +97,83 @@ class History extends React.PureComponent<IProps, IState> {
         );
     }
 
+    getX = () => {
+        Animated.timing(this.translateX,
+            {
+                useNativeDriver: false,
+                toValue: wp(5),
+                duration: 150
+            },
+        ).start();
+    }
+
+    getEditX = () => {
+        Animated.timing(this.translateX,
+            {
+                useNativeDriver: false,
+                toValue: 0,
+                duration: 150
+            },
+        ).start();
+    }
+
+    onClickItem = (item: IHistory[]) => {
+        const {navigation, dispatch, isEdit, ids} = this.props;
+        if (isEdit) {
+            let i = ids.indexOf(item['id'])
+            if (i > -1) {
+                ids.splice(i, 1);
+                dispatch({
+                    type: 'shelf/setIds',
+                    payload: {
+                        ids: [...ids]
+                    }
+                })
+            } else {
+                dispatch({
+                    type: 'shelf/setIds',
+                    payload: {
+                        ids: [...ids, item['id']]
+                    }
+                })
+            }
+        } else {
+            navigation.navigate('Brief', {
+                id: item['book_id'].toString()
+            })
+        }
+    }
+
+    goMangaView = (item: IHistory[]) => {
+        const {navigation} = this.props;
+        navigation.navigate('Brief', {
+            id: item['book_id'].toString()
+        })
+        navigation.navigate('MangaView', {
+            roast: item['roast'],
+            title: item['title'],
+            book_id: item['book_id'].toString(),
+        })
+    }
 
     renderItem = ({item}: SectionListRenderItemInfo<IHistory[]>) => {
+        const {isEdit, ids} = this.props;
+        const selected = ids.indexOf(item['id']) > -1;
+        const translateX = isEdit ? this.getX() : this.getEditX();
         return (
-            <HistoryItem data={item}/>
+            <Touchable onPress={() => this.onClickItem(item)}>
+                <Animated.View
+                    style={[
+                        {transform: [{translateX: this.translateX}]},
+                    ]}>
+                    <HistoryItem
+                        data={item}
+                        isEdit={isEdit}
+                        selected={selected}
+                        goMangaView={this.goMangaView}
+                    />
+                </Animated.View>
+            </Touchable>
         )
     }
 
@@ -131,11 +210,39 @@ class History extends React.PureComponent<IProps, IState> {
     }
 
     checkAll = () => {
-
+        const {dispatch, historyList, ids} = this.props;
+        let newData: string[] = [];
+        historyList.forEach(items => {
+                items.data.forEach(item => {
+                    newData = newData.concat(item['id'])
+                })
+            }
+        )
+        if (newData.length === ids.length) {
+            dispatch({
+                type: 'shelf/setState',
+                payload: {
+                    ids: []
+                }
+            })
+        } else {
+            dispatch({
+                type: 'shelf/setState',
+                payload: {
+                    ids: newData
+                }
+            })
+        }
     }
 
     destroy = () => {
-
+        const {dispatch, ids} = this.props;
+        dispatch({
+            type: 'shelf/delUserHistory',
+            payload: {
+                book_id: ids
+            }
+        })
     }
 
     render() {

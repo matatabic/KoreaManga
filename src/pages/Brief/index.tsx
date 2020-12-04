@@ -1,5 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, FlatList, ListRenderItemInfo, Animated, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
+import {
+    View,
+    StyleSheet,
+    FlatList,
+    ListRenderItemInfo,
+    Animated,
+    NativeSyntheticEvent,
+    NativeScrollEvent
+} from 'react-native';
 import {RootState} from "@/models/index";
 import {RouteProp} from "@react-navigation/native";
 import {ModalStackNavigation, RootStackNavigation, RootStackParamList} from "@/navigator/index";
@@ -134,11 +142,9 @@ class Brief extends React.PureComponent<IProps, IState> {
     goMangaView = (item: IChapter) => {
         const {navigation, book_id} = this.props;
         navigation.navigate('MangaView', {
-            data: {
-                book_id,
-                roast: item.roast,
-                title: item.title,
-            }
+            book_id: book_id,
+            roast: item.roast,
+            title: item.title,
         });
     }
 

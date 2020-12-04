@@ -228,7 +228,7 @@ class Shelf extends React.PureComponent<IProps, IState> {
                         onEndReached={this.onEndReached}
                         onEndReachedThreshold={0.1}
                     />
-                    <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
+                    <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy} />
                 </View> :
                 <LoginPending navigation={navigation}/>
         )

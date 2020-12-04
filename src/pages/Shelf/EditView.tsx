@@ -11,8 +11,9 @@ import {connect, ConnectedProps} from "react-redux";
 const mapStateToProps = ({shelf}: RootState) => {
     return {
         ids: shelf.ids,
-        activePage: shelf.activePage,
         collectionList: shelf.collectionList,
+        historyList: shelf.historyList,
+        activePage: shelf.activePage,
     };
 };
 
@@ -43,13 +44,27 @@ class EditView extends React.Component<IProps> {
     }
 
     render() {
-        const {isEdit, ids, collectionList} = this.props;
+        const {isEdit, ids, collectionList, historyList, activePage} = this.props;
+        let listLength: number = 0;
+        switch (activePage) {
+            case 1:
+                listLength = collectionList.length;
+                break;
+            case 2:
+                historyList.forEach(items => {
+                        items.data.forEach(_ => {
+                            listLength++;
+                        })
+                    }
+                )
+                break;
+        }
         return (
             isEdit &&
             <View>
                 <View style={styles.container}>
                     <Touchable style={styles.content} onPress={this.checkAll}>
-                        {ids.length === collectionList.length ?
+                        {ids.length === listLength ?
                             <>
                                 <Icon name="icon-tianxie" size={18} color={Color.red}/>
                                 <Text style={{color: Color.red, marginLeft: 10}}>取消全选</Text>

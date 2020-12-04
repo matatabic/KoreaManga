@@ -1,5 +1,14 @@
 import React from 'react';
-import {View, Text, FlatList, StyleSheet, ListRenderItemInfo, Image, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
+import {
+    View,
+    Text,
+    FlatList,
+    StyleSheet,
+    ListRenderItemInfo,
+    Image,
+    NativeSyntheticEvent,
+    NativeScrollEvent
+} from 'react-native';
 import {IChapter} from "@/models/brief";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
@@ -50,7 +59,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         const {dispatch} = this.props;
-        const {roast, book_id} = this.props.route.params.data;
+        const {roast, book_id} = this.props.route.params;
         dispatch({
             type: 'mangaView/setState',
             payload: {

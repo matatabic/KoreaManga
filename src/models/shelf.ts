@@ -1,7 +1,7 @@
 import {Model, Effect} from 'dva-core-ts';
 import {Reducer} from 'redux';
-import ShelfServices from "@/services/shelf";
 import {RootState} from "@/models/index";
+import ShelfServices from "@/services/shelf";
 import BriefServices from "@/services/brief";
 import {StatusCode} from "@/utils/const";
 
@@ -62,6 +62,7 @@ interface ShelfModel extends Model {
         fetchCollectionList: Effect;
         fetchHistoryList: Effect;
         delUserCollection: Effect;
+        delUserHistory: Effect;
     };
 }
 
@@ -220,7 +221,7 @@ const shelfModel: ShelfModel = {
 
             const namespace = type.split('/')[0];
 
-            const {collectionList: list, isEditCollection: isEdit} = yield select(
+            const {collectionList: list} = yield select(
                 (state: RootState) => state[namespace],
             );
 
@@ -238,7 +239,42 @@ const shelfModel: ShelfModel = {
                     type: 'setState',
                     payload: {
                         collectionList: newList,
-                        isEditCollection: !isEdit
+                        isEditCollection: false,
+                    }
+                })
+            }
+        },
+        *delUserHistory(action, {call, put, select}) {
+            const {payload, type} = action;
+
+            const namespace = type.split('/')[0];
+
+            const {historyList: list} = yield select(
+                (state: RootState) => state[namespace],
+            );
+
+            let newData = '';
+            for (let i of payload.ids) {
+                newData += `${i},`;
+            }
+
+            const data = yield call(ShelfServices.delUserHistory, {id: newData});
+            if (data.code === StatusCode.SUCCESS) {
+                let n = 0;
+                let newList: IHistoryList[] = [];
+                list.forEach((items: IHistoryList) => {
+                    let data = items.data.filter(item => payload.ids.indexOf(item['id']) === -1)
+                    if (data.length !== 0) {
+                        newList[n] = {title: items.title, data: data}
+                        n++
+                    }
+                })
+
+                yield put({
+                    type: 'setState',
+                    payload: {
+                        historyList: newList,
+                        isEditHistory: false,
                     }
                 })
             }

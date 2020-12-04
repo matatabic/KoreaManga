@@ -5,6 +5,7 @@ import {Color} from "@/utils/const";
 import FastImage from "react-native-fast-image";
 import Touchable from "@/components/Touchable";
 import {ip, wp} from "@/utils/index";
+import Icon from "@/assets/iconfont";
 
 const imageWidth = wp(25);
 const imageHeight = ip(imageWidth);
@@ -12,13 +13,31 @@ const itemHeight = imageHeight + 10;
 
 interface IProps {
     data: IHistory[];
+    isEdit: boolean;
+    selected: boolean;
+    goMangaView: (data: IHistory[]) => void;
 }
 
 class HistoryItem extends PureComponent<IProps> {
+
+    onPress = () => {
+        const {data, goMangaView} = this.props;
+        if (typeof goMangaView === 'function') {
+            goMangaView(data);
+        }
+    }
+
     render() {
-        const {data} = this.props;
+        const {data, isEdit, selected} = this.props;
         return (
             <View style={styles.item}>
+                {
+                    isEdit && (
+                        <View style={styles.selectedView}>
+                            <Icon name="icon-gouxuan" size={18} color={selected ? Color.red : Color.grey}/>
+                        </View>
+                    )
+                }
                 <FastImage
                     source={{uri: data['image'], cache: FastImage.cacheControl.immutable}}
                     style={styles.image}
@@ -31,11 +50,14 @@ class HistoryItem extends PureComponent<IProps> {
                         <Text style={styles.infoText}>{`更新至第${data['chapter_total']}话`}</Text>
                     </View>
                 </View>
-                <View style={styles.rightView}>
-                    <View style={styles.read}>
-                        <Text style={styles.readTitle}>{`续看第${data['chapter_num']}话`}</Text>
+                {
+                    !isEdit &&
+                    <View style={styles.rightView}>
+                        <Touchable onPress={this.onPress} style={styles.read}>
+                            <Text style={styles.readTitle}>{`续看第${data['chapter_num']}话`}</Text>
+                        </Touchable>
                     </View>
-                </View>
+                }
             </View>
         );
     }
@@ -78,10 +100,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    readTitle:{
+    readTitle: {
         color: Color.pink,
+    },
+    selectedView: {
+        justifyContent: 'center',
+        left: -wp(5)
+    },
+    selected: {
+        width: 15,
+        height: 15,
+        backgroundColor: Color.red
     }
-
 })
 
 export default HistoryItem;
