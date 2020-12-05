@@ -9,15 +9,15 @@ export async function getCollection(params: any) {
 }
 
 export async function getHistory(params: any) {
-    return axios.get(HISTORY_URL, {
+    return axios.get(HISTORY_URL,{
         params
     });
 }
 
 export async function delUserHistory(params: any) {
-    return axios.post(DEL_HISTORY_URL, {
+    return axios.post(DEL_HISTORY_URL,
         params
-    });
+    );
 }
 
 export default {

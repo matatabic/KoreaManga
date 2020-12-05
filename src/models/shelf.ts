@@ -225,12 +225,12 @@ const shelfModel: ShelfModel = {
                 (state: RootState) => state[namespace],
             );
 
-            let newData = '';
+            let idsString = '';
             for (let i of payload.ids) {
-                newData += `${i},`;
+                idsString += `${i},`;
             }
 
-            const data = yield call(BriefServices.delUserCollection, {id: newData});
+            const data = yield call(BriefServices.delUserCollection, {id: idsString});
             if (data.code === StatusCode.SUCCESS) {
                 const newList = list.filter((item: ICollection) => {
                     return payload.ids.indexOf(item.id) === -1
@@ -253,17 +253,17 @@ const shelfModel: ShelfModel = {
                 (state: RootState) => state[namespace],
             );
 
-            let newData = '';
+            let idsString = '';
             for (let i of payload.ids) {
-                newData += `${i},`;
+                idsString += `${i},`;
             }
 
-            const data = yield call(ShelfServices.delUserHistory, {id: newData});
+            const data = yield call(ShelfServices.delUserHistory, {book_id: idsString});
             if (data.code === StatusCode.SUCCESS) {
                 let n = 0;
                 let newList: IHistoryList[] = [];
                 list.forEach((items: IHistoryList) => {
-                    let data = items.data.filter(item => payload.ids.indexOf(item['id']) === -1)
+                    let data = items.data.filter(item => payload.ids.indexOf(item['book_id']) === -1)
                     if (data.length !== 0) {
                         newList[n] = {title: items.title, data: data}
                         n++

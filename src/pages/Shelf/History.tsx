@@ -120,7 +120,7 @@ class History extends React.PureComponent<IProps, IState> {
     onClickItem = (item: IHistory[]) => {
         const {navigation, dispatch, isEdit, ids} = this.props;
         if (isEdit) {
-            let i = ids.indexOf(item['id'])
+            let i = ids.indexOf(item['book_id'])
             if (i > -1) {
                 ids.splice(i, 1);
                 dispatch({
@@ -133,7 +133,7 @@ class History extends React.PureComponent<IProps, IState> {
                 dispatch({
                     type: 'shelf/setIds',
                     payload: {
-                        ids: [...ids, item['id']]
+                        ids: [...ids, item['book_id']]
                     }
                 })
             }
@@ -158,7 +158,7 @@ class History extends React.PureComponent<IProps, IState> {
 
     renderItem = ({item}: SectionListRenderItemInfo<IHistory[]>) => {
         const {isEdit, ids} = this.props;
-        const selected = ids.indexOf(item['id']) > -1;
+        const selected = ids.indexOf(item['book_id']) > -1;
         const translateX = isEdit ? this.getX() : this.getEditX();
         return (
             <Touchable onPress={() => this.onClickItem(item)}>
@@ -214,7 +214,7 @@ class History extends React.PureComponent<IProps, IState> {
         let newData: string[] = [];
         historyList.forEach(items => {
                 items.data.forEach(item => {
-                    newData = newData.concat(item['id'])
+                    newData = newData.concat(item['book_id'])
                 })
             }
         )
@@ -240,7 +240,7 @@ class History extends React.PureComponent<IProps, IState> {
         dispatch({
             type: 'shelf/delUserHistory',
             payload: {
-                book_id: ids
+                ids
             }
         })
     }
