@@ -5,6 +5,7 @@ import Touchable from "@/components/Touchable";
 import {ip, wp} from "@/utils/index";
 import {IBook} from "@/models/search";
 import {Color} from "@/utils/const";
+import ErrorImage from "@/assets/image/error.png";
 
 const imageWidth = wp(25);
 const imageHeight = ip(imageWidth);
@@ -12,24 +13,44 @@ const itemHeight = imageHeight + 10;
 
 interface IProps {
     data: IBook;
-    onPress: (data: IBook) => void;
+    goBrief: (data: IBook) => void;
 }
 
-class Item extends React.PureComponent<IProps> {
+interface IState {
+    errorLoad: boolean;
+}
+
+class Item extends React.PureComponent<IProps, IState> {
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            errorLoad: false,
+        }
+    }
+
+    showError = () => {
+        this.setState({
+            errorLoad: true
+        })
+    };
 
     onPress = () => {
-        const {data, onPress} = this.props;
-        if (typeof onPress === 'function') {
-            onPress(data)
+        const {data, goBrief} = this.props;
+        if (typeof goBrief === 'function') {
+            goBrief(data)
         }
     }
 
     render() {
         const {data} = this.props;
+        const {errorLoad} = this.state;
+        const loadImage = errorLoad ? ErrorImage : {uri: data.image, cache: FastImage.cacheControl.immutable};
         return (
             <Touchable style={styles.item} onPress={this.onPress}>
                 <FastImage
-                    source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
+                    source={loadImage}
+                    onError={this.showError}
                     style={styles.image}
                     resizeMode={FastImage.resizeMode.stretch}
                 />

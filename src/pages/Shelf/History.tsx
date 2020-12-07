@@ -18,6 +18,7 @@ import End from "@/components/End";
 import EditView from "@/pages/Shelf/EditView";
 import Touchable from "@/components/Touchable";
 import {wp} from "@/utils/index";
+import LoginPending from "@/pages/Shelf/LoginPending";
 
 const mapStateToProps = ({user, shelf, loading}: RootState) => {
     return {
@@ -246,27 +247,28 @@ class History extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {refreshing, historyList, isEdit} = this.props;
+        const {navigation, isLogin, refreshing, historyList, isEdit} = this.props;
         return (
-            <View style={styles.container}>
-                <SectionList
-                    keyExtractor={(item, index) => `section-item-${index}`}
-                    renderSectionHeader={this.renderSectionHeader}
-                    onRefresh={this.onRefresh}
-                    refreshing={refreshing}
-                    sections={historyList}
-                    style={styles.container}
-                    contentContainerStyle={styles.contentContainer}
-                    stickySectionHeadersEnabled={true}
-                    onEndReached={this.onEndReached}
-                    onEndReachedThreshold={0.1}
-                    renderItem={this.renderItem}
-                    extraData={this.state}
-                    ListFooterComponent={this.renderFooter}
-                />
-                <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
-            </View>
-
+            isLogin ?
+                <View style={styles.container}>
+                    <SectionList
+                        keyExtractor={(item, index) => `section-item-${index}`}
+                        renderSectionHeader={this.renderSectionHeader}
+                        onRefresh={this.onRefresh}
+                        refreshing={refreshing}
+                        sections={historyList}
+                        style={styles.container}
+                        contentContainerStyle={styles.contentContainer}
+                        stickySectionHeadersEnabled={true}
+                        onEndReached={this.onEndReached}
+                        onEndReachedThreshold={0.1}
+                        renderItem={this.renderItem}
+                        extraData={this.state}
+                        ListFooterComponent={this.renderFooter}
+                    />
+                    <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
+                </View> :
+                <LoginPending navigation={navigation}/>
         );
     }
 }

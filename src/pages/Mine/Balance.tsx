@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
 
         alignItems: 'center',
     },
-    currencyTitle:{
-        marginLeft:5
+    currencyTitle: {
+        marginLeft: 5
     },
     giftView: {
         flex: 1,
@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
 
         alignItems: 'center',
     },
-    giftTitle:{
-        marginLeft:5
+    giftTitle: {
+        marginLeft: 5
     },
     rightView: {
         flex: 3,

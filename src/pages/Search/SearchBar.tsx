@@ -114,11 +114,9 @@ class SearchBar extends React.PureComponent<IProps, IState> {
         this.setState({
             searchTitle: text
         })
-        console.log(text.length)
         if (text && text.length > 0) {
             this.debounce(this.loadData, text, 250)
         } else {
-            console.log('showSimpleView: falseshowSimpleView: falseshowSimpleView: false')
             dispatch({
                 type: 'search/setState',
                 payload: {
@@ -172,7 +170,6 @@ class SearchBar extends React.PureComponent<IProps, IState> {
                                onSubmitEditing={this.onSubmitEditing}
                                maxLength={20}
                                placeholder={'搜索关键字...'}
-                               ref='textInputRefer'
                                onChangeText={(text) => {
                                    this.onChangeText(text)
                                }}

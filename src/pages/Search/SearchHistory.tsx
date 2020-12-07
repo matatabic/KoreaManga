@@ -86,7 +86,7 @@ class SearchHistory extends React.PureComponent<IProps> {
                         <Text style={styles.headerTitle}>搜索历史</Text>
                     </View>
                     {this.renderItem}
-                    <DestroyView onPress={this.destroyHistory}/>
+                    <DestroyView destroyHistory={this.destroyHistory}/>
                 </View>
             );
         }

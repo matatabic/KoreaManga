@@ -7,14 +7,16 @@ import {Color} from "@/utils/const";
 interface IProps {
     data: IStatus;
     active: Boolean;
-    onPress: (data: IStatus) => void;
+    onClickEdit: (data: IStatus) => void;
 }
 
 class TopBatItem extends React.PureComponent<IProps> {
 
     onPress = () => {
-        const {data, onPress} = this.props;
-        onPress(data)
+        const {data, onClickEdit} = this.props;
+        if (typeof onClickEdit === 'function') {
+            onClickEdit(data);
+        }
     }
 
     render() {

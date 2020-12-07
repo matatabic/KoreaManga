@@ -29,7 +29,7 @@ class Simple extends React.PureComponent<IProps> {
             simpleList.map((item, index) => {
                 return (
                     <View key={index}>
-                        <SimpleItem data={item} onPress={goBrief}/>
+                        <SimpleItem data={item} goBrief={goBrief}/>
                     </View>
                 )
             })

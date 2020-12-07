@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
-import {ErrorMessage, FieldInputProps, FormikHandlers, FormikProps} from 'formik';
+import {ErrorMessage, FieldInputProps, FormikProps} from 'formik';
 import {Color} from "@/utils/const";
 import Icon, {IconNames} from '@/assets/iconfont/index';
+import Touchable from "@/components/Touchable";
 
 interface IProps {
     field: FieldInputProps<any>;
@@ -11,12 +12,22 @@ interface IProps {
 }
 
 class Input extends React.PureComponent<IProps> {
+
+    chaCha = () => {
+        const {form, field} = this.props;
+        if (field.name === 'account') {
+            form.setFieldValue('account', '');
+        } else if (field.name === 'password') {
+            form.setFieldValue('password', '');
+        }
+    }
+
     render() {
         const {form, field, iconName, ...rest} = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.inputView}>
-                    <Icon name={'icon-account'} color={Color.dark_title} size={20}/>
+                    <Icon name={iconName} color={Color.night_btn} size={20}/>
                     <TextInput
                         {...field}
                         {...rest}
@@ -24,6 +35,9 @@ class Input extends React.PureComponent<IProps> {
                         onChangeText={form.handleChange(field.name)}
                         onBlur={form.handleBlur(field.name)}
                     />
+                    <Touchable onPress={this.chaCha}>
+                        <Icon name={'icon-chacha'} color={Color.night_btn} size={20}/>
+                    </Touchable>
                     <ErrorMessage
                         name={field.name}
                         component={Text}

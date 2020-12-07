@@ -10,7 +10,7 @@ import {getStatusBarHeight} from "react-native-iphone-x-helper";
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
-        bookInfo: brief.bookInfo,
+        data: brief.bookInfo,
     };
 };
 
@@ -18,15 +18,17 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
+interface IProps extends ModelState {
+}
 
-class ImageTopBar extends React.Component<ModelState> {
+class ImageTopBar extends React.Component<IProps> {
 
     render() {
-        const {bookInfo} = this.props;
+        const {data} = this.props;
         return (
             <View style={styles.container}>
                 <FastImage
-                    source={{uri: bookInfo.image}}
+                    source={{uri: data.image}}
                     style={styles.image}
                     resizeMode={FastImage.resizeMode.cover}
                 />

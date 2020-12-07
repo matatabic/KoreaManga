@@ -10,14 +10,14 @@ export interface IPagination {
 }
 
 export interface IBook {
-    id: string;
+    id: number;
     title: string;
     image: string;
     category: string;
 }
 
 export interface ICarousel {
-    id: string;
+    id: number;
     image: string;
 }
 

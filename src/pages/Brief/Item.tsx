@@ -21,7 +21,9 @@ class Item extends React.Component<IProps> {
 
     onPress = () => {
         const {goMangaView, data} = this.props;
-        goMangaView(data);
+        if (typeof goMangaView === 'function') {
+            goMangaView(data);
+        }
     }
 
 

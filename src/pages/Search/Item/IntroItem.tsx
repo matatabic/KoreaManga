@@ -6,14 +6,16 @@ import {Color} from "@/utils/const";
 
 interface IProps {
     data: any;
-    onPress: (data: IBook) => void;
+    goBrief: (data: IBook) => void;
 }
 
 class IntroItem extends React.Component<IProps> {
 
-    onPress = () =>{
-        const {data,onPress} = this.props;
-        onPress(data);
+    onPress = () => {
+        const {data, goBrief} = this.props;
+        if (typeof goBrief === "function") {
+            goBrief(data);
+        }
     }
 
     render() {

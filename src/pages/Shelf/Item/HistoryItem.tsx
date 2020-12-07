@@ -6,6 +6,8 @@ import FastImage from "react-native-fast-image";
 import Touchable from "@/components/Touchable";
 import {ip, wp} from "@/utils/index";
 import Icon from "@/assets/iconfont";
+import ErrorImage from "@/assets/image/error.png";
+import {load} from "@/config/storage";
 
 const imageWidth = wp(25);
 const imageHeight = ip(imageWidth);
@@ -18,7 +20,24 @@ interface IProps {
     goMangaView: (data: IHistory[]) => void;
 }
 
-class HistoryItem extends PureComponent<IProps> {
+interface IState {
+    errorLoad: boolean;
+}
+
+class HistoryItem extends PureComponent<IProps, IState> {
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            errorLoad: false,
+        }
+    }
+
+    showError = () => {
+        this.setState({
+            errorLoad: true
+        })
+    };
 
     onPress = () => {
         const {data, goMangaView} = this.props;
@@ -29,6 +48,8 @@ class HistoryItem extends PureComponent<IProps> {
 
     render() {
         const {data, isEdit, selected} = this.props;
+        const {errorLoad} = this.state;
+        const loadImage = errorLoad ? ErrorImage : {uri: data['image'], cache: FastImage.cacheControl.immutable};
         return (
             <View style={styles.item}>
                 {
@@ -39,7 +60,8 @@ class HistoryItem extends PureComponent<IProps> {
                     )
                 }
                 <FastImage
-                    source={{uri: data['image'], cache: FastImage.cacheControl.immutable}}
+                    source={loadImage}
+                    onError={this.showError}
                     style={styles.image}
                     resizeMode={FastImage.resizeMode.stretch}
                 />

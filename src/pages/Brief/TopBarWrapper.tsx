@@ -14,7 +14,9 @@ class TopBarWrapper extends React.PureComponent<IProps> {
 
     onPress = () => {
         const {goBack} = this.props;
-        goBack();
+        if (typeof goBack === 'function') {
+            goBack();
+        }
     }
 
     render() {

@@ -93,7 +93,7 @@ class BookList extends React.Component<IProps, IState> {
     renderItem = ({item}: ListRenderItemInfo<IBook>) => {
         const {goBrief} = this.props;
         return (
-            <Item data={item} onPress={goBrief}/>
+            <Item data={item} goBrief={goBrief}/>
         )
     }
 

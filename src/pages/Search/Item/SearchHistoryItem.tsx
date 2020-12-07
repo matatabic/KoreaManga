@@ -14,12 +14,16 @@ interface IProps {
 class SearchHistoryItem extends React.PureComponent<IProps> {
     clearHistory = () => {
         const {index, clearHistory} = this.props;
-        clearHistory(index)
+        if (typeof clearHistory === "function") {
+            clearHistory(index);
+        }
     }
 
     HistorySearch = () => {
         const {title, HistorySearch} = this.props;
-        HistorySearch(title)
+        if (typeof HistorySearch === "function") {
+            HistorySearch(title);
+        }
     }
 
     render() {

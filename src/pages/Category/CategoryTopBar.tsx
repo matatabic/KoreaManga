@@ -76,7 +76,7 @@ class CategoryTopBar extends React.PureComponent<IProps> {
                             const active = item.id == activeStatus;
                             return (
                                 <View key={item.id}>
-                                    <TopBatItem data={item} active={active} onPress={this.onPress}/>
+                                    <TopBatItem data={item} active={active} onClickEdit={this.onPress}/>
                                 </View>
                             )
                         })

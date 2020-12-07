@@ -4,14 +4,21 @@ import Touchable from "@/components/Touchable";
 import {Color} from "@/utils/const";
 
 interface IProps {
-    onPress: () => void;
+    destroyHistory: () => void;
 }
 
 class DestroyView extends React.PureComponent<IProps> {
+
+    destroyHistory = () => {
+        const {destroyHistory} = this.props;
+        if (typeof destroyHistory === "function") {
+            destroyHistory();
+        }
+    }
+
     render() {
-        const {onPress} = this.props;
         return (
-            <Touchable onPress={() => onPress()} style={styles.container}>
+            <Touchable onPress={this.destroyHistory} style={styles.container}>
                 <Text style={styles.title}>清除历史记录</Text>
             </Touchable>
         )

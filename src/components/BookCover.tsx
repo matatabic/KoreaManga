@@ -5,33 +5,53 @@ import {ip, viewportWidth, wp} from "@/utils/index";
 import {IBook} from "@/models/home";
 import {Color} from "@/utils/const";
 import FastImage from 'react-native-fast-image';
+import ErrorImage from '@/assets/image/error.png'
 
 
-export interface IProps {
+interface IProps {
     data: IBook;
     goBrief: (data: IBook) => void;
 }
 
-const DEFAULT_IMAGE =
-    'https://jiecaomh.com/media/uploads/a/目標就是妳內褲完結/cover.jpg';
+interface IState {
+    errorLoad: boolean;
+}
 
 const itemWidth = wp(90) / 3;
 const imageHeight = ip(itemWidth);
 const itemMargin = (viewportWidth - wp(90)) / 4;
 
 
-class BookCover extends React.PureComponent<IProps> {
+class BookCover extends React.PureComponent<IProps, IState> {
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            errorLoad: false,
+        }
+    }
+
     showError = () => {
-        const {data} = this.props;
-        console.log('error' + data.id);
+        this.setState({
+            errorLoad: true
+        })
     };
 
-    render() {
+    onPress = () => {
         const {data, goBrief} = this.props;
+        if (typeof goBrief === 'function') {
+            goBrief(data);
+        }
+    }
+
+    render() {
+        const {data} = this.props;
+        const {errorLoad} = this.state;
+        const loadImage = errorLoad ? ErrorImage : {uri: data.image, cache: FastImage.cacheControl.immutable};
         return (
-            <Touchable style={styles.item} onPress={() => goBrief(data)}>
+            <Touchable style={styles.item} onPress={this.onPress}>
                 <FastImage
-                    source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
+                    source={loadImage}
                     onError={this.showError}
                     style={styles.image}
                     resizeMode={FastImage.resizeMode.stretch}

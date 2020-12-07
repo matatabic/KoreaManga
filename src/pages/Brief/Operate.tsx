@@ -12,7 +12,7 @@ import {ModalStackNavigation} from "@/navigator/index";
 const mapStateToProps = ({user, brief}: RootState) => {
     return {
         isLogin: user.isLogin,
-        bookInfo: brief.bookInfo,
+        data: brief.bookInfo,
         collection_id: brief.collection_id,
     };
 };
@@ -33,12 +33,12 @@ interface IProps extends ModelState {
 class Operate extends React.Component<IProps> {
 
     addUserCollection = () => {
-        const {dispatch, navigation, isLogin, bookInfo} = this.props;
+        const {dispatch, navigation, isLogin, data} = this.props;
         if (isLogin) {
             dispatch({
                 type: 'brief/addUserCollection',
                 payload: {
-                    book_id: bookInfo.id
+                    book_id: data.id
                 }
             })
         } else {

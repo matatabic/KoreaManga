@@ -39,7 +39,7 @@ class Intro extends React.PureComponent<IProps> {
                             introList[value].map((item: IBook, index: string) => {
                                 return (
                                     <View key={`key-${key}-${index}`}>
-                                        <IntroItem data={item} onPress={goBrief}/>
+                                        <IntroItem data={item} goBrief={goBrief}/>
                                     </View>
                                 )
                             })

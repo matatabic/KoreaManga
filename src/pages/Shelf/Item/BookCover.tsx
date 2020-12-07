@@ -5,6 +5,7 @@ import {ICollection} from "@/models/shelf";
 import {Color} from "@/utils/const";
 import FastImage from 'react-native-fast-image';
 import Icon from "@/assets/iconfont";
+import ErrorImage from "@/assets/image/error.png";
 
 
 interface IProps {
@@ -13,24 +14,38 @@ interface IProps {
     selected: boolean;
 }
 
+interface IState {
+    errorLoad: boolean;
+}
 
 const itemWidth = wp(90) / 3;
 const imageHeight = ip(itemWidth);
 const itemMargin = (viewportWidth - wp(90)) / 4;
 
 
-class BookCover extends React.PureComponent<IProps> {
+class BookCover extends React.PureComponent<IProps, IState> {
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            errorLoad: false,
+        }
+    }
+
     showError = () => {
-        const {data} = this.props;
-        console.log('error' + data.id);
+        this.setState({
+            errorLoad: true
+        })
     };
 
     render() {
         const {data, isEdit, selected} = this.props;
+        const {errorLoad} = this.state;
+        const loadImage = errorLoad ? ErrorImage : {uri: data.image, cache: FastImage.cacheControl.immutable};
         return (
             <View style={styles.item}>
                 <FastImage
-                    source={{uri: data.image, cache: FastImage.cacheControl.immutable}}
+                    source={loadImage}
                     onError={this.showError}
                     style={styles.image}
                     resizeMode={FastImage.resizeMode.stretch}

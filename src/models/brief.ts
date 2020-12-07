@@ -2,17 +2,17 @@ import {Effect, Model} from "dva-core-ts";
 import {Reducer} from "redux";
 import BriefServices from "@/services/brief";
 import {StatusCode} from "@/utils/const";
-import Toast from "react-native-root-toast";
+
 
 export interface IChapter {
-    id: string;
+    id: number;
     title: string;
     name: string;
     roast: string;
 }
 
-export interface IInfo {
-    id: string,
+export interface IBookInfo {
+    id: number,
     title: string,
     image: string,
     category: string,
@@ -22,7 +22,7 @@ export interface IInfo {
 }
 
 export interface BriefState {
-    bookInfo: IInfo;
+    bookInfo: IBookInfo;
     collection_id: number;
     markChapter: string;
     markIndex: string;
@@ -45,7 +45,7 @@ interface CategoryModel extends Model {
 
 export const initialState = {
     bookInfo: {
-        id: '',
+        id: 0,
         title: '',
         image: '',
         category: '',

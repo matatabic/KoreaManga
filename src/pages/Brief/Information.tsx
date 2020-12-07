@@ -5,11 +5,13 @@ import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {hp, ip, wp} from "@/utils/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
+import FastImage from "react-native-fast-image";
+import ErrorImage from "@/assets/image/error.png";
 
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
-        bookInfo: brief.bookInfo,
+        data: brief.bookInfo,
     };
 };
 
@@ -21,26 +23,51 @@ interface IProps extends ModelState {
     opacity: Animated.AnimatedInterpolation;
 }
 
+interface IState {
+    errorLoad: boolean;
+}
+
 const imageWidth = wp(33);
 const imageHeight = ip(imageWidth);
 
-class Information extends React.Component<IProps> {
+class Information extends React.Component<IProps, IState> {
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            errorLoad: false,
+        }
+    }
+
+    showError = () => {
+        this.setState({
+            errorLoad: true
+        })
+    };
+
     render() {
-        const {bookInfo, opacity} = this.props;
+        const {data, opacity} = this.props;
+        const {errorLoad} = this.state;
+        const loadImage = errorLoad ? ErrorImage : {uri: data.image, cache: FastImage.cacheControl.immutable};
         return (
-            bookInfo && bookInfo.image.length > 0 && (
+            data && data.image.length > 0 && (
                 <Animated.View style={[styles.wrapper, {
                     opacity: opacity
                 }]}>
                     <View style={styles.container}>
                         <View style={styles.leftView}>
-                            <Image source={{uri: bookInfo.image}} style={styles.image}/>
+                            <FastImage
+                                source={loadImage}
+                                onError={this.showError}
+                                style={styles.image}
+                                resizeMode={FastImage.resizeMode.stretch}
+                            />
                         </View>
                         <View style={styles.rightView}>
-                            <Text style={styles.title}>{bookInfo.title}</Text>
-                            <Text style={styles.bulletin}>{bookInfo.status}</Text>
-                            <Text style={styles.bulletin}>{bookInfo.author}</Text>
-                            <Text style={styles.bulletin}>{bookInfo.category}</Text>
+                            <Text style={styles.title}>{data.title}</Text>
+                            <Text style={styles.bulletin}>{data.status}</Text>
+                            <Text style={styles.bulletin}>{data.author}</Text>
+                            <Text style={styles.bulletin}>{data.category}</Text>
                         </View>
                     </View>
                 </Animated.View>
@@ -80,7 +107,6 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     image: {
-
         width: imageWidth,
         height: imageHeight,
     },

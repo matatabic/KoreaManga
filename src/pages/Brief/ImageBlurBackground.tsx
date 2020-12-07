@@ -8,7 +8,7 @@ import {connect, ConnectedProps} from "react-redux";
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
-        bookInfo: brief.bookInfo,
+        data: brief.bookInfo,
     };
 };
 
@@ -22,12 +22,12 @@ interface IProps extends ModelState {
 
 class ImageBlurBackground extends React.Component<IProps> {
     render() {
-        const {bookInfo, imageSize} = this.props;
+        const {data, imageSize} = this.props;
         return (
-            bookInfo && bookInfo.image.length > 0 && (
+            data && data.image.length > 0 && (
                 <View style={styles.container}>
                     <Animated.Image
-                        source={{uri: bookInfo.image}}
+                        source={{uri: data.image}}
                         style={[styles.image, {
                             transform: [{scale: imageSize}]
                         }]}
