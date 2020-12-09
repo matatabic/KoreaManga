@@ -1,5 +1,5 @@
 import axios from "axios";
-import {EPISODE_URL} from "@/config/api";
+import {EPISODE_URL, ADD_HISTORY} from "@/config/api";
 
 
 export interface IParams {
@@ -15,6 +15,11 @@ export async function getList(params: IParams) {
     });
 }
 
+export async function saveMark(params: any) {
+    return axios.post(ADD_HISTORY, params);
+}
+
 export default {
     getList,
+    saveMark
 };

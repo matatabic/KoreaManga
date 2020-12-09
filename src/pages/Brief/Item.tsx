@@ -33,7 +33,7 @@ class Item extends React.Component<IProps> {
             <Touchable onPress={this.onPress}>
                 <View style={styles.itemWrapper}>
                     <View style={styles.item}>
-                        <Text>{data.name}</Text>
+                        <Text>第{data.chapter_num}话</Text>
                     </View>
                 </View>
             </Touchable>

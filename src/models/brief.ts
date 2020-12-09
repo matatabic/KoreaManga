@@ -7,8 +7,8 @@ import {StatusCode} from "@/utils/const";
 export interface IChapter {
     id: number;
     title: string;
-    name: string;
-    roast: string;
+    roast: number;
+    chapter_num: number;
 }
 
 export interface IBookInfo {
@@ -24,8 +24,8 @@ export interface IBookInfo {
 export interface BriefState {
     bookInfo: IBookInfo;
     collection_id: number;
-    markChapter: string;
-    markIndex: string;
+    markChapterNum: number;
+    markRoast: number;
     chapterList: IChapter[];
 }
 
@@ -35,6 +35,7 @@ interface CategoryModel extends Model {
     reducers: {
         setState: Reducer<BriefState>;
         setCollectionId: Reducer<BriefState>;
+        setChapter: Reducer<BriefState>;
     };
     effects: {
         fetchBrief: Effect;
@@ -54,8 +55,8 @@ export const initialState = {
         status: '',
     },
     collection_id: 0,
-    markChapter: '',
-    markIndex: '',
+    markChapterNum: 0,
+    markRoast: 0,
     chapterList: []
 };
 
@@ -74,6 +75,12 @@ const briefModel: CategoryModel = {
                 ...state,
                 collection_id: payload.collection_id,
             };
+        },
+        setChapter(state = initialState, {payload}) {
+            return{
+                ...state,
+                ...payload,
+            }
         },
     },
     effects: {

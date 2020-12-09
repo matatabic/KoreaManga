@@ -5,8 +5,11 @@ import {RootState} from "@/models/index";
 
 
 export interface IEpisode {
-    id: string;
+    id: number;
     image: string;
+    roast: number;
+    chapter_id: number;
+    chapter_num: number;
     multiple: number;
 }
 
@@ -35,6 +38,7 @@ interface MangaViewModel extends Model {
     };
     effects: {
         fetchEpisodeList: Effect;
+        addHistory: Effect;
     };
 }
 
@@ -104,6 +108,9 @@ const mangaViewModel: MangaViewModel = {
             if (action.callback) {
                 action.callback();
             }
+        },
+        *addHistory({payload}, {call, put}) {
+            yield call(EpisodeServices.saveMark, payload);
         },
     },
 };

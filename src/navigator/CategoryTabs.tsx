@@ -104,7 +104,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
         this.createModel(item.id);
         return (
             <Tab.Screen
-                key={item.id}
+                key={item.id.toString()}
                 name={item.id}
                 component={Category}
                 initialParams={{

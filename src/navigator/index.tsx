@@ -26,12 +26,11 @@ export type RootStackParamList = {
     Search: undefined;
     SearchBar: undefined;
     Brief: {
-        id: string;
+        id: number;
     };
     MangaView: {
-        roast: string;
-        title: string;
-        book_id: string;
+        roast: number;
+        book_id: number;
     },
 };
 
@@ -87,9 +86,7 @@ function RootStackScreen() {
                     headerTitle: '',
                     cardStyle: {backgroundColor: Color.page_bg},
                     headerLeft: () => {
-                        return (
-                            <></>
-                        )
+                        return null;
                     },
                 }}
             />
@@ -107,7 +104,7 @@ function RootStackScreen() {
                     headerTransparent: true,
                     headerTitle: '',
                     headerLeft: () => {
-                        return <></>
+                        return null;
                     },
                 }}
             />
@@ -119,7 +116,7 @@ function RootStackScreen() {
                     headerTitle: '',
                     cardStyle: {backgroundColor: Color.black},
                     headerLeft: () => {
-                        return <></>
+                        return null;
                     },
                 }}
             />

@@ -144,7 +144,6 @@ class Brief extends React.PureComponent<IProps, IState> {
         navigation.navigate('MangaView', {
             book_id: book_id,
             roast: item.roast,
-            title: item.title,
         });
     }
 
@@ -237,8 +236,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         backgroundColor: Color.page_bg,
     },
-
-
 })
 
 export default connector(Brief);

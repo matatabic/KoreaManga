@@ -6,12 +6,15 @@ import Touchable from "@/components/Touchable";
 import {hp, wp} from "@/utils/index";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-import {ModalStackNavigation} from "@/navigator/index";
+import {ModalStackNavigation, RootStackNavigation} from "@/navigator/index";
 
 
 const mapStateToProps = ({user, brief}: RootState) => {
     return {
         isLogin: user.isLogin,
+        markChapterNum: brief.markChapterNum,
+        markRoast: brief.markRoast,
+        chapterList: brief.chapterList,
         data: brief.bookInfo,
         collection_id: brief.collection_id,
     };
@@ -22,7 +25,7 @@ const connector = connect(mapStateToProps);
 type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
-    navigation: ModalStackNavigation;
+    navigation: RootStackNavigation & ModalStackNavigation;
     opacity: Animated.AnimatedInterpolation;
     leftViewX: Animated.AnimatedInterpolation;
     rightViewX: Animated.AnimatedInterpolation;
@@ -60,8 +63,24 @@ class Operate extends React.Component<IProps> {
         }
     }
 
+    readNow = () => {
+        const {navigation, data, markRoast} = this.props;
+        if (markRoast > 0) {
+            navigation.navigate('MangaView', {
+                book_id: data.id,
+                roast: markRoast,
+            });
+        } else {
+            navigation.navigate('MangaView', {
+                book_id: data.id,
+                roast: 1,
+            });
+        }
+
+    }
+
     render() {
-        const {opacity, leftViewX, rightViewX, rightViewScale, rightFontSize, collection_id} = this.props;
+        const {markChapterNum, opacity, leftViewX, rightViewX, rightViewScale, rightFontSize, collection_id} = this.props;
         return (
             <>
                 <Animated.View style={[styles.shadowView, {opacity: opacity}]}/>
@@ -94,19 +113,16 @@ class Operate extends React.Component<IProps> {
                                     </Animated.View>
                                 </Touchable>
                         }
-
-                        <Animated.View style={[styles.rightView, {
-                            left: rightViewX,
-                            transform: [{scale: rightViewScale}]
-                        }]}>
-                            <Touchable onPress={() => {
-                                console.log('开始阅读')
-                            }}>
+                        <Touchable onPress={this.readNow}>
+                            <Animated.View style={[styles.rightView, {
+                                left: rightViewX,
+                                transform: [{scale: rightViewScale}]
+                            }]}>
                                 <Animated.Text style={[styles.rightTitle, {
                                     fontSize: rightFontSize
-                                }]}>开始阅读</Animated.Text>
-                            </Touchable>
-                        </Animated.View>
+                                }]}>{markChapterNum > 0 ? `续看第${markChapterNum}话` : '开始阅读'}</Animated.Text>
+                            </Animated.View>
+                        </Touchable>
                     </View>
                 </View>
             </>

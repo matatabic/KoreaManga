@@ -1,14 +1,13 @@
 import React from 'react';
 import {
-    View,
-    Text,
     FlatList,
     StyleSheet,
     ListRenderItemInfo,
-    Image,
     NativeSyntheticEvent,
-    NativeScrollEvent
+    NativeScrollEvent,
+    Text,
 } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import {IChapter} from "@/models/brief";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
@@ -19,11 +18,15 @@ import {IEpisode, initialState} from "@/models/mangaView";
 import Item from "./item/Item";
 import More from "@/components/More";
 import End from "@/components/End";
+import {viewportWidth} from "@/utils/index";
+import Touchable from "@/components/Touchable";
 
 
-const mapStateToProps = ({mangaView, loading}: RootState) => {
+const mapStateToProps = ({mangaView, brief, loading}: RootState) => {
     return {
         episodeList: mangaView.episodeList,
+        currentChapter: brief.markChapterNum,
+        currentRoast: brief.markRoast,
         refreshing: mangaView.refreshing,
         headerHasMore: mangaView.headerHasMore,
         endHasMore: mangaView.endHasMore,
@@ -47,7 +50,11 @@ interface IState {
 
 class MangaView extends React.PureComponent<IProps, IState> {
 
-    loadUpData = true;
+    _FlatList: any = null;
+    loadUpData: boolean = true;
+    currentChapterId: number = 0
+    currentChapterNum: number = 0;
+    currentRoast: number = 0;
 
     constructor(props: IProps) {
         super(props);
@@ -58,6 +65,9 @@ class MangaView extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
+        NetInfo.fetch("wifi").then(state => {
+            console.log(state)
+        });
         const {dispatch} = this.props;
         const {roast, book_id} = this.props.route.params;
         dispatch({
@@ -70,18 +80,16 @@ class MangaView extends React.PureComponent<IProps, IState> {
         this.loadData(true, true);
     }
 
+    onPress = () => {
+        this._FlatList.scrollToIndex({viewPosition: 0, index: 5});
+    }
+
     renderHeader = () => {
-        const {headerHasMore} = this.props;
-        const {headerReached} = this.state;
-
-        if (headerReached) {
-            return <More/>;
-        }
-        if (!headerHasMore) {
-            return <End/>;
-        }
-
-        return null;
+        return (
+            <Touchable onPress={this.onPress}>
+                <Text style={{color: 'red', height: 50}}>jump</Text>
+            </Touchable>
+        )
     }
 
     renderFooter = () => {
@@ -99,7 +107,6 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     loadData = (refreshing: boolean, direction: boolean, callback?: () => void) => {
         const {dispatch} = this.props;
-
         dispatch({
             type: 'mangaView/fetchEpisodeList',
             payload: {
@@ -147,13 +154,18 @@ class MangaView extends React.PureComponent<IProps, IState> {
         });
     }
 
-    onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
-        // const offsetY = nativeEvent.contentOffset.y;
-        // console.log(offsetY)
-        // if (this.loadUpData && offsetY < -30) {
-        //     this.loadUpData = false;
-        //     this.onHeaderReached();
-        // }
+    onScrollEndDrag = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const {episodeList} = this.props;
+        let offset_total = 0;
+        for (let i = 0; i < episodeList.length; i++) {
+            offset_total += episodeList[i].multiple * viewportWidth;
+            if (nativeEvent.contentOffset.y < offset_total) {
+                this.currentChapterId = episodeList[i].chapter_id;
+                this.currentChapterNum = episodeList[i].chapter_num;
+                this.currentRoast = episodeList[i].roast;
+                break;
+            }
+        }
     };
 
     renderItem = ({item}: ListRenderItemInfo<IEpisode>) => {
@@ -163,13 +175,38 @@ class MangaView extends React.PureComponent<IProps, IState> {
     }
 
     componentWillUnmount() {
-        const {dispatch} = this.props;
+        const {dispatch, episodeList} = this.props;
+        const {book_id} = this.props.route.params;
+
+        const chapter_id = this.currentChapterId > 0 ? this.currentChapterId : episodeList[0].chapter_id;
+        const chapter_num = this.currentChapterNum > 0 ? this.currentChapterNum : episodeList[0].chapter_num;
+        const roast = this.currentRoast > 0 ? this.currentRoast : episodeList[0].roast;
+
         dispatch({
             type: 'mangaView/setState',
             payload: {
                 ...initialState
             }
         })
+
+        dispatch({
+            type: 'brief/setChapter',
+            payload: {
+                markChapterNum: chapter_num,
+                markRoast: roast
+            }
+        })
+
+        dispatch({
+            type: 'mangaView/addHistory',
+            payload: {
+                book_id,
+                chapter_id,
+                chapter_num,
+                roast,
+            }
+        })
+
     }
 
     render() {
@@ -178,15 +215,26 @@ class MangaView extends React.PureComponent<IProps, IState> {
         return (
             <FlatList
                 // ListHeaderComponent={this.renderHeader}
+                ref={(ref) => {
+                    this._FlatList = ref;
+                }}
                 style={styles.container}
                 data={episodeList}
                 numColumns={1}
                 extraData={this.state}
                 renderItem={this.renderItem}
-                keyExtractor={(item, key) => `item-${item.id}`}
+                getItemLayout={(data: any, index) => {
+                    let offset = 0;
+                    const length = viewportWidth * data[index].multiple;
+                    for (let i = 0; i < index; i++) {
+                        offset += viewportWidth * data[i].multiple
+                    }
+                    return {length: length, offset, index}
+                }}
+                keyExtractor={(item) => `item-${item.id}`}
                 onEndReached={this.onEndReached}
                 onEndReachedThreshold={0.1}
-                onScroll={this.onScroll}
+                onScrollEndDrag={this.onScrollEndDrag}
                 ListFooterComponent={this.renderFooter}
             />
         );

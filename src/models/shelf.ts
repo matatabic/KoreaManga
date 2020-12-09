@@ -188,7 +188,7 @@ const shelfModel: ShelfModel = {
             } else {
                 newList = [...list, ...data.list];
                 newList = newList.reduce((pre, cur) => {
-                    const index = pre.findIndex((i: { title: any; }) => cur.title === i.title)
+                    const index = pre.findIndex((i: { title: string }) => cur.title === i.title)
                     if (index < 0) {
                         pre.push(cur)
                     } else {

@@ -12,6 +12,7 @@ const COLLECTION_URL = 'collection/getList';
 const DEL_HISTORY_URL = 'mark/delUserMark';
 //mark
 const HISTORY_URL = 'mark/getList';
+const ADD_HISTORY = 'mark/saveMark';
 //category
 const CATEGORY_URL = '/category/getList';
 const STATUS_URL = '/status/getList';
@@ -33,6 +34,7 @@ export {
     DEL_COLLECTION_URL,
     COLLECTION_URL,
     HISTORY_URL,
+    ADD_HISTORY,
     DEL_HISTORY_URL,
     CATEGORY_URL,
     STATUS_URL,
