@@ -6,6 +6,7 @@ import {connect, ConnectedProps} from "react-redux";
 import More from "@/components/More";
 import End from "@/components/End";
 import Item from "./item";
+import ListPlaceholder from "@/components/Placeholder/ListPlaceholder";
 
 
 const mapStateToProps = (state: RootState) => {
@@ -98,21 +99,22 @@ class BookList extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {bookList, refreshing} = this.props;
+        const {bookList, refreshing, loading} = this.props;
         return (
-            <FlatList
-                data={bookList}
-                extraData={this.state}
-                keyExtractor={(item, key) => `item-${key}`}
-                ListHeaderComponent={this.header}
-                onRefresh={this.onRefresh}
-                refreshing={refreshing}
-                numColumns={1}
-                renderItem={this.renderItem}
-                onEndReached={this.onEndReached}
-                onEndReachedThreshold={0.1}
-                ListFooterComponent={this.renderFooter}
-            />
+            (loading && refreshing) ? <ListPlaceholder/> :
+                <FlatList
+                    data={bookList}
+                    extraData={this.state}
+                    keyExtractor={(item, key) => `item-${key}`}
+                    ListHeaderComponent={this.header}
+                    onRefresh={this.onRefresh}
+                    refreshing={refreshing}
+                    numColumns={1}
+                    renderItem={this.renderItem}
+                    onEndReached={this.onEndReached}
+                    onEndReachedThreshold={0.1}
+                    ListFooterComponent={this.renderFooter}
+                />
         );
     }
 }

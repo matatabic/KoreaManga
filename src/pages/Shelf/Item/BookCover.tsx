@@ -68,7 +68,7 @@ class BookCover extends React.PureComponent<IProps, IState> {
                 </>
                 }
                 <View style={styles.titleView}>
-                    <Text style={styles.title} numberOfLines={1}>{data.title}{data.id}</Text>
+                    <Text style={styles.title} numberOfLines={1}>{data.title}</Text>
                     <Text style={styles.chapter_info} numberOfLines={1}>{data.chapter_info}</Text>
                 </View>
             </View>
@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     },
     titleView: {
         width: itemWidth,
+        marginTop: 5,
         height: 35,
     },
     image: {

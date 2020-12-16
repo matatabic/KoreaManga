@@ -9,24 +9,21 @@ interface IProps {
     goBrief: (data: IBook) => void;
 }
 
-class IntroItem extends React.Component<IProps> {
+const IntroItem = ({data, goBrief}: IProps) => {
 
-    onPress = () => {
-        const {data, goBrief} = this.props;
+    const onPress = () => {
         if (typeof goBrief === "function") {
             goBrief(data);
         }
     }
 
-    render() {
-        const {data} = this.props;
-        return (
-            <Touchable onPress={this.onPress} style={styles.item}>
-                <Text style={styles.title}>{data.title}</Text>
-            </Touchable>
-        );
-    }
+    return (
+        <Touchable onPress={onPress} style={styles.item}>
+            <Text style={styles.title}>{data.title}</Text>
+        </Touchable>
+    );
 }
+
 
 const styles = StyleSheet.create({
     item: {

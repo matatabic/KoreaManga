@@ -24,6 +24,7 @@ import Operate from "./Operate";
 import Information from "./Information";
 import BookIntro from "./BookIntro";
 import Fixed from "./Fixed";
+import BriefPlaceholder from "@/components/Placeholder/BriefPlaceholder";
 
 
 const startHeight = hp(17.5);
@@ -31,11 +32,13 @@ const endHeight = hp(35) - getStatusBarHeight();
 const showFixedViewH = endHeight + hp(3.5);
 
 
-const mapStateToProps = ({brief}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
+const mapStateToProps = ({brief, loading}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
     const {id} = route.params;
     return {
         book_id: id,
+        refreshing: brief.refreshing,
         chapterList: brief.chapterList,
+        loading: loading.effects['brief/fetchBrief']
     };
 };
 
@@ -65,7 +68,7 @@ class Brief extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        this.loadData();
+        this.loadData(true);
     }
 
     getBgImageSize = () => {
@@ -129,13 +132,16 @@ class Brief extends React.PureComponent<IProps, IState> {
         })
     }
 
-    loadData = () => {
+    loadData = (refreshing: boolean, callback?: () => void) => {
         const {dispatch, book_id} = this.props;
+
         dispatch({
             type: 'brief/fetchBrief',
             payload: {
-                book_id
-            }
+                refreshing,
+                book_id,
+            },
+            callback
         })
     }
 
@@ -199,34 +205,36 @@ class Brief extends React.PureComponent<IProps, IState> {
     };
 
     render() {
-        const {chapterList} = this.props;
+        const {chapterList, loading, refreshing} = this.props;
         const topBarOpacity = this.getOpacity();
         const imageSize = this.getBgImageSize();
+
         return (
-            <View>
-                <ImageBlurBackground imageSize={imageSize}/>
-                <FlatList
-                    ListHeaderComponent={this.header}
-                    data={chapterList}
-                    numColumns={4}
-                    columnWrapperStyle={styles.columnWrapper}
-                    renderItem={this.renderItem}
-                    keyExtractor={(item, key) => `item-${key}`}
-                    showsVerticalScrollIndicator={false}
-                    onScroll={Animated.event(
-                        [{
-                            nativeEvent: {contentOffset: {y: this.translateY}}
-                        }],
-                        {
-                            useNativeDriver: false,
-                            listener: this.onScroll
-                        },
-                    )}
-                    ListFooterComponent={this.renderFooter}
-                />
-                {this.fixedView}
-                <TopBarWrapper goBack={this.goBack} topBarOpacity={topBarOpacity}/>
-            </View>
+            (loading && refreshing) ? <BriefPlaceholder/> :
+                <View>
+                    <ImageBlurBackground imageSize={imageSize}/>
+                    <FlatList
+                        ListHeaderComponent={this.header}
+                        data={chapterList}
+                        numColumns={4}
+                        columnWrapperStyle={styles.columnWrapper}
+                        renderItem={this.renderItem}
+                        keyExtractor={(item, key) => `item-${key}`}
+                        showsVerticalScrollIndicator={false}
+                        onScroll={Animated.event(
+                            [{
+                                nativeEvent: {contentOffset: {y: this.translateY}}
+                            }],
+                            {
+                                useNativeDriver: false,
+                                listener: this.onScroll
+                            },
+                        )}
+                        ListFooterComponent={this.renderFooter}
+                    />
+                    {this.fixedView}
+                    <TopBarWrapper goBack={this.goBack} topBarOpacity={topBarOpacity}/>
+                </View>
         );
     }
 }

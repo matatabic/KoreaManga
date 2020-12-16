@@ -16,6 +16,7 @@ import More from "@/components/More";
 import End from "@/components/End";
 import {Color} from "@/utils/const";
 import {RootStackNavigation} from "@/navigator/index";
+import BookPlaceholder from "@/components/Placeholder/BookPlaceholder";
 
 
 const mapStateToProps = (state: RootState, {route}: { route: RouteProp<CategoryParamList, string> }) => {
@@ -189,28 +190,26 @@ class Category extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {bookList, refreshing} = this.props
+        const {bookList, refreshing, loading} = this.props
         return (
-            // <View>
-            //     <Text>{activeCategory}+{activeStatus}</Text>
-            // </View>
-            <FlatList
-                keyExtractor={(item, key) => `item-${key}`}
-                data={bookList}
-                extraData={this.state}
-                renderItem={this.renderItem}
-                refreshing={refreshing}
-                style={styles.container}
-                onRefresh={this.onRefresh}
-                ListFooterComponent={this.renderFooter}
-                scrollEventThrottle={1}
-                onScrollBeginDrag={this.onScrollBeginDrag}
-                onScrollEndDrag={this.onScrollEndDrag}
-                onScroll={this.onScroll}
-                numColumns={3}
-                onEndReached={this.onEndReached}
-                onEndReachedThreshold={0.1}
-            />
+            (loading && refreshing) ? <BookPlaceholder/> :
+                <FlatList
+                    keyExtractor={(item, key) => `item-${key}`}
+                    data={bookList}
+                    extraData={this.state}
+                    renderItem={this.renderItem}
+                    refreshing={refreshing}
+                    style={styles.container}
+                    onRefresh={this.onRefresh}
+                    ListFooterComponent={this.renderFooter}
+                    scrollEventThrottle={1}
+                    onScrollBeginDrag={this.onScrollBeginDrag}
+                    onScrollEndDrag={this.onScrollEndDrag}
+                    onScroll={this.onScroll}
+                    numColumns={3}
+                    onEndReached={this.onEndReached}
+                    onEndReachedThreshold={0.1}
+                />
         );
     }
 }

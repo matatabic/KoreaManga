@@ -47,7 +47,7 @@ class Item extends React.PureComponent<IProps, IState> {
         const {errorLoad} = this.state;
         const loadImage = errorLoad ? ErrorImage : {uri: data.image, cache: FastImage.cacheControl.immutable};
         return (
-            <Touchable style={styles.item} onPress={this.onPress}>
+            <Touchable style={styles.container} onPress={this.onPress}>
                 <FastImage
                     source={loadImage}
                     onError={this.showError}
@@ -71,7 +71,7 @@ class Item extends React.PureComponent<IProps, IState> {
 }
 
 const styles = StyleSheet.create({
-    item: {
+    container: {
         height: itemHeight,
         paddingTop: 5,
         flexDirection: 'row',

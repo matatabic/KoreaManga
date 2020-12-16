@@ -11,38 +11,35 @@ interface IProps {
     HistorySearch: (data: string) => void;
 }
 
-class SearchHistoryItem extends React.PureComponent<IProps> {
-    clearHistory = () => {
-        const {index, clearHistory} = this.props;
-        if (typeof clearHistory === "function") {
-            clearHistory(index);
-        }
-    }
+const SearchHistoryItem = ({index, title, clearHistory, HistorySearch}: IProps) => {
 
-    HistorySearch = () => {
-        const {title, HistorySearch} = this.props;
+    const search = () => {
         if (typeof HistorySearch === "function") {
             HistorySearch(title);
         }
     }
 
-    render() {
-        const {title} = this.props;
-        return (
-            <View style={styles.item}>
-                <Touchable onPress={this.HistorySearch} style={styles.itemLeft}>
-                    <Icon name="icon-time1"/>
-                    <Text style={styles.title}>{title}</Text>
-                </Touchable>
-                <Touchable onPress={this.clearHistory}>
-                    <View style={styles.itemRight}>
-                        <Icon name="icon-cha"/>
-                    </View>
-                </Touchable>
-            </View>
-        )
+    const clear = () => {
+        if (typeof clearHistory === "function") {
+            clearHistory(index);
+        }
     }
+
+    return (
+        <View style={styles.item}>
+            <Touchable onPress={search} style={styles.itemLeft}>
+                <Icon name="icon-time1"/>
+                <Text style={styles.title}>{title}</Text>
+            </Touchable>
+            <Touchable onPress={clear}>
+                <View style={styles.itemRight}>
+                    <Icon name="icon-cha"/>
+                </View>
+            </Touchable>
+        </View>
+    )
 }
+
 
 const styles = StyleSheet.create({
     item: {

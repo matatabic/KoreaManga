@@ -23,6 +23,7 @@ export interface IBookInfo {
 
 export interface BriefState {
     bookInfo: IBookInfo;
+    refreshing: boolean;
     collection_id: number;
     markChapterNum: number;
     markRoast: number;
@@ -54,6 +55,7 @@ export const initialState = {
         description: '',
         status: '',
     },
+    refreshing: false,
     collection_id: 0,
     markChapterNum: 0,
     markRoast: 0,
@@ -77,21 +79,37 @@ const briefModel: CategoryModel = {
             };
         },
         setChapter(state = initialState, {payload}) {
-            return{
+            return {
                 ...state,
                 ...payload,
             }
         },
     },
     effects: {
-        *fetchBrief({payload}, {call, put}) {
-            const {data} = yield call(BriefServices.getList, payload);
+        *fetchBrief(action, {call, put}) {
+            const {payload, type} = action;
+            const {refreshing} = payload;
+
             yield put({
                 type: 'setState',
                 payload: {
-                    ...data
+                    refreshing
                 },
             });
+
+            const {data} = yield call(BriefServices.getList, payload);
+
+            yield put({
+                type: 'setState',
+                payload: {
+                    ...data,
+                    refreshing: false,
+                },
+            });
+
+            if (action.callback) {
+                action.callback();
+            }
         },
         *addUserCollection({payload}, {call, put}) {
             const data = yield call(BriefServices.addUserCollection, payload);

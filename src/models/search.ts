@@ -13,7 +13,7 @@ export interface IPagination {
 }
 
 export interface IBook {
-    id: string;
+    id: number;
     title: string;
     image?: string;
     author?: string;

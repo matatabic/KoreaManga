@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet,SectionList, SectionListRenderItemInfo, FlatList, ListRenderItemInfo, Animated,} from 'react-native';
+import {View, Text, StyleSheet, SectionList, SectionListRenderItemInfo, FlatList, ListRenderItemInfo, Animated,} from 'react-native';
 import Carousel, {sideHeight} from "@/pages/Home/Carousel";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
@@ -12,14 +12,14 @@ import {Color} from "@/utils/const";
 import BookCover from "@/components/BookCover";
 import More from "@/components/More";
 import End from "@/components/End";
+import HomePlaceholder from "@/components/Placeholder/HomePlaceholder";
 
-const mapStateToProps = (state: RootState) => {
-    const {home} = state;
+const mapStateToProps = ({home, loading}: RootState) => {
     return {
         commendList: home.commendList,
         refreshing: home.refreshing,
         hasMore: home.hasMore,
-        loading: state.loading.effects['home/fetchCommendList']
+        loading: loading.effects['home/fetchCommendList']
     };
 };
 
@@ -146,35 +146,36 @@ class Home extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {commendList, refreshing, navigation} = this.props;
+        const {commendList, refreshing, navigation, loading} = this.props;
         const topBarColor = this.getTopBarColor();
         return (
-            <View>
-                <CarouselBlurBackground/>
-                <TopBarWrapper navigation={navigation} topBarColor={topBarColor}/>
-                <SectionList
-                    keyExtractor={(item, index) => `section-item-${index}`}
-                    ListHeaderComponent={this.header}
-                    renderSectionHeader={this.renderSectionHeader}
-                    onRefresh={this.onRefresh}
-                    refreshing={refreshing}
-                    sections={commendList}
-                    stickySectionHeadersEnabled={true}
-                    onScroll={Animated.event(
-                        [{
-                            nativeEvent: {contentOffset: {y: this.scrollY}}
-                        }],
-                        {
-                            useNativeDriver: false
-                        }
-                    )}
-                    onEndReached={this.onEndReached}
-                    onEndReachedThreshold={0.1}
-                    renderItem={this.renderItem}
-                    extraData={this.state}
-                    ListFooterComponent={this.renderFooter}
-                />
-            </View>
+            (loading && refreshing) ? <HomePlaceholder/> :
+                <View>
+                    <CarouselBlurBackground/>
+                    <TopBarWrapper navigation={navigation} topBarColor={topBarColor}/>
+                    <SectionList
+                        keyExtractor={(item, index) => `section-item-${index}`}
+                        ListHeaderComponent={this.header}
+                        renderSectionHeader={this.renderSectionHeader}
+                        onRefresh={this.onRefresh}
+                        refreshing={refreshing}
+                        sections={commendList}
+                        stickySectionHeadersEnabled={true}
+                        onScroll={Animated.event(
+                            [{
+                                nativeEvent: {contentOffset: {y: this.scrollY}}
+                            }],
+                            {
+                                useNativeDriver: false
+                            }
+                        )}
+                        onEndReached={this.onEndReached}
+                        onEndReachedThreshold={0.1}
+                        renderItem={this.renderItem}
+                        extraData={this.state}
+                        ListFooterComponent={this.renderFooter}
+                    />
+                </View>
         )
     }
 }

@@ -9,24 +9,19 @@ interface IProps {
     goBrief: (data: IBook) => void;
 }
 
-class SimpleItem extends React.PureComponent<IProps> {
-
-    onPress = () => {
-        const {data, goBrief} = this.props;
+const SimpleItem = ({data, goBrief}: IProps) => {
+    const onPress = () => {
         if (typeof goBrief === "function") {
             goBrief(data);
         }
     }
 
-    render() {
-        const {data} = this.props;
-        return (
-            <Touchable onPress={this.onPress} style={styles.item}>
-                <Text>{data.title}</Text>
-                <Text style={styles.authorText}>{data.author}</Text>
-            </Touchable>
-        );
-    }
+    return (
+        <Touchable onPress={onPress} style={styles.item}>
+            <Text>{data.title}</Text>
+            <Text style={styles.authorText}>{data.author}</Text>
+        </Touchable>
+    );
 }
 
 const styles = StyleSheet.create({

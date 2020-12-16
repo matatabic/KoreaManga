@@ -7,8 +7,9 @@ import {connect, ConnectedProps} from "react-redux";
 import {Color} from "@/utils/const";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 
-const mapStateToProps = ({shelf}: RootState) => {
+const mapStateToProps = ({user, shelf}: RootState) => {
     return {
+        isLogin: user.isLogin,
         activePage: shelf.activePage,
         isEditHistory: shelf.isEditHistory,
         isEditCollection: shelf.isEditCollection,
@@ -22,7 +23,10 @@ type ModelState = ConnectedProps<typeof connector> & MaterialTopTabBarProps;
 class ShelfTopBar extends React.PureComponent<ModelState> {
 
     editBtn = () => {
-        const {dispatch, activePage, isEditCollection, isEditHistory} = this.props;
+        const {dispatch, isLogin, activePage, isEditCollection, isEditHistory} = this.props
+        if (!isLogin) {
+            return false;
+        }
         switch (activePage) {
             case 1:
                 dispatch({

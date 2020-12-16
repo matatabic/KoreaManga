@@ -47,6 +47,7 @@
     "react-native-tab-view-viewpager-adapter": "^1.1.0",
     "react-navigation-header-buttons": "^5.0.2",
     "react-redux": "^7.2.1",
+    "rn-placeholder": "^3.0.3",
     "yup": "^0.29.3"
   },
   "devDependencies": {
