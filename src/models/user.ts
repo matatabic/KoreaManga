@@ -25,6 +25,7 @@ interface UserModel extends Model {
     };
     effects: {
         loadData: Effect;
+        register: Effect;
         login: Effect;
         logout: Effect;
     };
@@ -72,8 +73,53 @@ const userModel: UserModel = {
                 })
             }
         },
+        *register(action, {call, put}) {
+            const {payload} = action;
+
+            const data = yield call(UserServices.Register, payload);
+            let isGoBack = false;
+
+            Toast.show(data.msg, {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.CENTER,
+                shadow: true,
+                animation: true,
+            })
+
+            if (data.code === StatusCode.SUCCESS) {
+                isGoBack = true;
+                const userInfo = {
+                    mobile: data.data.mobile,
+                    username: data.data.username,
+                    nickname: data.data.nickname,
+                }
+                yield put({
+                    type: 'userLogin',
+                    payload: {
+                        userInfo
+                    }
+                })
+
+                storage.save({
+                    key: 'isLogin',
+                    data: true
+                })
+                storage.save({
+                    key: 'token',
+                    data: data.data.token
+                })
+                storage.save({
+                    key: 'userInfo',
+                    data: userInfo
+                })
+            }
+            if (action.callback) {
+                action.callback(isGoBack);
+            }
+        },
         *login(action, {call, put}) {
             const {payload} = action;
+
             const data = yield call(UserServices.Login, payload);
             let isGoBack = false;
 

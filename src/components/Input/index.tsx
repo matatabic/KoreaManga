@@ -6,19 +6,18 @@ import Icon, {IconNames} from '@/assets/iconfont/index';
 import Touchable from "@/components/Touchable";
 
 interface IProps {
-    field: FieldInputProps<any>;
-    form: FormikProps<any>;
+    field: FieldInputProps<string>;
+    form: FormikProps<string>;
     iconName: IconNames;
+    chaCha: (form: FormikProps<string>, field: FieldInputProps<string>) => void;
 }
 
 class Input extends React.PureComponent<IProps> {
 
     chaCha = () => {
-        const {form, field} = this.props;
-        if (field.name === 'account') {
-            form.setFieldValue('account', '');
-        } else if (field.name === 'password') {
-            form.setFieldValue('password', '');
+        const {form, field, chaCha} = this.props;
+        if (typeof chaCha === "function") {
+            chaCha(form, field);
         }
     }
 

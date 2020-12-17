@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, ScrollView, View, StyleSheet} from 'react-native';
-import {Formik, Field} from 'formik';
+import {Formik, Field, FieldInputProps, FormikProps} from 'formik';
 import * as Yup from 'yup';
 import Input from "@/components/Input";
 import {Color} from "@/utils/const";
@@ -40,6 +40,7 @@ interface IProps extends ModelState {
 
 interface IState {
     disabled: boolean;
+    loginPage: boolean;
 }
 
 class Login extends React.Component<IProps, IState> {
@@ -48,12 +49,13 @@ class Login extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             disabled: false,
+            loginPage: true,
         }
     }
 
     onSubmit = (values: Values) => {
         const {dispatch, navigation, loading} = this.props;
-        const {disabled} = this.state;
+        const {disabled,loginPage} = this.state;
 
         if (disabled || loading) {
             return;
@@ -63,22 +65,66 @@ class Login extends React.Component<IProps, IState> {
             disabled: true
         })
 
-        dispatch({
-            type: 'user/login',
-            payload: values,
-            callback: (isGoBack: boolean) => {
-                isGoBack ? navigation.goBack()
-                    : setTimeout(() => {
-                        this.setState({
-                            disabled: false
-                        })
-                    }, 2000);
-            },
-        });
+        if(loginPage){
+            dispatch({
+                type: 'user/login',
+                payload: values,
+                callback: (isGoBack: boolean) => {
+                    isGoBack ? navigation.goBack()
+                        : setTimeout(() => {
+                            this.setState({
+                                disabled: false
+                            })
+                        }, 2000);
+                },
+            });
+        }else{
+            dispatch({
+                type: 'user/register',
+                payload: values,
+                callback: (isGoBack: boolean) => {
+                    isGoBack ? navigation.goBack()
+                        : setTimeout(() => {
+                            this.setState({
+                                disabled: false
+                            })
+                        }, 2000);
+                },
+            });
+        }
+
+    }
+
+    chaCha = (form: FormikProps<string>, field: FieldInputProps<string>) => {
+        if (field.name === 'account') {
+            form.setFieldValue('account', '');
+        } else if (field.name === 'password') {
+            form.setFieldValue('password', '');
+        }
+    }
+
+    onChange = () => {
+        const {navigation} = this.props;
+        const {loginPage} = this.state;
+        if(loginPage){
+            navigation.setOptions({
+                'headerTitle': '注册'
+            })
+        }else{
+            navigation.setOptions({
+                'headerTitle': '登录'
+            })
+        }
+        this.setState({
+            loginPage: !loginPage
+        })
+
+
+
     }
 
     render() {
-        const {disabled} = this.state;
+        const {disabled, loginPage} = this.state;
         return (
             <ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
                 <Formik
@@ -102,10 +148,12 @@ class Login extends React.Component<IProps, IState> {
                             />
                             <View style={styles.jumpView}>
                                 <Text style={styles.jumpTitle}>忘记密码?</Text>
-                                <Text style={styles.jumpTitle}>注册账号</Text>
+                                <Touchable onPress={this.onChange}>
+                                    <Text style={styles.jumpTitle}>{loginPage ? '注册账号' : '立即登录'}</Text>
+                                </Touchable>
                             </View>
                             <Touchable disabled={disabled} onPress={handleSubmit} style={styles.login}>
-                                <Text style={styles.loginText}>登录</Text>
+                                <Text style={styles.loginText}>{loginPage ? '登录' : '注册'}</Text>
                             </Touchable>
                         </View>
                     )}

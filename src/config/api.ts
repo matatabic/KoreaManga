@@ -20,6 +20,7 @@ const CATEGORY_TREE_URL = '/category/getTreeList';
 //episode
 const EPISODE_URL = '/episode/getList';
 //user
+const REGISTER_URL = '/passport/register';
 const LOGIN_URL = '/passport/login';
 const LOGOUT_URL = '/passport/logout';
 
@@ -40,6 +41,7 @@ export {
     STATUS_URL,
     CATEGORY_TREE_URL,
     EPISODE_URL,
+    REGISTER_URL,
     LOGIN_URL,
     LOGOUT_URL
 };

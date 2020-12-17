@@ -45,7 +45,7 @@ class Information extends React.Component<IProps> {
                     <View style={styles.titleView}>
                         <View>
                             <Text style={styles.name}>
-                                {isLogin ? userInfo.nickname : '未登录'}
+                                {isLogin ? userInfo.nickname ? userInfo.nickname : userInfo.username : '未登录'}
                             </Text>
                         </View>
                         <View>
