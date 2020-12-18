@@ -5,7 +5,7 @@ import {
     ListRenderItemInfo,
     NativeSyntheticEvent,
     NativeScrollEvent,
-    Text,
+    Text, StatusBar,
 } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
 import {IChapter} from "@/models/brief";
@@ -20,6 +20,7 @@ import More from "@/components/More";
 import End from "@/components/End";
 import {viewportWidth} from "@/utils/index";
 import Touchable from "@/components/Touchable";
+import Toast from "react-native-root-toast";
 
 
 const mapStateToProps = ({mangaView, brief, loading}: RootState) => {
@@ -66,7 +67,14 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         NetInfo.fetch("wifi").then(state => {
-            console.log(state)
+            if (state.type !== "wifi") {
+                Toast.show('现在处于wifi环境，请注意流量使用', {
+                    position: Toast.positions.CENTER,
+                    duration: Toast.durations.LONG,
+                    shadow: true,
+                    animation: true,
+                })
+            }
         });
         const {dispatch} = this.props;
         const {roast, book_id} = this.props.route.params;
@@ -213,30 +221,33 @@ class MangaView extends React.PureComponent<IProps, IState> {
         const {episodeList} = this.props;
 
         return (
-            <FlatList
-                // ListHeaderComponent={this.renderHeader}
-                ref={(ref) => {
-                    this._FlatList = ref;
-                }}
-                style={styles.container}
-                data={episodeList}
-                numColumns={1}
-                extraData={this.state}
-                renderItem={this.renderItem}
-                getItemLayout={(data: any, index) => {
-                    let offset = 0;
-                    const length = viewportWidth * data[index].multiple;
-                    for (let i = 0; i < index; i++) {
-                        offset += viewportWidth * data[i].multiple
-                    }
-                    return {length: length, offset, index}
-                }}
-                keyExtractor={(item) => `item-${item.id}`}
-                onEndReached={this.onEndReached}
-                onEndReachedThreshold={0.1}
-                onScrollEndDrag={this.onScrollEndDrag}
-                ListFooterComponent={this.renderFooter}
-            />
+            <>
+                <StatusBar hidden/>
+                <FlatList
+                    // ListHeaderComponent={this.renderHeader}
+                    ref={(ref) => {
+                        this._FlatList = ref;
+                    }}
+                    style={styles.container}
+                    data={episodeList}
+                    numColumns={1}
+                    extraData={this.state}
+                    renderItem={this.renderItem}
+                    getItemLayout={(data: any, index) => {
+                        let offset = 0;
+                        const length = viewportWidth * data[index].multiple;
+                        for (let i = 0; i < index; i++) {
+                            offset += viewportWidth * data[i].multiple
+                        }
+                        return {length: length, offset, index}
+                    }}
+                    keyExtractor={(item) => `item-${item.id}`}
+                    onEndReached={this.onEndReached}
+                    onEndReachedThreshold={0.1}
+                    onScrollEndDrag={this.onScrollEndDrag}
+                    ListFooterComponent={this.renderFooter}
+                />
+            </>
         );
     }
 }

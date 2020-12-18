@@ -32,10 +32,13 @@ const endHeight = hp(35) - getStatusBarHeight();
 const showFixedViewH = endHeight + hp(3.5);
 
 
-const mapStateToProps = ({brief, loading}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
+const mapStateToProps = ({user, brief, loading}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
     const {id} = route.params;
     return {
+        isLogin: user.isLogin,
         book_id: id,
+        markRoast: brief.markRoast,
+        collection_id: brief.collection_id,
         refreshing: brief.refreshing,
         chapterList: brief.chapterList,
         loading: loading.effects['brief/fetchBrief']
@@ -134,7 +137,6 @@ class Brief extends React.PureComponent<IProps, IState> {
 
     loadData = (refreshing: boolean, callback?: () => void) => {
         const {dispatch, book_id} = this.props;
-
         dispatch({
             type: 'brief/fetchBrief',
             payload: {
@@ -145,8 +147,52 @@ class Brief extends React.PureComponent<IProps, IState> {
         })
     }
 
+    addUserCollection = () => {
+        const {dispatch, navigation, isLogin, book_id} = this.props;
+        if (isLogin) {
+            dispatch({
+                type: 'brief/addUserCollection',
+                payload: {
+                    book_id
+                }
+            })
+        } else {
+            navigation.navigate("Login");
+        }
+    }
+
+    delUserCollection = () => {
+        const {dispatch, navigation, isLogin, collection_id} = this.props;
+        if (isLogin) {
+            dispatch({
+                type: 'brief/delUserCollection',
+                payload: {
+                    id: collection_id.toString()
+                }
+            })
+        } else {
+            navigation.navigate("Login");
+        }
+    }
+
+    readNow = () => {
+        const {navigation, book_id, markRoast} = this.props;
+        if (markRoast > 0) {
+            navigation.navigate('MangaView', {
+                book_id,
+                roast: markRoast,
+            });
+        } else {
+            navigation.navigate('MangaView', {
+                book_id,
+                roast: 1,
+            });
+        }
+    }
+
     goMangaView = (item: IChapter) => {
         const {navigation, book_id} = this.props;
+
         navigation.navigate('MangaView', {
             book_id: book_id,
             roast: item.roast,
@@ -170,6 +216,9 @@ class Brief extends React.PureComponent<IProps, IState> {
                     rightViewX={rightViewX}
                     rightViewScale={rightViewScale}
                     rightFontSize={rightFontSize}
+                    readNow={this.readNow}
+                    delUserCollection={this.delUserCollection}
+                    addUserCollection={this.addUserCollection}
                 />
                 <BookIntro/>
             </View>
@@ -179,7 +228,12 @@ class Brief extends React.PureComponent<IProps, IState> {
     get fixedView() {
         const {navigation} = this.props;
         if (this.state.showFixed) {
-            return <Fixed navigation={navigation}/>
+            return <Fixed
+                navigation={navigation}
+                readNow={this.readNow}
+                delUserCollection={this.delUserCollection}
+                addUserCollection={this.addUserCollection}
+            />
         }
         return null;
     }

@@ -5,6 +5,9 @@ import store from '@/config/dva';
 import {StatusBar} from 'react-native';
 import {RootSiblingParent} from 'react-native-root-siblings';
 import '@/config/http';
+import {enableScreens} from 'react-native-screens';
+
+enableScreens();
 
 export default class extends React.Component {
     render() {

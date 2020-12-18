@@ -7,7 +7,7 @@ import Touchable from "@/components/Touchable";
 import {ip, wp} from "@/utils/index";
 import Icon from "@/assets/iconfont";
 import ErrorImage from "@/assets/image/error.png";
-import {load} from "@/config/storage";
+
 
 const imageWidth = wp(25);
 const imageHeight = ip(imageWidth);

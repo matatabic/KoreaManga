@@ -25,36 +25,37 @@ type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
     navigation: ModalStackNavigation;
+    readNow: () => void;
+    delUserCollection: () => void;
+    addUserCollection: () => void;
 }
 
 class Fixed extends React.PureComponent<IProps> {
 
     addUserCollection = () => {
-        const {dispatch, navigation, isLogin, book_id} = this.props;
-        if (isLogin) {
-            dispatch({
-                type: 'brief/addUserCollection',
-                payload: {
-                    book_id
-                }
-            })
-        } else {
-            navigation.navigate("Login");
+        const {addUserCollection} = this.props;
+        if (typeof addUserCollection === "function") {
+            addUserCollection();
         }
     }
 
     delUserCollection = () => {
-        const {dispatch, navigation, isLogin, collection_id} = this.props;
-        if (isLogin) {
-            dispatch({
-                type: 'brief/delUserCollection',
-                payload: {
-                    id: collection_id.toString()
-                }
-            })
-        } else {
-            navigation.navigate("Login");
+        const {delUserCollection} = this.props;
+        if (typeof delUserCollection === "function") {
+            delUserCollection();
         }
+    }
+
+
+    readNow = () => {
+        const {readNow} = this.props;
+        if (typeof readNow === "function") {
+            readNow();
+        }
+    }
+
+    goBack = () => {
+        this.props.navigation.goBack();
     }
 
     render() {
@@ -64,7 +65,7 @@ class Fixed extends React.PureComponent<IProps> {
                 <View style={styles.container}>
                     <ImageTopBar/>
                     <View style={styles.backIconView}>
-                        <Touchable style={styles.backIcon}>
+                        <Touchable onPress={this.goBack} style={styles.backIcon}>
                             <Icon name="icon-arrow-left-bold" color='#ccc' size={24}/>
                         </Touchable>
                     </View>
@@ -79,23 +80,22 @@ class Fixed extends React.PureComponent<IProps> {
                                     <Text style={styles.collection}>已收藏</Text>
                                 </View>
                             </Touchable> :
-                            <Touchable onPress={this.addUserCollection}>
-                                <View style={[styles.leftView, {left: wp(30)}]}>
+
+                            <View style={[styles.leftWrapper, {left: wp(30)}]}>
+                                <Touchable style={styles.leftView} onPress={this.addUserCollection}>
                                     <Icon name="icon-xin"
                                           color={Color.red}
                                           size={25}
                                     />
                                     <Text style={styles.collection}>收藏</Text>
-                                </View>
-                            </Touchable>
+                                </Touchable>
+                            </View>
                     }
                     <View style={[styles.rightView, {
                         left: wp(10),
                         transform: [{scale: 0.65}]
                     }]}>
-                        <Touchable onPress={() => {
-                            console.log('开始阅读')
-                        }}>
+                        <Touchable onPress={this.readNow}>
                             <Text style={[styles.rightTitle, {
                                 fontSize: 20
                             }]}>开始阅读</Text>
@@ -126,9 +126,11 @@ const styles = StyleSheet.create({
         width: 25,
         height: 28,
     },
-    leftView: {
+    leftWrapper: {
         width: 75,
         marginLeft: wp(6),
+    },
+    leftView: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',

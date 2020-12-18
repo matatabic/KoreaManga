@@ -31,53 +31,36 @@ interface IProps extends ModelState {
     rightViewX: Animated.AnimatedInterpolation;
     rightViewScale: Animated.AnimatedInterpolation;
     rightFontSize: Animated.AnimatedInterpolation;
+    readNow: () => void;
+    delUserCollection: () => void;
+    addUserCollection: () => void;
 }
 
 class Operate extends React.Component<IProps> {
 
     addUserCollection = () => {
-        const {dispatch, navigation, isLogin, data} = this.props;
-        if (isLogin) {
-            dispatch({
-                type: 'brief/addUserCollection',
-                payload: {
-                    book_id: data.id
-                }
-            })
-        } else {
-            navigation.navigate("Login");
+        const {addUserCollection} = this.props;
+        if (typeof addUserCollection === "function"){
+            addUserCollection();
         }
     }
 
     delUserCollection = () => {
-        const {dispatch, navigation, isLogin, collection_id} = this.props;
-        if (isLogin) {
-            dispatch({
-                type: 'brief/delUserCollection',
-                payload: {
-                    id: collection_id.toString()
-                }
-            })
-        } else {
-            navigation.navigate("Login");
+        const {delUserCollection} = this.props;
+        if (typeof delUserCollection === "function"){
+            delUserCollection();
         }
     }
+
 
     readNow = () => {
-        const {navigation, data, markRoast} = this.props;
-        if (markRoast > 0) {
-            navigation.navigate('MangaView', {
-                book_id: data.id,
-                roast: markRoast,
-            });
-        } else {
-            navigation.navigate('MangaView', {
-                book_id: data.id,
-                roast: 1,
-            });
+        const {readNow} = this.props;
+        if (typeof readNow === "function"){
+            readNow();
         }
-
     }
+
+
 
     render() {
         const {markChapterNum, opacity, leftViewX, rightViewX, rightViewScale, rightFontSize, collection_id} = this.props;
