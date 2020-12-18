@@ -2,6 +2,7 @@ import {Effect, Model} from "dva-core-ts";
 import {Reducer} from "redux";
 import BriefServices from "@/services/brief";
 import {StatusCode} from "@/utils/const";
+import Toast from "react-native-root-toast";
 
 
 export interface IChapter {
@@ -113,6 +114,12 @@ const briefModel: CategoryModel = {
         },
         *addUserCollection({payload}, {call, put}) {
             const data = yield call(BriefServices.addUserCollection, payload);
+            Toast.show(data.msg, {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.CENTER,
+                shadow: true,
+                animation: true,
+            })
             if (data.code === StatusCode.SUCCESS) {
                 yield put({
                     type: 'setCollectionId',
@@ -124,6 +131,12 @@ const briefModel: CategoryModel = {
         },
         *delUserCollection({payload}, {call, put}) {
             const data = yield call(BriefServices.delUserCollection, payload);
+            Toast.show(data.msg, {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.CENTER,
+                shadow: true,
+                animation: true,
+            })
             if (data.code === StatusCode.SUCCESS) {
                 yield put({
                     type: 'setCollectionId',

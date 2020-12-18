@@ -7,27 +7,41 @@ import {Color} from "@/utils/const";
 import Touchable from "@/components/Touchable";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-import {ModalStackNavigation} from "@/navigator/index";
+import {ModalStackNavigation, RootStackNavigation} from "@/navigator/index";
+import {string} from "yup";
+import {val} from "react-native-reanimated/lib/typescript/val";
 
 const customerValidation = Yup.object().shape({
     account: Yup.string().required('请输入账号'),
     password: Yup.string().required('请输入密码'),
+    repeat_password: Yup.string().required('请二次输入密码').test('repeat_password', '密码错误', function (value) {
+        return this.parent.password === value;
+    }),
+    phone: Yup.string().notRequired().test('phone', '手机号码格式错误', function (value) {
+        if (value === undefined || value?.length === 0) {
+            return true;
+        }
+        return /^[1][3,4,5,7,8][0-9]{9}$/.test(value as string);
+    }),
 });
 
 interface Values {
     account: string;
     password: string;
-
+    repeat_password: string;
+    phone: string;
 }
 
 const initialValues: Values = {
     account: '',
     password: '',
+    repeat_password: '',
+    phone: ''
 }
 
 const mapStateToProps = ({loading}: RootState) => {
     return {
-        loading: loading.effects['user/login'],
+        loading: loading.effects['user/register'],
     };
 };
 
@@ -40,7 +54,7 @@ interface IProps extends ModelState {
 }
 
 
-const Login = ({navigation, dispatch, loading}: IProps) => {
+const Register = ({navigation, dispatch, loading}: IProps) => {
 
     const [disabled, setDisabled] = useState<boolean>(false);
 
@@ -53,28 +67,36 @@ const Login = ({navigation, dispatch, loading}: IProps) => {
         setDisabled(true);
 
         dispatch({
-            type: 'user/login',
+            type: 'user/register',
             payload: values,
             callback: (isGoBack: boolean) => {
-                isGoBack ? navigation.goBack()
-                    : setTimeout(() => {
+                if(isGoBack){
+                    navigation.goBack();
+                    navigation.goBack();
+                }else{
+                    setTimeout(() => {
                         setDisabled(false);
                     }, 2000);
+                }
             },
         });
-
     }
+
 
     const chaCha = (form: FormikProps<string>, field: FieldInputProps<string>) => {
         if (field.name === 'account') {
             form.setFieldValue('account', '');
         } else if (field.name === 'password') {
             form.setFieldValue('password', '');
+        } else if (field.name === 'repeat_password') {
+            form.setFieldValue('repeat_password', '');
+        } else if (field.name === 'phone') {
+            form.setFieldValue('phone', '');
         }
     }
-
-    const goRegister = () => {
-        navigation.navigate("Register")
+//
+    const goLogin = () => {
+        navigation.navigate("Login")
     }
 
     return (
@@ -100,14 +122,29 @@ const Login = ({navigation, dispatch, loading}: IProps) => {
                             secureTextEntry
                             chaCha={chaCha}
                         />
+                        <Field
+                            name="repeat_password"
+                            placeholder="请再输入密码"
+                            component={Input}
+                            iconName={'icon-mima'}
+                            secureTextEntry
+                            chaCha={chaCha}
+                        />
+                        <Field
+                            name="phone"
+                            placeholder="请输入手机号(选填)"
+                            component={Input}
+                            iconName={'icon-mobile-phone'}
+                            chaCha={chaCha}
+                        />
                         <View style={styles.jumpView}>
                             <Text style={styles.jumpTitle}>忘记密码?</Text>
-                            <Touchable onPress={goRegister}>
-                                <Text style={styles.jumpTitle}>注册账号</Text>
+                            <Touchable onPress={goLogin}>
+                                <Text style={styles.jumpTitle}>立即登录</Text>
                             </Touchable>
                         </View>
                         <Touchable disabled={disabled} onPress={handleSubmit} style={styles.login}>
-                            <Text style={styles.loginText}>登录</Text>
+                            <Text style={styles.loginText}>注册</Text>
                         </Touchable>
                     </View>
                 )}
@@ -115,7 +152,6 @@ const Login = ({navigation, dispatch, loading}: IProps) => {
         </ScrollView>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -147,4 +183,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default connector(Login);
+export default connector(Register);

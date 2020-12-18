@@ -16,6 +16,8 @@ import Search from "@/pages/Search";
 import {Color} from "@/utils/const";
 import Login from "@/pages/Login";
 import {statusBarHeight} from "@/utils/index";
+import Register from "@/pages/Register";
+import {forFade} from "@react-navigation/stack/lib/typescript/src/TransitionConfigs/HeaderStyleInterpolators";
 
 
 export type RootStackParamList = {
@@ -127,6 +129,7 @@ function RootStackScreen() {
 export type ModalStackParamList = {
     Root: undefined;
     Login: undefined;
+    Register: undefined;
 }
 
 export type ModalStackNavigation = StackNavigationProp<ModalStackParamList>;
@@ -170,6 +173,13 @@ function ModalStackScreen() {
                 component={Login}
                 options={{
                     headerTitle: '登录',
+                }}
+            />
+            <ModalStack.Screen
+                name="Register"
+                component={Register}
+                options={{
+                    headerTitle: '注册',
                 }}
             />
         </ModalStack.Navigator>
