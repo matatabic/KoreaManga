@@ -5,7 +5,7 @@ import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {RootStackNavigation} from "@/navigator/index";
 import {IBook} from "@/models/home";
-import TopBarWrapper, {TopBarNavigatorHeight} from "@/pages/views/TopBarWrapper";
+import TopBarWrapper from "@/pages/views/TopBarWrapper";
 import CarouselBlurBackground from "@/pages/views/CarouselBlurBackground";
 import {viewportWidth} from "@/utils/index";
 import {Color} from "@/utils/const";
@@ -13,6 +13,7 @@ import BookCover from "@/components/BookCover";
 import More from "@/components/More";
 import End from "@/components/End";
 import HomePlaceholder from "@/components/Placeholder/HomePlaceholder";
+import SplashScreen from 'react-native-splash-screen'
 
 const mapStateToProps = ({home, loading}: RootState) => {
     return {
@@ -50,6 +51,7 @@ class Home extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         this.loadData(true);
+        SplashScreen.hide();//关闭启动屏幕
     }
 
     loadData = (refreshing: boolean, callback?: () => void) => {

@@ -12,14 +12,18 @@ import {CategoryParamList} from "@/navigator/CategoryTabs";
 import Shelf from "@/pages/Shelf";
 import History from "@/pages/Shelf/History";
 import Download from "@/pages/Shelf/Download";
+import {ModalStackNavigation} from "@/navigator/index";
 
+interface IProps {
+    navigation: ModalStackNavigation;
+}
 
 const Tab = createMaterialTopTabNavigator<CategoryParamList>();
 
-class ShelfTabs extends React.Component {
+class ShelfTabs extends React.Component<IProps> {
 
     renderTabBar = (props: MaterialTopTabBarProps) => {
-        return <ShelfTopBar {...props} />;
+        return <ShelfTopBar reactNavigation={this.props.navigation} {...props} />;
     };
 
     renderScreen = (item: ICategory) => {

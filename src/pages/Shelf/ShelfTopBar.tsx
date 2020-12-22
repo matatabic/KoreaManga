@@ -6,6 +6,8 @@ import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {Color} from "@/utils/const";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
+import LoginPending from "@/pages/Shelf/LoginPending";
+import {ModalStackNavigation} from "@/navigator/index";
 
 const mapStateToProps = ({user, shelf}: RootState) => {
     return {
@@ -20,7 +22,13 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector> & MaterialTopTabBarProps;
 
-class ShelfTopBar extends React.PureComponent<ModelState> {
+interface IProps {
+    reactNavigation: ModalStackNavigation;
+}
+
+type Ip = IProps & ModelState;
+
+class ShelfTopBar extends React.PureComponent<Ip> {
 
     editBtn = () => {
         const {dispatch, isLogin, activePage, isEditCollection, isEditHistory} = this.props
@@ -53,7 +61,7 @@ class ShelfTopBar extends React.PureComponent<ModelState> {
     };
 
     render() {
-        let {indicatorStyle, activeTintColor, activePage, isEditCollection, isEditHistory, ...restProps} = this.props;
+        let {isLogin, reactNavigation, indicatorStyle, activeTintColor, activePage, isEditCollection, isEditHistory, ...restProps} = this.props;
         let isEdit = false;
         switch (activePage) {
             case 1:
@@ -81,6 +89,7 @@ class ShelfTopBar extends React.PureComponent<ModelState> {
                         <Text style={styles.text}>{isEdit ? '取消' : '编辑'}</Text>
                     </Touchable>
                 </View>
+                {!isLogin && <LoginPending navigation={reactNavigation}/>}
             </View>
         );
     }

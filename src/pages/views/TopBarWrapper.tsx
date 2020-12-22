@@ -5,8 +5,8 @@ import Icon from '@/assets/iconfont/index';
 import Touchable from "@/components/Touchable";
 import {RootStackNavigation} from "@/navigator/index";
 
-export const NavigatorHeight = 40;
-export const TopBarNavigatorHeight = getStatusBarHeight() + NavigatorHeight;
+const NavigatorHeight = 45;
+const TopBarNavigatorHeight = getStatusBarHeight() + NavigatorHeight;
 
 interface IProps {
     navigation: RootStackNavigation;

@@ -18,7 +18,6 @@ import End from "@/components/End";
 import EditView from "@/pages/Shelf/EditView";
 import Touchable from "@/components/Touchable";
 import {wp} from "@/utils/index";
-import LoginPending from "@/pages/Shelf/LoginPending";
 import ListPlaceholder from "@/components/Placeholder/ListPlaceholder";
 
 const mapStateToProps = ({user, shelf, loading}: RootState) => {
@@ -61,7 +60,6 @@ class History extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        console.log('123123333')
         this.loadData(true);
         const {navigation, dispatch} = this.props;
         this._unsubscribe = navigation.addListener('focus', () => {
@@ -256,29 +254,26 @@ class History extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {navigation, isLogin, refreshing, loading, historyList, isEdit} = this.props;
+        const {refreshing, loading, historyList, isEdit} = this.props;
         return (
-            isLogin ?
-                (loading && refreshing) ? <ListPlaceholder/> :
-                    <View style={styles.container}>
-                        <SectionList
-                            keyExtractor={(item, index) => `section-item-${index}`}
-                            renderSectionHeader={this.renderSectionHeader}
-                            onRefresh={this.onRefresh}
-                            refreshing={refreshing}
-                            sections={historyList}
-                            style={styles.container}
-                            contentContainerStyle={styles.contentContainer}
-                            stickySectionHeadersEnabled={true}
-                            onEndReached={this.onEndReached}
-                            onEndReachedThreshold={0.1}
-                            renderItem={this.renderItem}
-                            extraData={this.state}
-                            ListFooterComponent={this.renderFooter}
-                        />
-                        <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
-                    </View> :
-                <LoginPending navigation={navigation}/>
+            (loading && refreshing) ? <ListPlaceholder/> :
+                <View style={styles.container}>
+                    <SectionList
+                        keyExtractor={(item, index) => `section-item-${index}`}
+                        renderSectionHeader={this.renderSectionHeader}
+                        onRefresh={this.onRefresh}
+                        refreshing={refreshing}
+                        sections={historyList}
+                        style={styles.container}
+                        stickySectionHeadersEnabled={true}
+                        onEndReached={this.onEndReached}
+                        onEndReachedThreshold={0.1}
+                        renderItem={this.renderItem}
+                        extraData={this.state}
+                        ListFooterComponent={this.renderFooter}
+                    />
+                    <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
+                </View>
         );
     }
 }
@@ -287,12 +282,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    contentContainer: {
-        paddingHorizontal: 15,
-        backgroundColor: Color.page_bg,
-    },
     headerView: {
         height: 45,
+        paddingLeft: 15,
         justifyContent: 'center',
         backgroundColor: Color.page_bg,
     },

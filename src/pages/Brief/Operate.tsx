@@ -8,6 +8,7 @@ import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {ModalStackNavigation, RootStackNavigation} from "@/navigator/index";
 
+const imageWidth = wp(33);
 
 const mapStateToProps = ({user, brief}: RootState) => {
     return {
@@ -32,26 +33,17 @@ interface IProps extends ModelState {
     rightViewScale: Animated.AnimatedInterpolation;
     rightFontSize: Animated.AnimatedInterpolation;
     readNow: () => void;
-    delUserCollection: () => void;
-    addUserCollection: () => void;
+    onClickCollection: () => void;
 }
 
 class Operate extends React.Component<IProps> {
 
-    addUserCollection = () => {
-        const {addUserCollection} = this.props;
-        if (typeof addUserCollection === "function"){
-            addUserCollection();
+    onClickCollection = () => {
+        const {onClickCollection} = this.props;
+        if (typeof onClickCollection === "function"){
+            onClickCollection();
         }
     }
-
-    delUserCollection = () => {
-        const {delUserCollection} = this.props;
-        if (typeof delUserCollection === "function"){
-            delUserCollection();
-        }
-    }
-
 
     readNow = () => {
         const {readNow} = this.props;
@@ -70,42 +62,33 @@ class Operate extends React.Component<IProps> {
                 <View style={styles.container}>
                     <View style={styles.spaceView}/>
                     <View style={styles.contentContainer}>
-                        <View style={styles.seize}/>
-                        {
-                            collection_id > 0 ?
-                                <Touchable onPress={this.delUserCollection}>
-                                    <Animated.View style={[styles.leftView, {
-                                        left: leftViewX
-                                    }]}>
-                                        <Icon name="icon-xin"
-                                              color={Color.theme}
-                                              size={25}
-                                        />
-                                        <Text style={styles.collection}>已收藏</Text>
-                                    </Animated.View>
-                                </Touchable> :
-                                <Touchable onPress={this.addUserCollection}>
-                                    <Animated.View style={[styles.leftView, {
-                                        left: leftViewX
-                                    }]}>
-                                        <Icon name="icon-xin"
-                                              color={Color.red}
-                                              size={25}
-                                        />
-                                        <Text style={styles.collection}>收藏</Text>
-                                    </Animated.View>
-                                </Touchable>
-                        }
-                        <Touchable onPress={this.readNow}>
-                            <Animated.View style={[styles.rightView, {
-                                left: rightViewX,
-                                transform: [{scale: rightViewScale}]
+                        <View style={styles.leftWrapper}>
+                            <Animated.View style={[styles.leftView, {
+                                left: leftViewX
                             }]}>
+                                <Touchable style={styles.touchWrapper} onPress={this.onClickCollection}>
+                                    <Icon name="icon-xin"
+                                          color={collection_id > 0 ? Color.theme : Color.red}
+                                          size={22}
+                                    />
+                                    <Text style={styles.collection}>{collection_id > 0 ? '已收藏' : '收藏'}</Text>
+                                </Touchable>
+                            </Animated.View>
+                        </View>
+                        {/*<Touchable onPress={this.onClickCollection}>*/}
+                        <Animated.View style={[styles.rightWrapper, {
+                            left: rightViewX,
+                            transform: [{scale: rightViewScale}]
+                        }]}>
+                            <View style={styles.rightView}>
                                 <Animated.Text style={[styles.rightTitle, {
                                     fontSize: rightFontSize
-                                }]}>{markChapterNum > 0 ? `续看第${markChapterNum}话` : '开始阅读'}</Animated.Text>
-                            </Animated.View>
-                        </Touchable>
+                                }]}>
+                                    {markChapterNum > 0 ? `续看第${markChapterNum}话` : '开始阅读'}
+                                </Animated.Text>
+                            </View>
+                        </Animated.View>
+                        {/*</Touchable>*/}
                     </View>
                 </View>
             </>
@@ -128,34 +111,41 @@ const styles = StyleSheet.create({
         backgroundColor: Color.page_bg,
     },
     contentContainer: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        paddingHorizontal: hp(3)
     },
-    seize: {
-        width: wp(6),
+    leftWrapper: {
+        flex: 1
+    },
+    rightWrapper: {
+        flex: 1,
     },
     leftView: {
-        width: 75,
-        marginLeft: wp(6),
+        width: imageWidth,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    touchWrapper: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    collection: {
-        marginLeft: 5
-    },
-    leftTitle: {
-        marginLeft: 8,
-    },
     rightView: {
-        width: wp(50),
-        height: hp(6),
-        marginLeft: wp(15),
+        flex: 1,
+        width: wp(45),
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Color.red,
-        marginHorizontal: 10,
         borderRadius: 35,
+    },
+    collection: {
+        marginLeft: 5,
+        fontSize:14
+    },
+    leftTitle: {
+        marginLeft: 8,
     },
     rightTitle: {
         color: Color.grey_title,

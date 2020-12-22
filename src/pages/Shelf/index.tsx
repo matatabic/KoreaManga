@@ -54,7 +54,6 @@ class Shelf extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        console.log('33333333333333333')
         this.loadData(true);
         const {navigation, dispatch} = this.props;
         this._unsubscribe = navigation.addListener('focus', () => {
@@ -211,42 +210,38 @@ class Shelf extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {navigation, isLogin, collectionList, isEdit, loading, refreshing} = this.props;
+        const {collectionList, isEdit, loading, refreshing} = this.props;
         const headerOpacity = this.getHeaderOpacity();
         return (
-            isLogin ?
-                (
-                    (loading && refreshing) ? <BookPlaceholder/> :
-                        <View style={styles.container}>
-                            <View style={styles.totalView}>
-                                <Animated.Text style={[{
-                                    opacity: headerOpacity,
-                                }]}>总收藏{collectionList.length}本</Animated.Text>
-                            </View>
-                            <FlatList
-                                keyExtractor={(item, key) => `item-${key}`}
-                                scrollEventThrottle={1}
-                                data={collectionList}
-                                style={styles.container}
-                                numColumns={3}
-                                onScroll={Animated.event(
-                                    [{
-                                        nativeEvent: {contentOffset: {y: this.scrollY}}
-                                    }],
-                                    {
-                                        useNativeDriver: false
-                                    }
-                                )}
-                                renderItem={this.renderItem}
-                                extraData={this.state}
-                                ListFooterComponent={this.renderFooter}
-                                onEndReached={this.onEndReached}
-                                onEndReachedThreshold={0.1}
-                            />
-                            <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
-                        </View>
-                ) :
-                <LoginPending navigation={navigation}/>
+            (loading && refreshing) ? <BookPlaceholder/> :
+                <View style={styles.container}>
+                    <View style={styles.totalView}>
+                        <Animated.Text style={[{
+                            opacity: headerOpacity,
+                        }]}>总收藏{collectionList.length}本</Animated.Text>
+                    </View>
+                    <FlatList
+                        keyExtractor={(item, key) => `item-${key}`}
+                        scrollEventThrottle={1}
+                        data={collectionList}
+                        style={styles.container}
+                        numColumns={3}
+                        onScroll={Animated.event(
+                            [{
+                                nativeEvent: {contentOffset: {y: this.scrollY}}
+                            }],
+                            {
+                                useNativeDriver: false
+                            }
+                        )}
+                        renderItem={this.renderItem}
+                        extraData={this.state}
+                        ListFooterComponent={this.renderFooter}
+                        onEndReached={this.onEndReached}
+                        onEndReachedThreshold={0.1}
+                    />
+                    <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
+                </View>
         )
     }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
-import {hp, ip, viewportWidth, wp} from "@/utils/index";
+import {hp, ip, viewportWidth} from "@/utils/index";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import FastImage from "react-native-fast-image";
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
         width: viewportWidth,
-        height: hp(6) + getStatusBarHeight(),
+        height: hp(6.75) + getStatusBarHeight(),
         overflow: "hidden"
     },
     image: {

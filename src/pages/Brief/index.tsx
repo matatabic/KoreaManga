@@ -29,7 +29,7 @@ import BriefPlaceholder from "@/components/Placeholder/BriefPlaceholder";
 
 const startHeight = hp(17.5);
 const endHeight = hp(35) - getStatusBarHeight();
-const showFixedViewH = endHeight + hp(3.5);
+const showFixedViewH = hp(35);
 
 
 const mapStateToProps = ({user, brief, loading}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
@@ -60,7 +60,6 @@ interface IState {
 
 class Brief extends React.PureComponent<IProps, IState> {
 
-    showFixedViewH = showFixedViewH;
     translateY = new Animated.Value(0)
 
     constructor(props: IProps) {
@@ -147,31 +146,26 @@ class Brief extends React.PureComponent<IProps, IState> {
         })
     }
 
-    addUserCollection = () => {
-        const {dispatch, navigation, isLogin, book_id} = this.props;
-        if (isLogin) {
-            dispatch({
-                type: 'brief/addUserCollection',
-                payload: {
-                    book_id
-                }
-            })
-        } else {
+    onClickCollection = () => {
+        const {dispatch, navigation, isLogin, collection_id, book_id} = this.props;
+        if (!isLogin) {
             navigation.navigate("Login");
-        }
-    }
-
-    delUserCollection = () => {
-        const {dispatch, navigation, isLogin, collection_id} = this.props;
-        if (isLogin) {
-            dispatch({
-                type: 'brief/delUserCollection',
-                payload: {
-                    id: collection_id.toString()
-                }
-            })
         } else {
-            navigation.navigate("Login");
+            if (collection_id > 0) {
+                dispatch({
+                    type: 'brief/delUserCollection',
+                    payload: {
+                        id: collection_id.toString()
+                    }
+                })
+            } else {
+                dispatch({
+                    type: 'brief/addUserCollection',
+                    payload: {
+                        book_id
+                    }
+                })
+            }
         }
     }
 
@@ -217,8 +211,7 @@ class Brief extends React.PureComponent<IProps, IState> {
                     rightViewScale={rightViewScale}
                     rightFontSize={rightFontSize}
                     readNow={this.readNow}
-                    delUserCollection={this.delUserCollection}
-                    addUserCollection={this.addUserCollection}
+                    onClickCollection={this.onClickCollection}
                 />
                 <BookIntro/>
             </View>
@@ -231,8 +224,7 @@ class Brief extends React.PureComponent<IProps, IState> {
             return <Fixed
                 navigation={navigation}
                 readNow={this.readNow}
-                delUserCollection={this.delUserCollection}
-                addUserCollection={this.addUserCollection}
+                onClickCollection={this.onClickCollection}
             />
         }
         return null;
@@ -247,7 +239,7 @@ class Brief extends React.PureComponent<IProps, IState> {
     }
 
     onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        if (event.nativeEvent.contentOffset.y > this.showFixedViewH) {
+        if (event.nativeEvent.contentOffset.y > showFixedViewH) {
             this.setState({
                 showFixed: true
             })

@@ -89,8 +89,9 @@ const styles = StyleSheet.create({
     item: {
         height: itemHeight,
         paddingTop: 5,
+        paddingHorizontal:15,
         flexDirection: 'row',
-        backgroundColor: Color.white,
+        backgroundColor: Color.page_bg,
     },
     image: {
         borderRadius: 10,
