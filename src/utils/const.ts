@@ -19,6 +19,7 @@ export const Color = { //App通用颜色
     split_line: '#D0D0D1',//分割线色值
     page_bg: '#FFFFFF',   //默认页面背景色
     grey_page_bg: '#F5F5F5',
+    translucent: 'rgba(0,0,0,0.5)',
     transparent: 'transparent',
 };
 

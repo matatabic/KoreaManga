@@ -24,6 +24,7 @@ export interface IBookInfo {
 
 export interface BriefState {
     bookInfo: IBookInfo;
+    book_update_info: string;
     refreshing: boolean;
     collection_id: number;
     markChapterNum: number;
@@ -57,6 +58,7 @@ export const initialState = {
         status: '',
     },
     refreshing: false,
+    book_update_info: '',
     collection_id: 0,
     markChapterNum: 0,
     markRoast: 0,

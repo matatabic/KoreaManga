@@ -4,7 +4,6 @@ import Icon from "@/assets/iconfont";
 import {Color} from "@/utils/const";
 import Touchable from "@/components/Touchable";
 import {hp, wp} from "@/utils/index";
-import {getStatusBarHeight} from "react-native-iphone-x-helper";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {ModalStackNavigation} from "@/navigator/index";
@@ -59,7 +58,7 @@ class Fixed extends React.PureComponent<IProps> {
                 <View style={styles.container}>
                     <View style={styles.spaceView}/>
                     <View style={styles.contentContainer}>
-                        <Touchable style={{position: "absolute", left: 6, top: 8.25}} onPress={this.goBack}>
+                        <Touchable style={styles.backIcon} onPress={this.goBack}>
                             <Icon name="icon-arrow-left-bold" color='#ccc' size={24}/>
                         </Touchable>
                         <View style={styles.leftWrapper}>
@@ -69,24 +68,28 @@ class Fixed extends React.PureComponent<IProps> {
                                 <Touchable style={styles.touchWrapper} onPress={this.onClickCollection}>
                                     <Icon name="icon-xin"
                                           color={collection_id > 0 ? Color.theme : Color.red}
-                                          size={22}
+                                          size={25}
                                     />
                                     <Text style={styles.collection}>{collection_id > 0 ? '已收藏' : '收藏'}</Text>
                                 </Touchable>
                             </Animated.View>
                         </View>
+
                         <Animated.View style={[styles.rightWrapper, {
                             left: wp(10),
                             transform: [{scale: 0.65}]
                         }]}>
-                            <Touchable style={styles.rightView} onPress={this.readNow}>
-                                <Animated.Text style={[styles.rightTitle, {
-                                    fontSize: 20
-                                }]}>
-                                    {markChapterNum > 0 ? `续看第${markChapterNum}话` : '开始阅读'}
-                                </Animated.Text>
+                            <Touchable style={styles.rightWrapper} onPress={this.readNow}>
+                                <View style={styles.rightView}>
+                                    <Animated.Text style={[styles.rightTitle, {
+                                        fontSize: 20
+                                    }]}>
+                                        {markChapterNum > 0 ? `续看第${markChapterNum}话` : '开始阅读'}
+                                    </Animated.Text>
+                                </View>
                             </Touchable>
                         </Animated.View>
+
                     </View>
                 </View>
             </>
@@ -113,11 +116,16 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
         flexDirection: 'row',
+        justifyContent: "space-between",
         alignItems: 'center',
-        paddingHorizontal: hp(3)
+        paddingLeft: hp(1.5),
+        paddingRight: hp(3)
+    },
+    backIcon: {
+        width: 25,
     },
     leftWrapper: {
-        flex: 1
+        flex: 1,
     },
     rightWrapper: {
         flex: 1,
@@ -142,7 +150,7 @@ const styles = StyleSheet.create({
     },
     collection: {
         marginLeft: 5,
-        fontSize: 14
+        fontSize: 16
     },
     leftTitle: {
         marginLeft: 8,

@@ -29,7 +29,7 @@ import BriefPlaceholder from "@/components/Placeholder/BriefPlaceholder";
 
 const startHeight = hp(17.5);
 const endHeight = hp(35) - getStatusBarHeight();
-const showFixedViewH = hp(35);
+const showFixedViewH = hp(35.5);
 
 
 const mapStateToProps = ({user, brief, loading}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
@@ -278,8 +278,9 @@ class Brief extends React.PureComponent<IProps, IState> {
                         )}
                         ListFooterComponent={this.renderFooter}
                     />
-                    {this.fixedView}
+
                     <TopBarWrapper goBack={this.goBack} topBarOpacity={topBarOpacity}/>
+                    {this.fixedView}
                 </View>
         );
     }

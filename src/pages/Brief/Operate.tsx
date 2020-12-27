@@ -40,18 +40,17 @@ class Operate extends React.Component<IProps> {
 
     onClickCollection = () => {
         const {onClickCollection} = this.props;
-        if (typeof onClickCollection === "function"){
+        if (typeof onClickCollection === "function") {
             onClickCollection();
         }
     }
 
     readNow = () => {
         const {readNow} = this.props;
-        if (typeof readNow === "function"){
+        if (typeof readNow === "function") {
             readNow();
         }
     }
-
 
 
     render() {
@@ -62,6 +61,7 @@ class Operate extends React.Component<IProps> {
                 <View style={styles.container}>
                     <View style={styles.spaceView}/>
                     <View style={styles.contentContainer}>
+                        <View style={styles.backIconSpace}/>
                         <View style={styles.leftWrapper}>
                             <Animated.View style={[styles.leftView, {
                                 left: leftViewX
@@ -69,26 +69,28 @@ class Operate extends React.Component<IProps> {
                                 <Touchable style={styles.touchWrapper} onPress={this.onClickCollection}>
                                     <Icon name="icon-xin"
                                           color={collection_id > 0 ? Color.theme : Color.red}
-                                          size={22}
+                                          size={25}
                                     />
                                     <Text style={styles.collection}>{collection_id > 0 ? '已收藏' : '收藏'}</Text>
                                 </Touchable>
                             </Animated.View>
                         </View>
-                        {/*<Touchable onPress={this.onClickCollection}>*/}
+
                         <Animated.View style={[styles.rightWrapper, {
                             left: rightViewX,
                             transform: [{scale: rightViewScale}]
                         }]}>
-                            <View style={styles.rightView}>
-                                <Animated.Text style={[styles.rightTitle, {
-                                    fontSize: rightFontSize
-                                }]}>
-                                    {markChapterNum > 0 ? `续看第${markChapterNum}话` : '开始阅读'}
-                                </Animated.Text>
-                            </View>
+                            <Touchable style={styles.rightWrapper} onPress={this.readNow}>
+                                <View style={styles.rightView}>
+                                    <Animated.Text style={[styles.rightTitle, {
+                                        fontSize: rightFontSize
+                                    }]}>
+                                        {markChapterNum > 0 ? `续看第${markChapterNum}话` : '开始阅读'}
+                                    </Animated.Text>
+                                </View>
+                            </Touchable>
                         </Animated.View>
-                        {/*</Touchable>*/}
+
                     </View>
                 </View>
             </>
@@ -113,11 +115,16 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
         flexDirection: 'row',
+        justifyContent: "space-between",
         alignItems: 'center',
-        paddingHorizontal: hp(3)
+        paddingLeft: hp(1.5),
+        paddingRight: hp(3)
+    },
+    backIconSpace: {
+        width: 25,
     },
     leftWrapper: {
-        flex: 1
+        flex: 1,
     },
     rightWrapper: {
         flex: 1,
@@ -142,7 +149,7 @@ const styles = StyleSheet.create({
     },
     collection: {
         marginLeft: 5,
-        fontSize:14
+        fontSize: 16
     },
     leftTitle: {
         marginLeft: 8,

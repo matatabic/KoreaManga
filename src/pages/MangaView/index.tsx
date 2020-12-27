@@ -5,7 +5,7 @@ import {
     ListRenderItemInfo,
     NativeSyntheticEvent,
     NativeScrollEvent,
-    Text, StatusBar,
+    StatusBar,
 } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
 import {IChapter} from "@/models/brief";
@@ -19,8 +19,9 @@ import Item from "./item/Item";
 import More from "@/components/More";
 import End from "@/components/End";
 import {viewportWidth} from "@/utils/index";
-import Touchable from "@/components/Touchable";
+
 import Toast from "react-native-root-toast";
+import BookStatusBar from "./BookStatusBar";
 
 
 const mapStateToProps = ({mangaView, brief, loading}: RootState) => {
@@ -47,7 +48,9 @@ interface IProps extends ModelState {
 interface IState {
     endReached: boolean;
     headerReached: boolean;
+    currentRoast: number;
 }
+
 
 class MangaView extends React.PureComponent<IProps, IState> {
 
@@ -62,13 +65,14 @@ class MangaView extends React.PureComponent<IProps, IState> {
         this.state = {
             endReached: false,
             headerReached: false,
+            currentRoast: 1,
         };
     }
 
     componentDidMount() {
         NetInfo.fetch("wifi").then(state => {
             if (state.type !== "wifi") {
-                Toast.show('现在处于wifi环境，请注意流量使用', {
+                Toast.show('现在处于非wifi环境，请注意流量使用', {
                     position: Toast.positions.CENTER,
                     duration: Toast.durations.LONG,
                     shadow: true,
@@ -90,14 +94,6 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     onPress = () => {
         this._FlatList.scrollToIndex({viewPosition: 0, index: 5});
-    }
-
-    renderHeader = () => {
-        return (
-            <Touchable onPress={this.onPress}>
-                <Text style={{color: 'red', height: 50}}>jump</Text>
-            </Touchable>
-        )
     }
 
     renderFooter = () => {
@@ -162,7 +158,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
         });
     }
 
-    onScrollEndDrag = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
+    onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
         const {episodeList} = this.props;
         let offset_total = 0;
         for (let i = 0; i < episodeList.length; i++) {
@@ -171,6 +167,9 @@ class MangaView extends React.PureComponent<IProps, IState> {
                 this.currentChapterId = episodeList[i].chapter_id;
                 this.currentChapterNum = episodeList[i].chapter_num;
                 this.currentRoast = episodeList[i].roast;
+                this.setState({
+                    currentRoast: episodeList[i].roast
+                })
                 break;
             }
         }
@@ -224,7 +223,6 @@ class MangaView extends React.PureComponent<IProps, IState> {
             <>
                 <StatusBar hidden/>
                 <FlatList
-                    // ListHeaderComponent={this.renderHeader}
                     ref={(ref) => {
                         this._FlatList = ref;
                     }}
@@ -244,9 +242,10 @@ class MangaView extends React.PureComponent<IProps, IState> {
                     keyExtractor={(item) => `item-${item.id}`}
                     onEndReached={this.onEndReached}
                     onEndReachedThreshold={0.1}
-                    onScrollEndDrag={this.onScrollEndDrag}
+                    onScroll={this.onScroll}
                     ListFooterComponent={this.renderFooter}
                 />
+                <BookStatusBar currentRoast={this.state.currentRoast}/>
             </>
         );
     }

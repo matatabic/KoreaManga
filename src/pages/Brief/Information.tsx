@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     wrapper: {
         paddingTop: getStatusBarHeight(),
         height: hp(25),
-        zIndex: 99999,
+        zIndex: 100,
     },
     container: {
         flexDirection: "row",

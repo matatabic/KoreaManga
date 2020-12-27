@@ -4,6 +4,7 @@ import Icon from "@/assets/iconfont";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 import Touchable from "@/components/Touchable";
 import {Color} from "@/utils/const";
+import {hp} from "@/utils/index";
 
 interface IProps {
     goBack: () => void;
@@ -51,14 +52,14 @@ const styles = StyleSheet.create({
         height: 45,
     },
     headerContainer: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: "space-between",
         paddingTop: 15,
+        paddingHorizontal: hp(1.5)
     },
     leftView: {
         width: 25,
-        height: 28,
-        marginLeft: 6,
     },
     rightView: {
         flexDirection: 'row',

@@ -7,6 +7,7 @@ import {connect, ConnectedProps} from "react-redux";
 const mapStateToProps = ({brief}: RootState) => {
     return {
         data: brief.bookInfo,
+        book_update_info: brief.book_update_info,
     };
 };
 
@@ -16,7 +17,7 @@ type ModelState = ConnectedProps<typeof connector>;
 
 class BookIntro extends React.Component<ModelState> {
     render() {
-        const {data} = this.props;
+        const {data, book_update_info} = this.props;
         return (
             <>
                 <View style={styles.description}>
@@ -27,7 +28,7 @@ class BookIntro extends React.Component<ModelState> {
                         <Text style={styles.itemHeaderLeftTitle}>章节</Text>
                     </View>
                     <View style={styles.itemHeaderRight}>
-                        <Text style={styles.itemHeaderRightTitle}>2020-09-16更新至第363话</Text>
+                        <Text style={styles.itemHeaderRightTitle}>{book_update_info}</Text>
                     </View>
                 </View>
             </>
