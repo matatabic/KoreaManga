@@ -263,6 +263,7 @@ class Brief extends React.PureComponent<IProps, IState> {
                         ListHeaderComponent={this.header}
                         data={chapterList}
                         numColumns={4}
+                        scrollEventThrottle={1}
                         columnWrapperStyle={styles.columnWrapper}
                         renderItem={this.renderItem}
                         keyExtractor={(item, key) => `item-${key}`}

@@ -31,4 +31,14 @@ function getActiveRouteName(state: NavigationState) {
     return route.name;
 }
 
-export {viewportWidth, viewportHeight, statusBarHeight, wp, hp, ip, getActiveRouteName};
+function getCurrentDate() {
+    let date = new Date();
+
+    let hour = date.getHours();
+    let minute = date.getMinutes();
+    let min = minute > 10 ? minute : `0${minute}`
+
+    return `${hour}:${min}`;
+}
+
+export {viewportWidth, viewportHeight, statusBarHeight, wp, hp, ip, getActiveRouteName, getCurrentDate};

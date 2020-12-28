@@ -8,8 +8,10 @@ export interface IEpisode {
     id: number;
     image: string;
     roast: number;
+    number: number;
     chapter_id: number;
     chapter_num: number;
+    episode_total: number;
     multiple: number;
 }
 
@@ -70,7 +72,7 @@ const mangaViewModel: MangaViewModel = {
     },
     effects: {
         *fetchEpisodeList(action, {call, put, select}) {
-            const {payload, type} = action;
+            const {payload} = action;
             const {refreshing, direction} = payload;
 
             let {episodeList: list, book_id, roast, headerIndex, endIndex} = yield select(
@@ -109,8 +111,9 @@ const mangaViewModel: MangaViewModel = {
                 action.callback();
             }
         },
-        *addHistory({payload}, {call, put}) {
-            yield call(EpisodeServices.saveMark, payload);
+        *addHistory({payload}, {call}) {
+            const data = yield call(EpisodeServices.saveMark, payload);
+            console.log(data)
         },
     },
 };

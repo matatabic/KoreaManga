@@ -18,14 +18,14 @@ import {IEpisode, initialState} from "@/models/mangaView";
 import Item from "./item/Item";
 import More from "@/components/More";
 import End from "@/components/End";
-import {viewportWidth} from "@/utils/index";
-
+import {viewportWidth, getCurrentDate} from "@/utils/index";
 import Toast from "react-native-root-toast";
 import BookStatusBar from "./BookStatusBar";
 
 
-const mapStateToProps = ({mangaView, brief, loading}: RootState) => {
+const mapStateToProps = ({mangaView, brief, user, loading}: RootState) => {
     return {
+        isLogin: user.isLogin,
         episodeList: mangaView.episodeList,
         currentChapter: brief.markChapterNum,
         currentRoast: brief.markRoast,
@@ -45,31 +45,48 @@ interface IProps extends ModelState {
     data: IChapter;
 }
 
+
 interface IState {
     endReached: boolean;
-    headerReached: boolean;
-    currentRoast: number;
+    currentTime: string;
+    currentEpisodeTotal: number;
+    currentChapterNum: number;
+    currentNumber: number;
+    connectionType: string;
 }
 
 
 class MangaView extends React.PureComponent<IProps, IState> {
 
-    _FlatList: any = null;
-    loadUpData: boolean = true;
-    currentChapterId: number = 0
-    currentChapterNum: number = 0;
+    timer: NodeJS.Timer | null = null;
+    currentChapterId: number = 0;
     currentRoast: number = 0;
 
     constructor(props: IProps) {
         super(props);
         this.state = {
             endReached: false,
-            headerReached: false,
-            currentRoast: 1,
+            connectionType: '未知',
+            currentEpisodeTotal: 0,
+            currentChapterNum: 1,
+            currentNumber: 1,
+            currentTime: '',
         };
     }
 
     componentDidMount() {
+        const time: string = getCurrentDate();
+        this.setState({
+            currentTime: time
+        })
+
+        this.timer = setInterval(() => {
+            const time: string = getCurrentDate();
+            this.setState({
+                currentTime: time
+            })
+        }, 60000)
+
         NetInfo.fetch("wifi").then(state => {
             if (state.type !== "wifi") {
                 Toast.show('现在处于非wifi环境，请注意流量使用', {
@@ -80,6 +97,13 @@ class MangaView extends React.PureComponent<IProps, IState> {
                 })
             }
         });
+
+        NetInfo.addEventListener(state => {
+            this.setState({
+                connectionType: state.type,
+            })
+        });
+
         const {dispatch} = this.props;
         const {roast, book_id} = this.props.route.params;
         dispatch({
@@ -92,8 +116,16 @@ class MangaView extends React.PureComponent<IProps, IState> {
         this.loadData(true, true);
     }
 
-    onPress = () => {
-        this._FlatList.scrollToIndex({viewPosition: 0, index: 5});
+    static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
+        if (prevState.currentEpisodeTotal === 0 && nextProps.episodeList.length > 0) {
+            return {
+                currentEpisodeTotal: nextProps.episodeList[0].episode_total,
+                currentChapterNum: nextProps.episodeList[0].chapter_num,
+                currentNumber: nextProps.episodeList[0].number,
+            }
+        }
+
+        return null;
     }
 
     renderFooter = () => {
@@ -121,26 +153,6 @@ class MangaView extends React.PureComponent<IProps, IState> {
         });
     }
 
-    onHeaderReached = () => {
-        const {headerHasMore, loading} = this.props;
-
-        if (!headerHasMore || loading) {
-            return;
-        }
-        this.setState({
-            headerReached: true,
-        });
-
-        this.loadData(false, false, () => {
-            this.setState({
-                headerReached: false,
-            });
-            setTimeout(() => {
-                this.loadUpData = true;
-            }, 1000)
-        });
-    }
-
     onEndReached = () => {
         const {endHasMore, loading} = this.props;
 
@@ -158,17 +170,19 @@ class MangaView extends React.PureComponent<IProps, IState> {
         });
     }
 
-    onScroll = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
+    onScrollEndDrag = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
         const {episodeList} = this.props;
         let offset_total = 0;
         for (let i = 0; i < episodeList.length; i++) {
             offset_total += episodeList[i].multiple * viewportWidth;
             if (nativeEvent.contentOffset.y < offset_total) {
                 this.currentChapterId = episodeList[i].chapter_id;
-                this.currentChapterNum = episodeList[i].chapter_num;
                 this.currentRoast = episodeList[i].roast;
+
                 this.setState({
-                    currentRoast: episodeList[i].roast
+                    currentChapterNum: episodeList[i].chapter_num,
+                    currentEpisodeTotal: episodeList[i].episode_total,
+                    currentNumber: episodeList[i].number,
                 })
                 break;
             }
@@ -182,11 +196,12 @@ class MangaView extends React.PureComponent<IProps, IState> {
     }
 
     componentWillUnmount() {
-        const {dispatch, episodeList} = this.props;
+        const {isLogin, dispatch, episodeList} = this.props;
         const {book_id} = this.props.route.params;
 
         const chapter_id = this.currentChapterId > 0 ? this.currentChapterId : episodeList[0].chapter_id;
-        const chapter_num = this.currentChapterNum > 0 ? this.currentChapterNum : episodeList[0].chapter_num;
+        const chapter_num = this.state.currentChapterNum > 0 ?
+            this.state.currentChapterNum : episodeList[0].chapter_num;
         const roast = this.currentRoast > 0 ? this.currentRoast : episodeList[0].roast;
 
         dispatch({
@@ -204,31 +219,32 @@ class MangaView extends React.PureComponent<IProps, IState> {
             }
         })
 
-        dispatch({
-            type: 'mangaView/addHistory',
-            payload: {
-                book_id,
-                chapter_id,
-                chapter_num,
-                roast,
-            }
-        })
+        if (isLogin) {
+            dispatch({
+                type: 'mangaView/addHistory',
+                payload: {
+                    book_id,
+                    chapter_id,
+                    chapter_num,
+                    roast,
+                }
+            })
+        }
 
+        clearInterval(Number(this.timer));
     }
 
     render() {
         const {episodeList} = this.props;
-
+        const {connectionType, currentTime, currentNumber, currentChapterNum, currentEpisodeTotal} = this.state;
         return (
             <>
                 <StatusBar hidden/>
                 <FlatList
-                    ref={(ref) => {
-                        this._FlatList = ref;
-                    }}
                     style={styles.container}
                     data={episodeList}
                     numColumns={1}
+                    scrollEventThrottle={1}
                     extraData={this.state}
                     renderItem={this.renderItem}
                     getItemLayout={(data: any, index) => {
@@ -242,10 +258,16 @@ class MangaView extends React.PureComponent<IProps, IState> {
                     keyExtractor={(item) => `item-${item.id}`}
                     onEndReached={this.onEndReached}
                     onEndReachedThreshold={0.1}
-                    onScroll={this.onScroll}
+                    onScrollEndDrag={this.onScrollEndDrag}
                     ListFooterComponent={this.renderFooter}
                 />
-                <BookStatusBar currentRoast={this.state.currentRoast}/>
+                <BookStatusBar
+                    connectionType={connectionType}
+                    currentTime={currentTime}
+                    currentEpisodeTotal={currentEpisodeTotal}
+                    currentChapterNum={currentChapterNum}
+                    currentNumber={currentNumber}
+                />
             </>
         );
     }

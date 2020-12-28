@@ -5,27 +5,31 @@ import {wp} from "@/utils/index";
 import {Color} from "@/utils/const";
 
 interface IProps {
-    currentRoast: any
+    connectionType: string;
+    currentTime: string;
+    currentEpisodeTotal: number;
+    currentChapterNum: number;
+    currentNumber: number;
 }
 
 class BookStatusBar extends React.Component<IProps> {
 
     render() {
-        const {currentRoast} = this.props;
-        console.log(currentRoast)
+        const {connectionType, currentTime, currentEpisodeTotal, currentNumber, currentChapterNum} = this.props;
+
         return (
             <View style={styles.container}>
                 <View>
-                    <Text style={styles.title}>第{currentRoast}回</Text>
+                    <Text style={styles.title}>第{currentChapterNum}回</Text>
                 </View>
                 <View>
-                    <Text style={styles.title}>1/8</Text>
+                    <Text style={styles.title}>{`${currentNumber}/${currentEpisodeTotal}`}</Text>
                 </View>
                 <View>
-                    <Text style={styles.title}>16:52</Text>
+                    <Text style={styles.title}>{currentTime}</Text>
                 </View>
                 <View>
-                    <Text style={styles.title}>WiFi</Text>
+                    <Text style={styles.title}>{connectionType.toLocaleUpperCase()}</Text>
                 </View>
                 <View>
                     <Text style={styles.title}>电池</Text>
