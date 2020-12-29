@@ -156,7 +156,7 @@ class Home extends React.PureComponent<IProps, IState> {
                     <CarouselBlurBackground/>
                     <TopBarWrapper navigation={navigation} topBarColor={topBarColor}/>
                     <SectionList
-                        keyExtractor={(item, index) => `section-item-${index}`}
+                        keyExtractor={(item, index) => `item-${item['id']}-key-${index}`}
                         ListHeaderComponent={this.header}
                         renderSectionHeader={this.renderSectionHeader}
                         onRefresh={this.onRefresh}
