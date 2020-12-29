@@ -5,6 +5,7 @@ import {wp} from "@/utils/index";
 import {Color} from "@/utils/const";
 
 interface IProps {
+    batteryLevel: string;
     connectionType: string;
     currentTime: string;
     currentEpisodeTotal: number;
@@ -15,7 +16,14 @@ interface IProps {
 class BookStatusBar extends React.Component<IProps> {
 
     render() {
-        const {connectionType, currentTime, currentEpisodeTotal, currentNumber, currentChapterNum} = this.props;
+        const {
+            batteryLevel,
+            connectionType,
+            currentTime,
+            currentEpisodeTotal,
+            currentNumber,
+            currentChapterNum
+        } = this.props;
 
         return (
             <View style={styles.container}>
@@ -32,7 +40,7 @@ class BookStatusBar extends React.Component<IProps> {
                     <Text style={styles.title}>{connectionType.toLocaleUpperCase()}</Text>
                 </View>
                 <View>
-                    <Text style={styles.title}>电池</Text>
+                    <Text style={styles.title}>{`电池${batteryLevel}%`}</Text>
                 </View>
             </View>
         );
@@ -44,7 +52,7 @@ const styles = StyleSheet.create({
     container: {
         position: "absolute",
         right: 0,
-        borderRadius: 5,
+        borderTopLeftRadius: 10,
         bottom: getBottomSpace(),
         width: wp(60),
         height: 30,

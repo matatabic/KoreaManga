@@ -6,6 +6,8 @@ import {
     NativeSyntheticEvent,
     NativeScrollEvent,
     StatusBar,
+    NativeEventEmitter,
+    NativeModules
 } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
 import {IChapter} from "@/models/brief";
@@ -14,7 +16,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {RouteProp} from "@react-navigation/native";
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import {RootStackParamList} from "@/navigator/index";
-import {IEpisode, initialState} from "@/models/mangaView";
+import {IEpisode} from "@/models/mangaView";
 import Item from "./item/Item";
 import More from "@/components/More";
 import End from "@/components/End";
@@ -22,6 +24,7 @@ import {viewportWidth, getCurrentDate} from "@/utils/index";
 import Toast from "react-native-root-toast";
 import BookStatusBar from "./BookStatusBar";
 
+const deviceInfoEmitter = new NativeEventEmitter(NativeModules.RNDeviceInfo);
 
 const mapStateToProps = ({mangaView, brief, user, loading}: RootState) => {
     return {
@@ -53,6 +56,7 @@ interface IState {
     currentChapterNum: number;
     currentNumber: number;
     connectionType: string;
+    batteryLevel: string;
 }
 
 
@@ -71,6 +75,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
             currentChapterNum: 1,
             currentNumber: 1,
             currentTime: '',
+            batteryLevel: '100',
         };
     }
 
@@ -102,6 +107,16 @@ class MangaView extends React.PureComponent<IProps, IState> {
             this.setState({
                 connectionType: state.type,
             })
+        });
+
+        const deviceInfoEmitter = new NativeEventEmitter(NativeModules.RNDeviceInfo);
+
+        deviceInfoEmitter.addListener('RNDeviceInfo_batteryLevelDidChange', level => {
+            if (level !== '-1') {
+                this.setState({
+                    batteryLevel: level
+                })
+            }
         });
 
         const {dispatch} = this.props;
@@ -206,9 +221,6 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
         dispatch({
             type: 'mangaView/setState',
-            payload: {
-                ...initialState
-            }
         })
 
         dispatch({
@@ -236,7 +248,14 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
     render() {
         const {episodeList} = this.props;
-        const {connectionType, currentTime, currentNumber, currentChapterNum, currentEpisodeTotal} = this.state;
+        const {
+            batteryLevel,
+            connectionType,
+            currentTime,
+            currentNumber,
+            currentChapterNum,
+            currentEpisodeTotal
+        } = this.state;
         return (
             <>
                 <StatusBar hidden/>
@@ -262,6 +281,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
                     ListFooterComponent={this.renderFooter}
                 />
                 <BookStatusBar
+                    batteryLevel={batteryLevel}
                     connectionType={connectionType}
                     currentTime={currentTime}
                     currentEpisodeTotal={currentEpisodeTotal}

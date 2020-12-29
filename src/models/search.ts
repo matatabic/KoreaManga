@@ -15,11 +15,11 @@ export interface IPagination {
 export interface IBook {
     id: number;
     title: string;
-    image?: string;
-    author?: string;
-    category?: string;
-    status?: string;
-    statusColor?: string;
+    image: string;
+    author: string;
+    category: string;
+    status: string;
+    statusColor: string;
 }
 
 export interface IIntro {
@@ -108,7 +108,7 @@ const searchModel: SearchModel = {
                 searchHistoryList
             };
         },
-        destroyHistory(state = initialState, {payload}) {
+        destroyHistory(state = initialState) {
             storage.save({
                 key: 'searchHistoryList',
                 data: [],
@@ -150,7 +150,7 @@ const searchModel: SearchModel = {
             });
         },
         *fetchBookList(action, {call, put, select}) {
-            const {payload, type} = action;
+            const {payload} = action;
             const {refreshing} = payload;
 
             const {bookList: list, pagination} = yield select(

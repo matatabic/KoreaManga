@@ -19,6 +19,8 @@ const STATUS_URL = '/status/getList';
 const CATEGORY_TREE_URL = '/category/getTreeList';
 //episode
 const EPISODE_URL = '/episode/getList';
+//guess
+const RANDOM_URL = '/book/getRandomList';
 //user
 const REGISTER_URL = '/passport/register';
 const LOGIN_URL = '/passport/login';
@@ -41,6 +43,7 @@ export {
     STATUS_URL,
     CATEGORY_TREE_URL,
     EPISODE_URL,
+    RANDOM_URL,
     REGISTER_URL,
     LOGIN_URL,
     LOGOUT_URL

@@ -5,7 +5,7 @@ import {RootStackNavigation} from "@/navigator/index";
 import {IBook} from "@/models/search";
 import SearchBar from "./SearchBar";
 import Intro from "./Intro";
-import BookList from "./BookList/index";
+import BookList from "./BookList";
 import SearchHistory from "./SearchHistory";
 import Simple from "./Simple";
 import {ScrollView} from "react-native";

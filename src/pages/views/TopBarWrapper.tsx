@@ -20,6 +20,13 @@ class TopBarWrapper extends React.Component<IProps> {
         navigation.navigate('Search');
     }
 
+    goGuess = (headerTitle: string) => {
+        const {navigation} = this.props;
+        navigation.navigate('Guess', {
+            headerTitle
+        });
+    }
+
     render() {
         const {topBarColor} = this.props;
         return (
@@ -28,22 +35,22 @@ class TopBarWrapper extends React.Component<IProps> {
             }]}>
                 <View style={styles.header}>
                     <View style={styles.headerLeft}>
-                        <View style={styles.headerLeftView}>
+                        <Touchable style={styles.headerLeftView} onPress={() => this.goGuess("榜单")}>
                             <Icon name="icon-paihangbang" size={25}/>
                             <Text style={styles.headerText}>榜单</Text>
-                        </View>
-                        <View style={styles.headerLeftView}>
+                        </Touchable>
+                        <Touchable style={styles.headerLeftView} onPress={() => this.goGuess("更新")}>
                             <Icon name="icon-shizhong" size={25}/>
                             <Text style={styles.headerText}>更新</Text>
-                        </View>
-                        <View style={styles.headerLeftView}>
+                        </Touchable>
+                        <Touchable style={styles.headerLeftView} onPress={() => this.goGuess("书单")}>
                             <Icon name="icon-history" size={25}/>
                             <Text style={styles.headerText}>书单</Text>
-                        </View>
-                        <View style={styles.headerLeftView}>
+                        </Touchable>
+                        <Touchable style={styles.headerLeftView} onPress={() => this.goGuess("VIP")}>
                             <Icon name="icon-VIP" size={25}/>
                             <Text style={styles.headerText}>VIP</Text>
-                        </View>
+                        </Touchable>
                     </View>
                     <Touchable onPress={this.goSearch}>
                         <View style={styles.headerRight}>

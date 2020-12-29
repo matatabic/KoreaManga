@@ -1,4 +1,5 @@
 import home from './home';
+import guess from './guess';
 import category from "./category";
 import categorySetting from './categorySetting';
 import brief from "./brief";
@@ -9,10 +10,11 @@ import user from "./user";
 import {DvaLoadingState} from 'dva-loading-ts';
 
 
-const models = [home, category, categorySetting, brief, mangaView, search, shelf, user];
+const models = [home, guess, category, categorySetting, brief, mangaView, search, shelf, user];
 
 export type RootState = {
     home: typeof home.state;
+    guess: typeof guess.state;
     category: typeof category.state;
     categorySetting: typeof categorySetting.state;
     brief: typeof brief.state;

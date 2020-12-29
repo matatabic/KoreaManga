@@ -125,7 +125,7 @@ class Home extends React.PureComponent<IProps, IState> {
             <FlatList
                 data={item}
                 numColumns={3}
-                keyExtractor={(item, index) => `item-${item.id}`}
+                keyExtractor={(item, index) => `item-${item.id}-key-${index}`}
                 style={styles.itemContainer}
                 renderItem={this._renderItem}
             />
@@ -163,6 +163,7 @@ class Home extends React.PureComponent<IProps, IState> {
                         refreshing={refreshing}
                         sections={commendList}
                         stickySectionHeadersEnabled={true}
+                        scrollEventThrottle={1}
                         onScroll={Animated.event(
                             [{
                                 nativeEvent: {contentOffset: {y: this.scrollY}}

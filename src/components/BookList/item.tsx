@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Touchable from "@/components/Touchable";
 import {ip, wp} from "@/utils/index";
 import {IBook} from "@/models/search";
 import {Color} from "@/utils/const";
 import ErrorImage from "@/assets/image/error.png";
+import SandGlass from "@/assets/image/sandglass.png";
 
 const imageWidth = wp(25);
 const imageHeight = ip(imageWidth);
@@ -18,6 +19,7 @@ interface IProps {
 
 interface IState {
     errorLoad: boolean;
+    placeholder: boolean;
 }
 
 class Item extends React.PureComponent<IProps, IState> {
@@ -26,6 +28,7 @@ class Item extends React.PureComponent<IProps, IState> {
         super(props);
         this.state = {
             errorLoad: false,
+            placeholder: true,
         }
     }
 
@@ -34,6 +37,12 @@ class Item extends React.PureComponent<IProps, IState> {
             errorLoad: true
         })
     };
+
+    onLoadEnd = () => {
+        this.setState({
+            placeholder: false
+        })
+    }
 
     onPress = () => {
         const {data, goBrief} = this.props;
@@ -44,23 +53,26 @@ class Item extends React.PureComponent<IProps, IState> {
 
     render() {
         const {data} = this.props;
-        const {errorLoad} = this.state;
+        const {errorLoad, placeholder} = this.state;
         const loadImage = errorLoad ? ErrorImage : {uri: data.image, cache: FastImage.cacheControl.immutable};
         return (
             <Touchable style={styles.container} onPress={this.onPress}>
-                <FastImage
-                    source={loadImage}
-                    onError={this.showError}
-                    style={styles.image}
-                    resizeMode={FastImage.resizeMode.stretch}
-                />
+                <View>
+                    <FastImage
+                        source={loadImage}
+                        onError={this.showError}
+                        onLoadEnd={this.onLoadEnd}
+                        style={styles.image}
+                        resizeMode={FastImage.resizeMode.stretch}
+                    />
+                    {placeholder && <Image source={SandGlass} style={styles.placeholder}/>}
+                </View>
                 <View style={styles.mainView}>
                     <Text numberOfLines={2} style={styles.titleText}>{data.title}</Text>
                     <View>
                         <Text style={styles.infoTitle}>{data.author}</Text>
                         <Text style={styles.infoTitle}>{data.category}</Text>
                     </View>
-
                 </View>
                 <View style={styles.rightView}>
                     <Text style={{color: data.statusColor}}>{data.status}</Text>
@@ -82,6 +94,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: imageWidth,
         height: imageHeight,
+    },
+    placeholder: {
+        width: imageWidth,
+        height: imageHeight,
+        position: "absolute",
+        top: 0,
+        left: 0,
     },
     mainView: {
         flex: 1,

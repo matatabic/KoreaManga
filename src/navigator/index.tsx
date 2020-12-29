@@ -7,17 +7,17 @@ import {
     CardStyleInterpolators,
     TransitionPresets,
 } from '@react-navigation/stack';
-import BottomTabs from './BottomTabs';
 import {Platform, StyleSheet} from 'react-native';
+import {Color} from "@/utils/const";
+import {statusBarHeight} from "@/utils/index";
+import BottomTabs from './BottomTabs';
 import Brief from '@/pages/Brief';
 import CategorySetting from "@/pages/CategorySetting";
 import MangaView from "@/pages/MangaView";
 import Search from "@/pages/Search";
-import {Color} from "@/utils/const";
 import Login from "@/pages/Login";
-import {statusBarHeight} from "@/utils/index";
 import Register from "@/pages/Register";
-import {forFade} from "@react-navigation/stack/lib/typescript/src/TransitionConfigs/HeaderStyleInterpolators";
+import Guess from "@/pages/Guess";
 
 
 export type RootStackParamList = {
@@ -34,6 +34,9 @@ export type RootStackParamList = {
         roast: number;
         book_id: number;
     },
+    Guess: {
+        headerTitle: string;
+    };
 };
 
 export type RootStackNavigation = StackNavigationProp<RootStackParamList>;
@@ -121,6 +124,10 @@ function RootStackScreen() {
                         return null;
                     },
                 }}
+            />
+            <RootStack.Screen
+                name="Guess"
+                component={Guess}
             />
         </RootStack.Navigator>
     );

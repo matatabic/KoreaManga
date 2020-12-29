@@ -113,7 +113,6 @@ const mangaViewModel: MangaViewModel = {
         },
         *addHistory({payload}, {call}) {
             const data = yield call(EpisodeServices.saveMark, payload);
-            console.log(data)
         },
     },
 };

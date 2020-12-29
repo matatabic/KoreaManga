@@ -12,7 +12,7 @@ import {RootState} from "@/models/index";
 import {RouteProp} from "@react-navigation/native";
 import {ModalStackNavigation, RootStackNavigation, RootStackParamList} from "@/navigator/index";
 import {connect, ConnectedProps} from "react-redux";
-import {IChapter, initialState} from "@/models/brief";
+import {IChapter} from "@/models/brief";
 import ImageBlurBackground from "@/pages/Brief/ImageBlurBackground";
 import {hp, wp} from "@/utils/index";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
@@ -128,9 +128,6 @@ class Brief extends React.PureComponent<IProps, IState> {
         const {dispatch} = this.props;
         dispatch({
             type: 'brief/setState',
-            payload: {
-                ...initialState
-            }
         })
     }
 
