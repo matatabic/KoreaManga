@@ -41,13 +41,6 @@ class Guess extends React.Component<IProps> {
         this.loadData(true);
     }
 
-    componentWillUnmount() {
-        const {dispatch} = this.props;
-        dispatch({
-            type: 'guess/setState',
-        });
-    }
-
     loadData = (refreshing: boolean, callback?: () => void) => {
         const {dispatch} = this.props;
         dispatch({

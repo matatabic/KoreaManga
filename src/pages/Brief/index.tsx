@@ -124,13 +124,6 @@ class Brief extends React.PureComponent<IProps, IState> {
         this.props.navigation.goBack();
     }
 
-    componentWillUnmount() {
-        const {dispatch} = this.props;
-        dispatch({
-            type: 'brief/setState',
-        })
-    }
-
     loadData = (refreshing: boolean, callback?: () => void) => {
         const {dispatch, book_id} = this.props;
         dispatch({
@@ -163,6 +156,9 @@ class Brief extends React.PureComponent<IProps, IState> {
                     }
                 })
             }
+            dispatch({
+                type: 'shelf/setCollectionScreenReload',
+            })
         }
     }
 

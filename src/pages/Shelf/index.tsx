@@ -4,7 +4,6 @@ import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import BookCover from "./Item/BookCover";
 import {ModalStackNavigation, RootStackNavigation} from "@/navigator/index";
-import LoginPending from "./LoginPending";
 import {ICollection} from "@/models/shelf";
 import More from "@/components/More";
 import End from "@/components/End";
@@ -35,6 +34,7 @@ interface IProps extends ModelState {
 
 interface IState {
     endReached: boolean;
+    ren: boolean;
 }
 
 class Shelf extends React.PureComponent<IProps, IState> {
@@ -49,14 +49,15 @@ class Shelf extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
+            ren: true,
             endReached: false,
         };
     }
 
     componentDidMount() {
-        this.loadData(true);
         const {navigation, dispatch} = this.props;
         this._unsubscribe = navigation.addListener('focus', () => {
+            this.loadData(true);
             dispatch({
                 type: 'shelf/setActivePage',
                 payload: {
@@ -70,13 +71,6 @@ class Shelf extends React.PureComponent<IProps, IState> {
 
     componentWillUnmount() {
         this._unsubscribe();
-    }
-
-    componentDidUpdate() {
-        if (this.props.isLogin && this.initData) {
-            this.loadData(true);
-            this.initData = false;
-        }
     }
 
     loadData = (refreshing: boolean, callback?: () => void) => {
@@ -210,38 +204,40 @@ class Shelf extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {collectionList, isEdit, loading, refreshing} = this.props;
+        const {collectionList, isEdit, loading, refreshing, isLogin} = this.props;
+
         const headerOpacity = this.getHeaderOpacity();
         return (
-            (loading && refreshing) ? <BookPlaceholder/> :
-                <View style={styles.container}>
-                    <View style={styles.totalView}>
-                        <Animated.Text style={[{
-                            opacity: headerOpacity,
-                        }]}>总收藏{collectionList.length}本</Animated.Text>
+            !isLogin ? null :
+                (loading && refreshing) ? <BookPlaceholder/> :
+                    <View style={styles.container}>
+                        <View style={styles.totalView}>
+                            <Animated.Text style={[{
+                                opacity: headerOpacity,
+                            }]}>总收藏{collectionList.length}本</Animated.Text>
+                        </View>
+                        <FlatList
+                            keyExtractor={(item, key) => `item-${key}`}
+                            scrollEventThrottle={1}
+                            data={collectionList}
+                            style={styles.container}
+                            numColumns={3}
+                            onScroll={Animated.event(
+                                [{
+                                    nativeEvent: {contentOffset: {y: this.scrollY}}
+                                }],
+                                {
+                                    useNativeDriver: false
+                                }
+                            )}
+                            renderItem={this.renderItem}
+                            extraData={this.state}
+                            ListFooterComponent={this.renderFooter}
+                            onEndReached={this.onEndReached}
+                            onEndReachedThreshold={0.1}
+                        />
+                        <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
                     </View>
-                    <FlatList
-                        keyExtractor={(item, key) => `item-${key}`}
-                        scrollEventThrottle={1}
-                        data={collectionList}
-                        style={styles.container}
-                        numColumns={3}
-                        onScroll={Animated.event(
-                            [{
-                                nativeEvent: {contentOffset: {y: this.scrollY}}
-                            }],
-                            {
-                                useNativeDriver: false
-                            }
-                        )}
-                        renderItem={this.renderItem}
-                        extraData={this.state}
-                        ListFooterComponent={this.renderFooter}
-                        onEndReached={this.onEndReached}
-                        onEndReachedThreshold={0.1}
-                    />
-                    <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
-                </View>
         )
     }
 }

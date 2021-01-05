@@ -60,9 +60,10 @@ class History extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        this.loadData(true);
+        // this.loadData(true);
         const {navigation, dispatch} = this.props;
         this._unsubscribe = navigation.addListener('focus', () => {
+            this.loadData(true);
             dispatch({
                 type: 'shelf/setActivePage',
                 payload: {
@@ -76,13 +77,6 @@ class History extends React.PureComponent<IProps, IState> {
 
     componentWillUnmount() {
         this._unsubscribe();
-    }
-
-    componentDidUpdate() {
-        if (this.props.isLogin && this.initData) {
-            this.loadData(true);
-            this.initData = false;
-        }
     }
 
     loadData = (refreshing: boolean, callback?: () => void) => {
@@ -254,26 +248,27 @@ class History extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {refreshing, loading, historyList, isEdit} = this.props;
+        const {refreshing, loading, historyList, isEdit, isLogin} = this.props;
         return (
-            (loading && refreshing) ? <ListPlaceholder/> :
-                <View style={styles.container}>
-                    <SectionList
-                        keyExtractor={(item, index) => `section-item-${index}`}
-                        renderSectionHeader={this.renderSectionHeader}
-                        onRefresh={this.onRefresh}
-                        refreshing={refreshing}
-                        sections={historyList}
-                        style={styles.container}
-                        stickySectionHeadersEnabled={true}
-                        onEndReached={this.onEndReached}
-                        onEndReachedThreshold={0.1}
-                        renderItem={this.renderItem}
-                        extraData={this.state}
-                        ListFooterComponent={this.renderFooter}
-                    />
-                    <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
-                </View>
+            !isLogin ? null :
+                (loading && refreshing) ? <ListPlaceholder/> : historyList.length > 0 &&
+                    <View style={styles.container}>
+                        <SectionList
+                            keyExtractor={(item, index) => `section-item-${index}`}
+                            renderSectionHeader={this.renderSectionHeader}
+                            onRefresh={this.onRefresh}
+                            refreshing={refreshing}
+                            sections={historyList}
+                            style={styles.container}
+                            stickySectionHeadersEnabled={true}
+                            onEndReached={this.onEndReached}
+                            onEndReachedThreshold={0.1}
+                            renderItem={this.renderItem}
+                            extraData={this.state}
+                            ListFooterComponent={this.renderFooter}
+                        />
+                        <EditView isEdit={isEdit} checkAll={this.checkAll} destroy={this.destroy}/>
+                    </View>
         );
     }
 }
@@ -281,6 +276,7 @@ class History extends React.PureComponent<IProps, IState> {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: Color.page_bg,
     },
     headerView: {
         height: 45,

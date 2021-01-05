@@ -1,6 +1,7 @@
 import {Dimensions, StatusBar} from 'react-native';
 import {NavigationState} from '@react-navigation/native';
 
+
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 
 const statusBarHeight = StatusBar.currentHeight;
@@ -40,5 +41,6 @@ function getCurrentDate() {
 
     return `${hour}:${min}`;
 }
+
 
 export {viewportWidth, viewportHeight, statusBarHeight, wp, hp, ip, getActiveRouteName, getCurrentDate};

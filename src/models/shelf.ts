@@ -36,13 +36,15 @@ interface IPagination {
     total: number;
 }
 
-export interface ShelfState {
+interface ShelfState {
     collectionList: ICollection[];
     historyList: IHistoryList[];
     collectionHasMore: boolean;
     collectionPagination: IPagination;
+    collectionScreenReload: boolean;
     historyHasMore: boolean;
     historyPagination: IPagination;
+    historyScreenReload: boolean;
     refreshing: boolean;
     ids: number[];
     isEditCollection: boolean;
@@ -57,6 +59,9 @@ interface ShelfModel extends Model {
         setState: Reducer<ShelfState>;
         setIds: Reducer<ShelfState>;
         setActivePage: Reducer<ShelfState>;
+        setCollectionScreenReload: Reducer<ShelfState>;
+        setHistoryScreenReload: Reducer<ShelfState>;
+        initData: Reducer<ShelfState>;
     };
     effects: {
         fetchCollectionList: Effect;
@@ -67,7 +72,7 @@ interface ShelfModel extends Model {
 }
 
 
-const initialState = {
+export const initialState = {
     collectionList: [],
     historyList: [],
     collectionHasMore: false,
@@ -76,12 +81,14 @@ const initialState = {
         page_size: 0,
         total: 0,
     },
+    collectionScreenReload: true,
     historyHasMore: false,
     historyPagination: {
         current_page: 0,
         page_size: 0,
         total: 0,
     },
+    historyScreenReload: true,
     ids: [],
     refreshing: false,
     isEditCollection: false,
@@ -114,6 +121,23 @@ const shelfModel: ShelfModel = {
                 ids: [],
             };
         },
+        setCollectionScreenReload(state = initialState) {
+            return {
+                ...state,
+                collectionScreenReload: true,
+            }
+        },
+        setHistoryScreenReload(state = initialState) {
+            return {
+                ...state,
+                historyScreenReload: true,
+            }
+        },
+        initData(state = initialState) {
+            return {
+                ...state,
+            }
+        }
     },
     effects: {
         *fetchCollectionList(action, {call, put, select}) {
@@ -122,9 +146,13 @@ const shelfModel: ShelfModel = {
 
             const namespace = type.split('/')[0];
 
-            const {collectionList: list, collectionPagination: pagination} = yield select(
+            const {collectionList: list, collectionPagination: pagination, collectionScreenReload: reload} = yield select(
                 (state: RootState) => state[namespace],
             );
+
+            if (refreshing && !reload) {
+                return false;
+            }
 
             yield put({
                 type: 'setState',
@@ -146,6 +174,7 @@ const shelfModel: ShelfModel = {
                     collectionList: newList,
                     refreshing: false,
                     collectionHasMore: data.pages.current_page * data.pages.page_size < data.pages.total,
+                    collectionScreenReload: false,
                     collectionPagination: {
                         current_page: data.pages.current_page,
                         page_size: data.pages.page_size,
@@ -164,9 +193,13 @@ const shelfModel: ShelfModel = {
 
             const namespace = type.split('/')[0];
 
-            const {historyList: list, historyPagination: pagination} = yield select(
+            const {historyList: list, historyPagination: pagination, historyScreenReload: reload} = yield select(
                 (state: RootState) => state[namespace],
             );
+
+            if (refreshing && !reload) {
+                return false;
+            }
 
             yield put({
                 type: 'setState',
@@ -204,6 +237,7 @@ const shelfModel: ShelfModel = {
                     historyList: newList,
                     refreshing: false,
                     historyHasMore: data.pages.current_page * data.pages.page_size < data.pages.total,
+                    historyScreenReload: false,
                     historyPagination: {
                         current_page: data.pages.current_page,
                         page_size: data.pages.page_size,

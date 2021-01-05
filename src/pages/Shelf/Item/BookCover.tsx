@@ -39,7 +39,6 @@ class BookCover extends React.PureComponent<IProps, IState> {
     };
 
     render() {
-        console.log('itemREnder')
         const {data, isEdit, selected} = this.props;
         const {errorLoad} = this.state;
         const loadImage = errorLoad ? ErrorImage : {uri: data.image, cache: FastImage.cacheControl.immutable};

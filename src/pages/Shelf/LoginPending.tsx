@@ -33,7 +33,7 @@ class LoginPending extends React.Component<IProps> {
                             </View>
                         </Touchable>
                         <View style={styles.registerView}>
-                            <Touchable style={styles.register} onPress={()=>{navigation.navigate('Login')}}>
+                            <Touchable style={styles.register} onPress={()=>{navigation.navigate('Register')}}>
                                 <Text>快速注册</Text>
                                 <Icon name="icon-hp-arrow-down" style={styles.arrow_down} size={12}/>
                             </Touchable>

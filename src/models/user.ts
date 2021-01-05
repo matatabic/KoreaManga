@@ -5,6 +5,8 @@ import Toast from "react-native-root-toast";
 import {StatusCode} from "@/utils/const";
 import storage, {load} from "@/config/storage";
 
+
+
 interface IUser {
     mobile: string;
     username: string;
@@ -169,6 +171,11 @@ const userModel: UserModel = {
                     userInfo: initialState
                 }
             })
+
+            yield put({
+                type: 'shelf/initData',
+            })
+
             Toast.show(data.msg, {
                 duration: Toast.durations.LONG,
                 position: Toast.positions.CENTER,

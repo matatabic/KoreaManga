@@ -25,8 +25,9 @@ const initialValues: Values = {
     password: '',
 }
 
-const mapStateToProps = ({loading}: RootState) => {
+const mapStateToProps = ({user, loading}: RootState) => {
     return {
+        isLogin: user.isLogin,
         loading: loading.effects['user/login'],
     };
 };
@@ -40,9 +41,20 @@ interface IProps extends ModelState {
 }
 
 
-const Login = ({navigation, dispatch, loading}: IProps) => {
+const Login = ({navigation, dispatch, isLogin, loading}: IProps) => {
 
     const [disabled, setDisabled] = useState<boolean>(false);
+
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            if (isLogin) {
+                navigation.goBack();
+            }
+        });
+
+        return unsubscribe;
+    }, [navigation]);
+
 
     const onSubmit = (values: Values) => {
 
@@ -62,7 +74,6 @@ const Login = ({navigation, dispatch, loading}: IProps) => {
                     }, 2000);
             },
         });
-
     }
 
     const chaCha = (form: FormikProps<string>, field: FieldInputProps<string>) => {

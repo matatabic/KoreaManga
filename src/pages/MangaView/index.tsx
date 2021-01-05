@@ -220,10 +220,6 @@ class MangaView extends React.PureComponent<IProps, IState> {
         const roast = this.currentRoast > 0 ? this.currentRoast : episodeList[0].roast;
 
         dispatch({
-            type: 'mangaView/setState',
-        })
-
-        dispatch({
             type: 'brief/setChapter',
             payload: {
                 markChapterNum: chapter_num,
@@ -240,6 +236,9 @@ class MangaView extends React.PureComponent<IProps, IState> {
                     chapter_num,
                     roast,
                 }
+            })
+            dispatch({
+                type: 'shelf/setHistoryScreenReload',
             })
         }
 
