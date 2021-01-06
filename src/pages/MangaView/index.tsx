@@ -227,6 +227,10 @@ class MangaView extends React.PureComponent<IProps, IState> {
             }
         })
 
+        dispatch({
+            type: 'mangaView/initData',
+        })
+
         if (isLogin) {
             dispatch({
                 type: 'mangaView/addHistory',

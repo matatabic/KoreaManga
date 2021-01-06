@@ -37,6 +37,7 @@ interface MangaViewModel extends Model {
     state: MangaViewState;
     reducers: {
         setState: Reducer<MangaViewState>;
+        initData: Reducer<MangaViewState>;
     };
     effects: {
         fetchEpisodeList: Effect;
@@ -67,6 +68,12 @@ const mangaViewModel: MangaViewModel = {
             return {
                 ...state,
                 ...payload,
+            };
+        },
+        initData(state = initialState) {
+            return {
+                ...state,
+                ...initialState,
             };
         },
     },

@@ -251,7 +251,7 @@ class History extends React.PureComponent<IProps, IState> {
         const {refreshing, loading, historyList, isEdit, isLogin} = this.props;
         return (
             !isLogin ? null :
-                (loading && refreshing) ? <ListPlaceholder/> : historyList.length > 0 &&
+                (loading && refreshing) ? <ListPlaceholder/> :
                     <View style={styles.container}>
                         <SectionList
                             keyExtractor={(item, index) => `section-item-${index}`}
