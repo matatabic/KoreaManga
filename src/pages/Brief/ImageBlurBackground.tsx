@@ -4,7 +4,7 @@ import {BlurView} from '@react-native-community/blur';
 import {ip, viewportWidth} from "@/utils/index";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-
+import FastImage from "react-native-fast-image";
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
@@ -20,22 +20,23 @@ interface IProps extends ModelState {
     imageSize: Animated.AnimatedInterpolation;
 }
 
+
 class ImageBlurBackground extends React.Component<IProps> {
     render() {
         const {data, imageSize} = this.props;
         return (
-            data && data.image.length > 0 && (
+            data.image.length > 0 && (
                 <View style={styles.container}>
                     <Animated.Image
                         source={{uri: data.image}}
                         style={[styles.image, {
                             transform: [{scale: imageSize}]
                         }]}
-                        resizeMode={"cover"}
+                        resizeMode={FastImage.resizeMode.cover}
                     />
                     <BlurView
                         blurType="dark"
-                        blurAmount={10}
+                        blurAmount={25}
                         style={StyleSheet.absoluteFillObject}
                     />
                 </View>

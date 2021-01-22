@@ -3,6 +3,10 @@ import {View, Text, StyleSheet} from 'react-native';
 import {Color} from "@/utils/const";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
+import Touchable from "@/components/Touchable";
+
+
+const itemHeight = 48;
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
@@ -15,11 +19,23 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
-class BookIntro extends React.Component<ModelState> {
+interface IProps extends ModelState {
+    showDrawer: () => void
+}
+
+class BookIntro extends React.Component<IProps> {
+
+    showDrawer = () => {
+        const {showDrawer} = this.props;
+        if (typeof showDrawer === "function") {
+            showDrawer();
+        }
+    }
+
     render() {
         const {data, book_update_info} = this.props;
         return (
-            <>
+            <View>
                 <View style={styles.description}>
                     <Text style={styles.descriptionTitle}>{data.description}</Text>
                 </View>
@@ -31,7 +47,12 @@ class BookIntro extends React.Component<ModelState> {
                         <Text style={styles.itemHeaderRightTitle}>{book_update_info}</Text>
                     </View>
                 </View>
-            </>
+                <View style={styles.allWrapper} >
+                    <Touchable style={styles.allView} onPress={this.showDrawer}>
+                        <Text style={styles.all}>全部</Text>
+                    </Touchable>
+                </View>
+            </View>
         );
     }
 }
@@ -68,6 +89,21 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: Color.dark_title,
     },
+    allWrapper: {
+        height: itemHeight,
+        backgroundColor: Color.page_bg,
+    },
+    allView: {
+        flex: 1,
+        borderRadius: 4,
+        marginHorizontal: 15,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: Color.grey_page_bg,
+    },
+    all: {
+        fontWeight: "bold",
+    }
 })
 
 export default connector(BookIntro);

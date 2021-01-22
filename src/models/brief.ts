@@ -10,6 +10,7 @@ export interface IChapter {
     title: string;
     roast: number;
     chapter_num: number;
+    created_at: string;
 }
 
 export interface IBookInfo {
@@ -24,6 +25,7 @@ export interface IBookInfo {
 
 export interface BriefState {
     bookInfo: IBookInfo;
+    statusBarHeight: number;
     book_update_info: string;
     refreshing: boolean;
     collection_id: number;
@@ -57,6 +59,7 @@ export const initialState = {
         description: '',
         status: '',
     },
+    statusBarHeight: 0,
     refreshing: false,
     book_update_info: '',
     collection_id: 0,
@@ -90,7 +93,7 @@ const briefModel: CategoryModel = {
     },
     effects: {
         *fetchBrief(action, {call, put}) {
-            const {payload, type} = action;
+            const {payload} = action;
             const {refreshing} = payload;
 
             yield put({

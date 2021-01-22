@@ -1,11 +1,10 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
-import {hp, ip, viewportWidth} from "@/utils/index";
+import {ip, viewportWidth} from "@/utils/index";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import FastImage from "react-native-fast-image";
-import {getStatusBarHeight} from "react-native-iphone-x-helper";
 
 
 const mapStateToProps = ({brief}: RootState) => {
@@ -19,25 +18,30 @@ const connector = connect(mapStateToProps);
 type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
+    statusBarHeight: number;
+    fixedOpacity: number;
 }
 
 class ImageTopBar extends React.Component<IProps> {
 
     render() {
-        const {data} = this.props;
+        const {data, statusBarHeight} = this.props;
         return (
-            <View style={styles.container}>
+            data.image.length > 0 && (<View style={[styles.container, {
+                height: statusBarHeight + 30,
+                opacity: 1
+            }]}>
                 <FastImage
                     source={{uri: data.image}}
                     style={styles.image}
-                    resizeMode={FastImage.resizeMode.cover}
+                    resizeMode={FastImage.resizeMode.contain}
                 />
                 <BlurView
                     blurType="dark"
-                    blurAmount={10}
+                    blurAmount={25}
                     style={StyleSheet.absoluteFillObject}
                 />
-            </View>
+            </View>)
         );
     }
 }
@@ -46,8 +50,7 @@ const styles = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
         width: viewportWidth,
-        height: hp(6.75) + getStatusBarHeight(),
-        overflow: "hidden"
+        overflow: "hidden",
     },
     image: {
         width: viewportWidth,

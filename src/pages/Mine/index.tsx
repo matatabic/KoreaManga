@@ -28,19 +28,19 @@ class Mine extends Component<IProps> {
         const {navigation} = this.props;
         const imageSize = this.getBgImageSize();
         return (
-            <>
+            <View style={{flex: 1}}>
                 <ImageBackground imageSize={imageSize}/>
                 <View style={styles.spaceView}/>
                 <ScrollView
                     scrollEventThrottle={1}
                     onScroll={Animated.event(
-                    [{
-                        nativeEvent: {contentOffset: {y: this.translateY}}
-                    }],
-                    {
-                        useNativeDriver: false,
-                    },
-                )}>
+                        [{
+                            nativeEvent: {contentOffset: {y: this.translateY}}
+                        }],
+                        {
+                            useNativeDriver: false,
+                        },
+                    )}>
                     <View style={styles.container}>
                         <View style={styles.detail}>
                             <Information navigation={navigation}/>
@@ -49,7 +49,7 @@ class Mine extends Component<IProps> {
                         </View>
                     </View>
                 </ScrollView>
-            </>
+            </View>
         );
     }
 }

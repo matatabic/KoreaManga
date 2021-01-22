@@ -4,16 +4,18 @@ import Icon from "@/assets/iconfont";
 import {getStatusBarHeight} from "react-native-iphone-x-helper";
 import Touchable from "@/components/Touchable";
 import {Color} from "@/utils/const";
-import {hp} from "@/utils/index";
+
 
 interface IProps {
+    statusBarHeight: number;
     goBack: () => void;
-    topBarOpacity: Animated.AnimatedInterpolation;
+    fixedOpacity: number,
+    opacity: Animated.AnimatedInterpolation;
 }
 
-class TopBarWrapper extends React.PureComponent<IProps> {
+class TopBarWrapper extends React.Component<IProps> {
 
-    onPress = () => {
+    goBack = () => {
         const {goBack} = this.props;
         if (typeof goBack === 'function') {
             goBack();
@@ -21,48 +23,85 @@ class TopBarWrapper extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {topBarOpacity} = this.props;
+        const {statusBarHeight, opacity, fixedOpacity} = this.props;
+
         return (
-            <View style={styles.container}>
-                <View style={styles.headerContainer}>
-                    <Touchable onPress={this.onPress} style={styles.leftView}>
-                        <Icon name="icon-arrow-left-bold" color='#ccc' size={24}/>
-                    </Touchable>
-                    <Animated.View style={[styles.rightView, {
-                        opacity: topBarOpacity
-                    }]}>
-                        <Touchable onPress={() => {
-                            console.log('123123')
-                        }}>
-                            <Icon style={styles.rightIcon} name="icon-shangbian" color={Color.white} size={22}/>
+            fixedOpacity !== 0 ?
+                <View style={[styles.wrapper, {
+                    height: statusBarHeight + getStatusBarHeight(),
+                    width: 0,
+                }]}>
+                    <View style={styles.backView}>
+                        <Touchable onPress={this.goBack}>
+                            <Icon name="icon-zuofang" color={Color.white} size={22}/>
                         </Touchable>
-                        <Icon style={styles.rightIcon} name="icon-xiabian" color={Color.white} size={22}/>
-                        <Icon style={styles.rightIcon} name="icon-more" color={Color.white} size={22}/>
-                    </Animated.View>
+                    </View>
                 </View>
-            </View>
+                :
+                <View style={[styles.wrapper, {
+                    height: statusBarHeight + getStatusBarHeight()
+                }]}>
+                    <View style={styles.container}>
+                        <View style={styles.leftView}>
+                            <Touchable onPress={this.goBack}>
+                                <Icon name="icon-zuofang" color={Color.white} size={22}/>
+                            </Touchable>
+                        </View>
+                        <Animated.View style={[styles.rightView, {
+                            opacity: opacity,
+                        }]}>
+                            <Touchable onPress={() => {
+                                console.log('shangbian')
+                            }}>
+                                <Icon style={styles.rightIcon} name="icon-shangbian" color={Color.white} size={22}/>
+                            </Touchable>
+                            <Touchable onPress={() => {
+                                console.log('xiabian')
+                            }}>
+                                <Icon style={styles.rightIcon} name="icon-xiabian" color={Color.white} size={22}/>
+                            </Touchable>
+                            <Touchable onPress={() => {
+                                console.log('more')
+                            }}>
+                                <Icon style={styles.rightIcon} name="icon-more" color={Color.white} size={22}/>
+                            </Touchable>
+                        </Animated.View>
+                    </View>
+                </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
+    wrapper: {
         ...StyleSheet.absoluteFillObject,
-        paddingTop: getStatusBarHeight(),
-        height: 45,
+        zIndex: 20,
     },
-    headerContainer: {
+    container: {
         flex: 1,
-        flexDirection: 'row',
+        paddingTop: getStatusBarHeight(),
+        flexDirection: "row",
         justifyContent: "space-between",
-        paddingTop: 15,
-        paddingHorizontal: hp(1.5)
+        alignItems: "center",
+        marginHorizontal: 10
+    },
+    backView: {
+        backgroundColor: 'red',
+        paddingTop: getStatusBarHeight(),
+        height: '100%',
+        flexDirection: "row",
+        alignItems: 'center',
+        marginHorizontal: 10,
     },
     leftView: {
-        width: 25,
+        height: '100%',
+        flexDirection: "row",
+        alignItems: 'center',
     },
     rightView: {
-        flexDirection: 'row',
+        height: '100%',
+        flexDirection: "row",
+        alignItems: 'center',
     },
     rightIcon: {
         marginHorizontal: 10
