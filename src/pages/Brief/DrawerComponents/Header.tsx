@@ -1,9 +1,10 @@
 import React from 'react';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View, Animated} from "react-native";
 import {Color} from "@/utils/const";
 import Icon from "@/assets/iconfont";
+import Touchable from "@/components/Touchable";
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
@@ -16,9 +17,22 @@ const connector = connect(mapStateToProps);
 
 type ModelState = ConnectedProps<typeof connector>;
 
-class Header extends React.Component<ModelState> {
+interface IProps extends ModelState {
+    spin: any;
+    reverse: () => void;
+}
+
+class Header extends React.Component<IProps> {
+
+    reverse = ()=>{
+        const {reverse} =this.props;
+        if(typeof reverse === "function"){
+            reverse();
+        }
+    }
+
     render() {
-        const {bookInfo} = this.props;
+        const {bookInfo, spin} = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.titleView}>
@@ -29,7 +43,11 @@ class Header extends React.Component<ModelState> {
                     <View style={styles.huaView}>
                         <Text>话</Text>
                     </View>
-                    <Icon name="icon-qiehuan" size={24}/>
+                    <Touchable onPress={this.reverse}>
+                        <Animated.View style={{transform: [{rotate: spin}]}}>
+                            <Icon name="icon-qiehuan" size={24}/>
+                        </Animated.View>
+                    </Touchable>
                 </View>
             </View>
         );

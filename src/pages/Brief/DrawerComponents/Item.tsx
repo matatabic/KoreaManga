@@ -24,7 +24,7 @@ class Item extends React.Component<IProps> {
         return (
             <Touchable style={styles.container} onPress={this.onPress}>
                 <View style={styles.info}>
-                    <Text style={{marginBottom: 10}}>{data.title}</Text>
+                    <Text style={styles.title}>{data.title}</Text>
                     <Text>{data.created_at}</Text>
                 </View>
                 <Image source={Day} style={styles.avatar}/>
@@ -50,6 +50,9 @@ const styles = StyleSheet.create({
         width: 36,
         height: 36,
         borderRadius: 18,
+    },
+    title: {
+        marginBottom: 15
     }
 })
 

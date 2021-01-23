@@ -1,5 +1,5 @@
 import React from 'react';
-import {Animated, FlatList, ListRenderItemInfo, StyleSheet, View} from 'react-native';
+import {Animated, Easing, FlatList, ListRenderItemInfo, StyleSheet, View} from 'react-native';
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {Color} from "@/utils/const";
@@ -27,7 +27,22 @@ interface IProps extends ModelState {
     hideDrawer: () => void;
 }
 
-class Drawer extends React.Component<IProps> {
+interface IState {
+    chapterList: IChapter[];
+}
+
+class Drawer extends React.Component<IProps, IState> {
+
+    spinValue = new Animated.Value(0)
+    isSpin: boolean = true;
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            chapterList: this.props.chapterList
+        }
+
+    }
 
     hideDrawer = () => {
         const {hideDrawer} = this.props;
@@ -42,8 +57,43 @@ class Drawer extends React.Component<IProps> {
         )
     }
 
+    reverse = () => {
+        if (this.isSpin) {
+            Animated.timing(
+                this.spinValue,
+                {
+                    toValue: 0.5,
+                    duration: 250,
+                    easing: Easing.linear,
+                    useNativeDriver: true
+                }
+            ).start();
+        } else {
+            Animated.timing(
+                this.spinValue,
+                {
+                    toValue: 1,
+                    duration: 250,
+                    easing: Easing.linear,
+                    useNativeDriver: true
+                }
+            ).start(() => this.spinValue.setValue(0));
+        }
+        this.setState({
+            chapterList:[...this.state.chapterList.reverse()]
+        })
+        this.isSpin = !this.isSpin
+    }
+
     render() {
-        const {drawerTranslateX, statusBarHeight, chapterList} = this.props;
+        const {drawerTranslateX, statusBarHeight} = this.props;
+        const {chapterList} = this.state;
+
+        const spin = this.spinValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '360deg']
+        })
+
         return (
             <Animated.View style={[styles.wrapper, {
                 transform: [{translateX: drawerTranslateX}]
@@ -53,10 +103,11 @@ class Drawer extends React.Component<IProps> {
                     <View style={[styles.listContainer, {
                         paddingTop: statusBarHeight
                     }]}>
-                        <Header/>
+                        <Header spin={spin} reverse={this.reverse}/>
                         <FlatList
                             data={chapterList}
                             renderItem={this.renderItem}
+                            extraData={this.state}
                         />
                     </View>
                 </View>
