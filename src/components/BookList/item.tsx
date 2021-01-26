@@ -46,6 +46,7 @@ class Item extends React.PureComponent<IProps, IState> {
 
     onPress = () => {
         const {data, goBrief} = this.props;
+        console.log('2312312')
         if (typeof goBrief === 'function') {
             goBrief(data)
         }

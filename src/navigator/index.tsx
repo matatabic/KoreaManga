@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer, NavigationState} from '@react-navigation/native';
 import {
     createStackNavigator,
@@ -18,6 +18,7 @@ import Search from "@/pages/Search";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Guess from "@/pages/Guess";
+import SplashScreen from "react-native-splash-screen";
 
 
 export type RootStackParamList = {
@@ -49,6 +50,11 @@ interface IState {
 
 
 function RootStackScreen() {
+
+    useEffect(()=>{
+        SplashScreen.hide();//关闭启动屏
+    },[])
+
     return (
         <RootStack.Navigator
             headerMode="float"

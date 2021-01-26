@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         width: itemWidth,
         marginTop: itemMargin,
         marginLeft: itemMargin,
-        backgroundColor: Color.white,
+        backgroundColor: Color.page_bg,
     },
     titleView: {
         width: itemWidth,

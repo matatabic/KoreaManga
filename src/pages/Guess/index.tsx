@@ -8,7 +8,6 @@ import {RootStackNavigation, RootStackParamList} from "@/navigator/index";
 import {RouteProp} from "@react-navigation/native";
 
 
-
 const mapStateToProps = ({guess, loading}: RootState) => {
     return {
         bookList: guess.bookList,
@@ -25,7 +24,6 @@ type ModelState = ConnectedProps<typeof connector>;
 interface IProps extends ModelState {
     navigation: RootStackNavigation;
     route: RouteProp<RootStackParamList, 'Guess'>;
-    goBrief: (data: IBook) => void;
 }
 
 
@@ -52,12 +50,18 @@ class Guess extends React.Component<IProps> {
         });
     }
 
+    goBrief = (data: IBook) => {
+        const {navigation} = this.props;
+        navigation.navigate('Brief', {
+            id: data.id
+        });
+    };
+
     render() {
         const {
             bookList,
             refreshing,
             loading,
-            goBrief,
             hasMore,
         } = this.props;
 
@@ -69,7 +73,7 @@ class Guess extends React.Component<IProps> {
                     refreshing={refreshing}
                     hasMore={hasMore}
                     loadData={this.loadData}
-                    goBrief={goBrief}
+                    goBrief={this.goBrief}
                 />
         );
     }

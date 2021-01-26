@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, SectionList, SectionListRenderItemInfo, FlatList, ListRenderItemInfo, Animated,} from 'react-native';
+import {View, Text, StyleSheet, SectionList, SectionListRenderItemInfo, Animated} from 'react-native';
 import Carousel, {sideHeight} from "@/pages/Home/Carousel";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
@@ -13,7 +13,7 @@ import BookCover from "@/components/BookCover";
 import More from "@/components/More";
 import End from "@/components/End";
 import HomePlaceholder from "@/components/Placeholder/HomePlaceholder";
-import SplashScreen from 'react-native-splash-screen'
+
 
 const mapStateToProps = ({home, loading}: RootState) => {
     return {
@@ -51,7 +51,6 @@ class Home extends React.PureComponent<IProps, IState> {
 
     componentDidMount() {
         this.loadData(true);
-        SplashScreen.hide();//关闭启动屏幕
     }
 
     loadData = (refreshing: boolean, callback?: () => void) => {
@@ -122,21 +121,15 @@ class Home extends React.PureComponent<IProps, IState> {
 
     renderItem = ({item}: SectionListRenderItemInfo<IBook[]>) => {
         return (
-            <FlatList
-                data={item}
-                numColumns={3}
-                keyExtractor={(item, index) => `item-${item.id}-key-${index}`}
-                style={styles.itemContainer}
-                renderItem={this._renderItem}
-            />
-        );
-    };
-
-    _renderItem = ({item}: ListRenderItemInfo<IBook>) => {
-        return (
-            <BookCover data={item} goBrief={this.goBrief} key={item.id}/>
+            <View style={styles.contentContainer}>
+                {item.map(data => {
+                    return (
+                        <BookCover data={data} goBrief={this.goBrief} key={data.id}/>
+                    )
+                })}
+            </View>
         )
-    }
+    };
 
     renderSectionHeader = ({section: {title}}: any) => {
         return (
@@ -152,7 +145,7 @@ class Home extends React.PureComponent<IProps, IState> {
         const topBarColor = this.getTopBarColor();
         return (
             (loading && refreshing) ? <HomePlaceholder/> :
-                <View>
+                <View style={{flex: 1}}>
                     <CarouselBlurBackground/>
                     <TopBarWrapper navigation={navigation} topBarColor={topBarColor}/>
                     <SectionList
@@ -208,6 +201,11 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         fontSize: 15,
         color: Color.black,
+    },
+    contentContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        backgroundColor: Color.page_bg,
     }
 })
 
