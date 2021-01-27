@@ -7,7 +7,7 @@ import {viewportWidth, wp} from "@/utils/index";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {ModalStackNavigation, RootStackNavigation} from "@/navigator/index";
-import ImageTopBar from "@/pages/Brief/ImageTopBar";
+
 
 const imageWidth = wp(30);
 
@@ -63,21 +63,19 @@ class Operate extends React.Component<IProps> {
         } = this.props;
 
         return (
-            <View style={{
-                height: statusBarHeight + 30
-            }}>
+            <View style={{opacity: fixedOpacity === 0 ? 1 : 0}}>
                 <Animated.View style={[styles.shadow, {
                     height: statusBarHeight + 30,
                     opacity: opacity,
                 }]}/>
-                <ImageTopBar statusBarHeight={statusBarHeight} fixedOpacity={fixedOpacity}/>
                 <View style={[styles.container, {
                     height: statusBarHeight + 30
                 }]}>
                     <Animated.View style={[styles.leftWrapper, {
                         left: leftViewX,
                     }]}>
-                        <Touchable style={{flexDirection: 'row', alignItems: "center"}} onPress={this.onClickCollection}>
+                        <Touchable style={{flexDirection: 'row', alignItems: "center"}}
+                                   onPress={this.onClickCollection}>
                             <Icon name="icon-xin"
                                   color={collection_id > 0 ? Color.theme : Color.red}
                                   size={25}

@@ -107,6 +107,7 @@ class Drawer extends React.Component<IProps, IState> {
                         <FlatList
                             data={chapterList}
                             renderItem={this.renderItem}
+                            keyExtractor={(item, key) => `item-${key}-item-${item.id}`}
                             extraData={this.state}
                         />
                     </View>

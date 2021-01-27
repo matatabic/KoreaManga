@@ -105,16 +105,14 @@ class MangaView extends React.PureComponent<IProps, IState> {
 
         NetInfo.addEventListener(state => {
             this.setState({
-                connectionType: state.type,
+                connectionType: state.type === "wifi" ? state.type : "noWifi",
             })
         });
-
-        const deviceInfoEmitter = new NativeEventEmitter(NativeModules.RNDeviceInfo);
 
         deviceInfoEmitter.addListener('RNDeviceInfo_batteryLevelDidChange', level => {
             if (level !== '-1') {
                 this.setState({
-                    batteryLevel: level
+                    batteryLevel: parseInt(level).toString()
                 })
             }
         });

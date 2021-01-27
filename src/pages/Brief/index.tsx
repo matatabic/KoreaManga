@@ -1,5 +1,13 @@
 import React, {useEffect, useRef} from 'react';
-import {StyleSheet, View, FlatList, Animated, NativeScrollEvent, NativeSyntheticEvent, ListRenderItemInfo} from 'react-native';
+import {
+    StyleSheet,
+    View,
+    FlatList,
+    Animated,
+    NativeScrollEvent,
+    NativeSyntheticEvent,
+    ListRenderItemInfo,
+} from 'react-native';
 import StickyHeader from 'react-native-stickyheader';
 import {RootState} from "@/models/index";
 import {RouteProp} from "@react-navigation/native";
@@ -19,6 +27,7 @@ import Item from "@/pages/Brief/Item";
 import Footer from "@/pages/Brief/Footer";
 import BriefPlaceholder from "@/components/Placeholder/BriefPlaceholder";
 import Drawer from "@/pages/Brief/Drawer";
+import FixedOperate from "@/pages/Brief/FixedOperate";
 
 
 const mapStateToProps = ({user, brief, loading}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
@@ -255,14 +264,48 @@ class Brief extends React.PureComponent<IProps, IState> {
         })
     }
 
-    render() {
-        const {scrollY, chapterList, navigation, statusBarHeight, loading, refreshing} = this.props;
+    get header() {
+        const {navigation, statusBarHeight} = this.props;
         const opacity = this.getOpacity();
         const leftViewX = this.getLeftViewX();
         const rightViewX = this.getRightViewX();
         const rightViewScale = this.getRightViewScale();
         const rightFontSize = this.getRightFontSize();
         const fontColor = this.getFontColor();
+
+        return (
+            <>
+                <Information
+                    statusBarHeight={statusBarHeight}
+                    opacity={opacity}
+                />
+                {/*<StickyHeader*/}
+                {/*    stickyHeaderY={this.fixedHeight} // 滑动到多少悬浮*/}
+                {/*    stickyScrollY={scrollY}*/}
+                {/*>*/}
+                <Operate
+                    navigation={navigation}
+                    fixedOpacity={this.state.fixedOpacity}
+                    opacity={opacity}
+                    statusBarHeight={statusBarHeight}
+                    leftViewX={leftViewX}
+                    rightViewX={rightViewX}
+                    rightViewScale={rightViewScale}
+                    rightFontSize={rightFontSize}
+                    fontColor={fontColor}
+                    onClickCollection={this.onClickCollection}
+                    readNow={this.readNow}
+                />
+                {/*</StickyHeader>*/}
+                <BookIntro showDrawer={this.showDrawer}/>
+            </>
+        )
+    }
+
+    render() {
+        const {scrollY, chapterList, statusBarHeight, loading, refreshing} = this.props;
+
+        const opacity = this.getOpacity();
         const imageSize = this.getBgImageSize();
 
         return (
@@ -280,7 +323,18 @@ class Brief extends React.PureComponent<IProps, IState> {
                         opacity={opacity}
                         fixedOpacity={this.state.fixedOpacity}
                     />
-                    <Animated.ScrollView
+                    {
+                        this.state.fixedOpacity === 1 &&
+                        <FixedOperate
+                            statusBarHeight={statusBarHeight}
+                            onClickCollection={this.onClickCollection}
+                            readNow={this.readNow}
+                        />
+                    }
+                    <FlatList
+                        data={chapterList}
+                        numColumns={4}
+                        ListHeaderComponent={this.header}
                         onScroll={Animated.event(
                             [
                                 {
@@ -293,41 +347,14 @@ class Brief extends React.PureComponent<IProps, IState> {
                             },
                         )}
                         scrollEventThrottle={1}
-                    >
-                        <Information
-                            statusBarHeight={statusBarHeight}
-                            opacity={opacity}
-                        />
-                        <StickyHeader
-                            stickyHeaderY={this.fixedHeight} // 滑动到多少悬浮
-                            stickyScrollY={scrollY}
-                        >
-                            <Operate
-                                navigation={navigation}
-                                fixedOpacity={this.state.fixedOpacity}
-                                opacity={opacity}
-                                statusBarHeight={statusBarHeight}
-                                leftViewX={leftViewX}
-                                rightViewX={rightViewX}
-                                rightViewScale={rightViewScale}
-                                rightFontSize={rightFontSize}
-                                fontColor={fontColor}
-                                onClickCollection={this.onClickCollection}
-                                readNow={this.readNow}
-                            />
-                        </StickyHeader>
-                        <BookIntro showDrawer={this.showDrawer}/>
-                        <FlatList
-                            data={chapterList}
-                            numColumns={4}
-                            scrollEventThrottle={1}
-                            columnWrapperStyle={styles.columnWrapper}
-                            renderItem={this.renderItem}
-                            keyExtractor={(item, key) => `item-${key}-item-${item.id}`}
-                            ListFooterComponent={this.renderFooter}
-                        />
-                    </Animated.ScrollView>
+                        style={styles.container}
+                        columnWrapperStyle={styles.columnWrapper}
+                        renderItem={this.renderItem}
+                        keyExtractor={(item, key) => `item-${key}-item-${item.id}`}
+                        ListFooterComponent={this.renderFooter}
+                    />
                 </View>
+
         )
     }
 }

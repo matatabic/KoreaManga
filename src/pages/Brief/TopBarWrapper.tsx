@@ -26,16 +26,16 @@ class TopBarWrapper extends React.Component<IProps> {
         const {statusBarHeight, opacity, fixedOpacity} = this.props;
 
         return (
-            fixedOpacity !== 0 ?
+            fixedOpacity === 1 ?
                 <View style={[styles.wrapper, {
                     height: statusBarHeight + getStatusBarHeight(),
-                    width: 0,
+                    width: 50,
                 }]}>
-                    <View style={styles.backView}>
-                        <Touchable onPress={this.goBack}>
+                    <Touchable onPress={this.goBack}>
+                        <View style={styles.backView}>
                             <Icon name="icon-zuofang" color={Color.white} size={22}/>
-                        </Touchable>
-                    </View>
+                        </View>
+                    </Touchable>
                 </View>
                 :
                 <View style={[styles.wrapper, {
@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 10
     },
     backView: {
-        backgroundColor: 'red',
         paddingTop: getStatusBarHeight(),
         height: '100%',
         flexDirection: "row",

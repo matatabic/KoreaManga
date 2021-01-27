@@ -19,7 +19,6 @@ type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
     statusBarHeight: number;
-    fixedOpacity: number;
 }
 
 class ImageTopBar extends React.Component<IProps> {
@@ -29,7 +28,6 @@ class ImageTopBar extends React.Component<IProps> {
         return (
             data.image.length > 0 && (<View style={[styles.container, {
                 height: statusBarHeight + 30,
-                opacity: 1
             }]}>
                 <FastImage
                     source={{uri: data.image}}
@@ -50,6 +48,7 @@ const styles = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
         width: viewportWidth,
+
         overflow: "hidden",
     },
     image: {
