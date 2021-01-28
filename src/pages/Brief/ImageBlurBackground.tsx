@@ -1,10 +1,11 @@
 import React from 'react';
 import {View, StyleSheet, Animated} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
-import {ip, viewportWidth} from "@/utils/index";
+import {hp, ip, viewportWidth} from "@/utils/index";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import FastImage from "react-native-fast-image";
+
 
 const mapStateToProps = ({brief}: RootState) => {
     return {
@@ -25,22 +26,21 @@ class ImageBlurBackground extends React.Component<IProps> {
     render() {
         const {data, imageSize} = this.props;
         return (
-            data.image.length > 0 && (
-                <View style={styles.container}>
-                    <Animated.Image
-                        source={{uri: data.image}}
-                        style={[styles.image, {
-                            transform: [{scale: imageSize}]
-                        }]}
-                        resizeMode={FastImage.resizeMode.cover}
-                    />
-                    <BlurView
-                        blurType="dark"
-                        blurAmount={25}
-                        style={StyleSheet.absoluteFillObject}
-                    />
-                </View>
-            )
+            data.image.length > 0 &&
+            <View style={styles.container}>
+                <Animated.Image
+                    source={{uri: data.image}}
+                    style={[styles.image, {
+                        transform: [{scale: imageSize}]
+                    }]}
+                    resizeMode={FastImage.resizeMode.stretch}
+                />
+                <BlurView
+                    blurType="dark"
+                    blurAmount={25}
+                    style={StyleSheet.absoluteFillObject}
+                />
+            </View>
         );
     }
 }
@@ -48,8 +48,8 @@ class ImageBlurBackground extends React.Component<IProps> {
 const styles = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
-        width: viewportWidth,
-        height: ip(viewportWidth),
+        height: hp(65),
+        overflow: "hidden",
     },
     image: {
         width: viewportWidth,

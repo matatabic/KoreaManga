@@ -9,7 +9,7 @@ import {Color} from "@/utils/const";
 interface IProps {
     statusBarHeight: number;
     goBack: () => void;
-    fixedOpacity: number,
+    fixedOpacity: boolean,
     opacity: Animated.AnimatedInterpolation;
 }
 
@@ -26,7 +26,7 @@ class TopBarWrapper extends React.Component<IProps> {
         const {statusBarHeight, opacity, fixedOpacity} = this.props;
 
         return (
-            fixedOpacity === 1 ?
+            fixedOpacity ?
                 <View style={[styles.wrapper, {
                     height: statusBarHeight + getStatusBarHeight(),
                     width: 50,

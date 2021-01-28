@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, Animated} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import {ip, viewportWidth} from "@/utils/index";
 import {RootState} from "@/models/index";
@@ -10,6 +10,7 @@ import FastImage from "react-native-fast-image";
 const mapStateToProps = ({brief}: RootState) => {
     return {
         data: brief.bookInfo,
+        statusBarHeight: brief.statusBarHeight,
     };
 };
 
@@ -19,27 +20,30 @@ type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
     statusBarHeight: number;
+    opacity: Animated.AnimatedInterpolation;
 }
 
 class ImageTopBar extends React.Component<IProps> {
 
     render() {
-        const {data, statusBarHeight} = this.props;
+        const {data, statusBarHeight, opacity} = this.props;
         return (
-            data.image.length > 0 && (<View style={[styles.container, {
+            data.image.length > 0 &&
+            <Animated.View style={[styles.container, {
                 height: statusBarHeight + 30,
+                opacity: opacity
             }]}>
                 <FastImage
                     source={{uri: data.image}}
                     style={styles.image}
-                    resizeMode={FastImage.resizeMode.contain}
+                    resizeMode={FastImage.resizeMode.cover}
                 />
                 <BlurView
                     blurType="dark"
                     blurAmount={25}
                     style={StyleSheet.absoluteFillObject}
                 />
-            </View>)
+            </Animated.View>
         );
     }
 }
@@ -47,8 +51,6 @@ class ImageTopBar extends React.Component<IProps> {
 const styles = StyleSheet.create({
     container: {
         ...StyleSheet.absoluteFillObject,
-        width: viewportWidth,
-
         overflow: "hidden",
     },
     image: {

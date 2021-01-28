@@ -2,11 +2,9 @@ import React, {useEffect, useRef} from 'react';
 import {
     StyleSheet,
     View,
-    FlatList,
     Animated,
     NativeScrollEvent,
     NativeSyntheticEvent,
-    ListRenderItemInfo,
 } from 'react-native';
 import StickyHeader from 'react-native-stickyheader';
 import {RootState} from "@/models/index";
@@ -27,7 +25,6 @@ import Item from "@/pages/Brief/Item";
 import Footer from "@/pages/Brief/Footer";
 import BriefPlaceholder from "@/components/Placeholder/BriefPlaceholder";
 import Drawer from "@/pages/Brief/Drawer";
-import FixedOperate from "@/pages/Brief/FixedOperate";
 
 
 const mapStateToProps = ({user, brief, loading}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
@@ -52,12 +49,12 @@ type ModelState = ConnectedProps<typeof connector>;
 interface IProps extends ModelState {
     route: RouteProp<RootStackParamList, 'Brief'>
     navigation: RootStackNavigation & ModalStackNavigation;
-    scrollY: any;
+    scrollY: Animated.Value;
     headerHeight: number;
 }
 
 interface IState {
-    fixedOpacity: number,
+    fixedOpacity: boolean,
 }
 
 const imageWidth = wp(30);
@@ -70,10 +67,11 @@ class Brief extends React.PureComponent<IProps, IState> {
     fixedHeight = this.props.headerHeight + imageHeight + 30;
     drawerTranslateX = new Animated.Value(viewportWidth);
 
+
     constructor(props: IProps) {
         super(props);
         this.state = {
-            fixedOpacity: 0,
+            fixedOpacity: false,
         }
     }
 
@@ -85,6 +83,18 @@ class Brief extends React.PureComponent<IProps, IState> {
                 this.EndShowHeight
             ],
             outputRange: [1, 0],
+            extrapolate: "clamp",
+        })
+    }
+
+    getBlurOpacity = () => {
+        const {scrollY} = this.props;
+        return scrollY.interpolate({
+            inputRange: [
+                this.fixedHeight - 1,
+                this.fixedHeight
+            ],
+            outputRange: [0, 1],
             extrapolate: "clamp",
         })
     }
@@ -132,19 +142,7 @@ class Brief extends React.PureComponent<IProps, IState> {
                 getStatusBarHeight() + statusBarHeight,
                 this.EndShowHeight
             ],
-            outputRange: [14, 20],
-            extrapolate: "clamp",
-        })
-    }
-
-    getFontColor = () => {
-        const {scrollY, statusBarHeight} = this.props;
-        return scrollY.interpolate({
-            inputRange: [
-                getStatusBarHeight() + statusBarHeight,
-                this.EndShowHeight
-            ],
-            outputRange: [Color.black, Color.white],
+            outputRange: [1, 1.5],
             extrapolate: "clamp",
         })
     }
@@ -161,22 +159,28 @@ class Brief extends React.PureComponent<IProps, IState> {
     onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         if (event.nativeEvent.contentOffset.y >= this.fixedHeight) {
             this.setState({
-                fixedOpacity: 1
+                fixedOpacity: true
             })
+
         } else {
             this.setState({
-                fixedOpacity: 0
+                fixedOpacity: false
             })
         }
     };
 
-    renderItem = ({item}: ListRenderItemInfo<IChapter>) => {
-        return <Item data={item} goMangaView={this.goMangaView}/>;
+    get renderItem() {
+        const {chapterList} = this.props;
+        return (
+            <View style={styles.itemContainer}>
+                {
+                    chapterList.map(item => {
+                        return <Item data={item} goMangaView={this.goMangaView}/>;
+                    })
+                }
+            </View>
+        )
     };
-
-    renderFooter = () => {
-        return <Footer/>
-    }
 
     onClickCollection = () => {
         const {dispatch, navigation, isLogin, collection_id, book_id} = this.props;
@@ -265,13 +269,13 @@ class Brief extends React.PureComponent<IProps, IState> {
     }
 
     get header() {
-        const {navigation, statusBarHeight} = this.props;
+        const {navigation, statusBarHeight, scrollY} = this.props;
         const opacity = this.getOpacity();
+        const blurOpacity = this.getBlurOpacity();
         const leftViewX = this.getLeftViewX();
         const rightViewX = this.getRightViewX();
         const rightViewScale = this.getRightViewScale();
         const rightFontSize = this.getRightFontSize();
-        const fontColor = this.getFontColor();
 
         return (
             <>
@@ -279,32 +283,30 @@ class Brief extends React.PureComponent<IProps, IState> {
                     statusBarHeight={statusBarHeight}
                     opacity={opacity}
                 />
-                {/*<StickyHeader*/}
-                {/*    stickyHeaderY={this.fixedHeight} // 滑动到多少悬浮*/}
-                {/*    stickyScrollY={scrollY}*/}
-                {/*>*/}
-                <Operate
-                    navigation={navigation}
-                    fixedOpacity={this.state.fixedOpacity}
-                    opacity={opacity}
-                    statusBarHeight={statusBarHeight}
-                    leftViewX={leftViewX}
-                    rightViewX={rightViewX}
-                    rightViewScale={rightViewScale}
-                    rightFontSize={rightFontSize}
-                    fontColor={fontColor}
-                    onClickCollection={this.onClickCollection}
-                    readNow={this.readNow}
-                />
-                {/*</StickyHeader>*/}
+                <StickyHeader
+                    stickyHeaderY={this.fixedHeight} // 滑动到多少悬浮
+                    stickyScrollY={scrollY}
+                >
+                    <Operate
+                        navigation={navigation}
+                        opacity={opacity}
+                        blurOpacity={blurOpacity}
+                        statusBarHeight={statusBarHeight}
+                        leftViewX={leftViewX}
+                        rightViewX={rightViewX}
+                        rightViewScale={rightViewScale}
+                        rightFontSize={rightFontSize}
+                        onClickCollection={this.onClickCollection}
+                        readNow={this.readNow}
+                    />
+                </StickyHeader>
                 <BookIntro showDrawer={this.showDrawer}/>
             </>
         )
     }
 
     render() {
-        const {scrollY, chapterList, statusBarHeight, loading, refreshing} = this.props;
-
+        const {scrollY, statusBarHeight, loading, refreshing} = this.props;
         const opacity = this.getOpacity();
         const imageSize = this.getBgImageSize();
 
@@ -323,18 +325,7 @@ class Brief extends React.PureComponent<IProps, IState> {
                         opacity={opacity}
                         fixedOpacity={this.state.fixedOpacity}
                     />
-                    {
-                        this.state.fixedOpacity === 1 &&
-                        <FixedOperate
-                            statusBarHeight={statusBarHeight}
-                            onClickCollection={this.onClickCollection}
-                            readNow={this.readNow}
-                        />
-                    }
-                    <FlatList
-                        data={chapterList}
-                        numColumns={4}
-                        ListHeaderComponent={this.header}
+                    <Animated.ScrollView
                         onScroll={Animated.event(
                             [
                                 {
@@ -342,19 +333,18 @@ class Brief extends React.PureComponent<IProps, IState> {
                                 },
                             ],
                             {
-                                useNativeDriver: false,
+                                useNativeDriver: true,
                                 listener: this.onScroll
                             },
                         )}
+                        overScrollMode='always'
                         scrollEventThrottle={1}
-                        style={styles.container}
-                        columnWrapperStyle={styles.columnWrapper}
-                        renderItem={this.renderItem}
-                        keyExtractor={(item, key) => `item-${key}-item-${item.id}`}
-                        ListFooterComponent={this.renderFooter}
-                    />
+                    >
+                        {this.header}
+                        {this.renderItem}
+                        <Footer/>
+                    </Animated.ScrollView>
                 </View>
-
         )
     }
 }
@@ -377,10 +367,13 @@ const Wrapper = function (props: IProps) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
-    columnWrapper: {
+    itemContainer: {
+        flex: 1,
         paddingHorizontal: 10,
+        flexWrap: "wrap",
+        flexDirection: "row",
         backgroundColor: Color.page_bg,
     },
 });

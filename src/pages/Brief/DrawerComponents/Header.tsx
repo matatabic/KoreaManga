@@ -18,15 +18,15 @@ const connector = connect(mapStateToProps);
 type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
-    spin: any;
+    spin: Animated.AnimatedInterpolation;
     reverse: () => void;
 }
 
 class Header extends React.Component<IProps> {
 
-    reverse = ()=>{
-        const {reverse} =this.props;
-        if(typeof reverse === "function"){
+    reverse = () => {
+        const {reverse} = this.props;
+        if (typeof reverse === "function") {
             reverse();
         }
     }
