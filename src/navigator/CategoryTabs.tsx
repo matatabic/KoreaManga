@@ -1,7 +1,7 @@
 import React from 'react';
 import {createMaterialTopTabNavigator, MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
 import ViewPagerAdapter from 'react-native-tab-view-viewpager-adapter';
-import {StyleSheet, Animated} from 'react-native';
+import {View, StyleSheet, Animated} from 'react-native';
 import Category from "@/pages/Category";
 import CategoryTopBar from "@/pages/Category/CategoryTopBar";
 import {RootState} from "@/models/index";
@@ -44,21 +44,13 @@ interface IProps extends ModelState {
 
 const Tab = createMaterialTopTabNavigator<CategoryParamList>();
 
-const statusBarHeight = getStatusBarHeight();
+
 const tabBarViewHeight = 45;
-const listHeight = viewportHeight - statusBarHeight;
+const listHeight = viewportHeight - getStatusBarHeight();
 
 class CategoryTabs extends React.PureComponent<IProps> {
 
     translateY = new Animated.Value(0)
-
-    getTopColor = () => {
-        return this.translateY.interpolate({
-            inputRange: [-tabBarViewHeight, 0],
-            outputRange: [Color.white, Color.theme],
-            extrapolate: "clamp",
-        })
-    }
 
     getTopOpacity = () => {
         return this.translateY.interpolate({
@@ -71,14 +63,14 @@ class CategoryTabs extends React.PureComponent<IProps> {
     showTopBar = () => {
         Animated.timing(this.translateY, {
             toValue: 0,
-            useNativeDriver: false,
+            useNativeDriver: true,
         }).start();
     }
 
     hideTopBar = () => {
         Animated.timing(this.translateY, {
             toValue: -tabBarViewHeight,
-            useNativeDriver: false,
+            useNativeDriver: true,
         }).start();
     }
 
@@ -121,8 +113,8 @@ class CategoryTabs extends React.PureComponent<IProps> {
 
     render() {
         const {myCategories, hideHeader} = this.props;
-        const topColor = this.getTopColor();
         const topOpacity = this.getTopOpacity();
+
         if (hideHeader) {
             this.hideTopBar();
         } else {
@@ -130,11 +122,17 @@ class CategoryTabs extends React.PureComponent<IProps> {
         }
 
         return (
-            <>
+            <View>
+                <View style={[styles.statusBar, {
+                    ...StyleSheet.absoluteFillObject,
+                    backgroundColor: Color.page_bg
+                }]}/>
                 <Animated.View style={[styles.statusBar, {
-                    backgroundColor: topColor,
+                    backgroundColor: Color.theme,
+                    opacity: topOpacity,
                 }
                 ]}/>
+
                 <Animated.View style={[styles.tabBarView, {
                     height: tabBarViewHeight,
                     backgroundColor: Color.theme,
@@ -177,7 +175,7 @@ class CategoryTabs extends React.PureComponent<IProps> {
                         {myCategories.map(this.renderScreen)}
                     </Tab.Navigator>
                 </Animated.View>
-            </>
+            </View>
         )
     }
 }

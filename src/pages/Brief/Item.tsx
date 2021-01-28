@@ -30,7 +30,7 @@ class Item extends React.Component<IProps> {
     render() {
         const {data} = this.props;
         return (
-            <Touchable onPress={this.onPress} key={data.id}>
+            <Touchable onPress={this.onPress}>
                 <View style={styles.itemWrapper}>
                     <View style={styles.item}>
                         <Text>第{data.chapter_num}话</Text>

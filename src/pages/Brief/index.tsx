@@ -175,7 +175,11 @@ class Brief extends React.PureComponent<IProps, IState> {
             <View style={styles.itemContainer}>
                 {
                     chapterList.map(item => {
-                        return <Item data={item} goMangaView={this.goMangaView}/>;
+                        return (
+                            <View key={item.id}>
+                                <Item data={item} goMangaView={this.goMangaView}/>
+                            </View>
+                        );
                     })
                 }
             </View>
