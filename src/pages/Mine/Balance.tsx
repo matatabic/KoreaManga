@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         borderWidth: StyleSheet.hairlineWidth,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Color.purple_btn
+        backgroundColor: Color.purple
     },
 })
 

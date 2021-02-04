@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         flexDirection: "row",
         alignItems: "center",
-        borderBottomColor: Color.split_line,
+        borderBottomColor: Color.dark_title,
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
     info: {

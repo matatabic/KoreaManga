@@ -26,7 +26,7 @@ class Input extends React.PureComponent<IProps> {
         return (
             <View style={styles.container}>
                 <View style={styles.inputView}>
-                    <Icon name={iconName} color={Color.night_btn} size={20}/>
+                    <Icon name={iconName} color={Color.night} size={20}/>
                     <TextInput
                         {...field}
                         {...rest}
@@ -35,7 +35,7 @@ class Input extends React.PureComponent<IProps> {
                         onBlur={form.handleBlur(field.name)}
                     />
                     <Touchable onPress={this.chaCha}>
-                        <Icon name={'icon-chacha'} color={Color.night_btn} size={20}/>
+                        <Icon name={'icon-chacha'} color={Color.night} size={20}/>
                     </Touchable>
                     <ErrorMessage
                         name={field.name}

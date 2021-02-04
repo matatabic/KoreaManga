@@ -8,9 +8,10 @@ export const Color = { //App通用颜色
     icon: '#F86442',
     grey: '#F0F0F0',
     text: '#000000',    //默认字体颜色
-    light_btn: '#F3F6F6',     //按钮颜色
-    purple_btn: '#874EFD',
-    night_btn: '#696969',
+    light: '#F3F6F6',     //按钮颜色
+    purple: '#874EFD',
+    night: '#696969',
+    dark: '#1C1C1C',
     yellow_btn: '#FDC841',
     grey_title: '#A9A9A9',
     dark_title: '#5B5B5B',

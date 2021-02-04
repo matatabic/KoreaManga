@@ -24,7 +24,7 @@ import {IChapter} from "@/models/brief";
 import Item from "@/pages/Brief/Item";
 import Footer from "@/pages/Brief/Footer";
 import BriefPlaceholder from "@/components/Placeholder/BriefPlaceholder";
-import Drawer from "@/pages/Brief/Drawer";
+import LightDrawer from "@/components/LightDrawer";
 
 
 const mapStateToProps = ({user, brief, loading}: RootState, {route}: { route: RouteProp<RootStackParamList, 'Brief'> }) => {
@@ -317,7 +317,7 @@ class Brief extends React.PureComponent<IProps, IState> {
         return (
             (loading && refreshing) ? <BriefPlaceholder/> :
                 <View style={styles.container}>
-                    <Drawer
+                    <LightDrawer
                         drawerTranslateX={this.drawerTranslateX}
                         hideDrawer={this.hideDrawer}
                         goMangaView={this.goMangaView}

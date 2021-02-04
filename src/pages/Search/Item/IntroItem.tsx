@@ -28,7 +28,7 @@ const IntroItem = ({data, goBrief}: IProps) => {
 const styles = StyleSheet.create({
     item: {
         height: '100%',
-        backgroundColor: Color.light_btn,
+        backgroundColor: Color.light,
         justifyContent: 'center',
         borderRadius: 5,
         margin: 5

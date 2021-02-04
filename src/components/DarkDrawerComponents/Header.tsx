@@ -41,7 +41,7 @@ class Header extends React.Component<IProps> {
                 </View>
                 <View style={styles.changeView}>
                     <View style={styles.huaView}>
-                        <Text>话</Text>
+                        <Text style={styles.hua}>话</Text>
                     </View>
                     <Touchable onPress={this.reverse}>
                         <Animated.View style={{transform: [{rotate: spin}]}}>
@@ -57,17 +57,18 @@ class Header extends React.Component<IProps> {
 const styles = StyleSheet.create({
     container: {
         height: 100,
-        paddingHorizontal: 10,
     },
     titleView: {
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        paddingHorizontal: 10,
     },
     title: {
         fontSize: 22,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        color: Color.white
     },
     status: {
         color: Color.theme
@@ -77,14 +78,20 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        paddingHorizontal: 10,
+        backgroundColor: Color.dark,
+        borderBottomColor: Color.dark_title,
+        borderBottomWidth: StyleSheet.hairlineWidth,
     },
     huaView: {
         width: 45,
         height: 25,
-        borderRadius: 15,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: Color.theme,
+    },
+    hua: {
+        color: Color.white,
+        fontSize: 16,
     }
 })
 

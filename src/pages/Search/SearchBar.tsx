@@ -74,7 +74,7 @@ class SearchBar extends React.PureComponent<IProps, IState> {
         })
     }
 
-    debounce = (cb: any, text: string, wait = 500) => {
+    debounce = (cb: any, wait = 500) => {
         let timeout = this.timeout
         if (timeout !== null) {
             clearTimeout(timeout)
@@ -115,7 +115,7 @@ class SearchBar extends React.PureComponent<IProps, IState> {
             searchTitle: text
         })
         if (text && text.length > 0) {
-            this.debounce(this.loadData, text, 250)
+            this.debounce(this.loadData, 250)
         } else {
             dispatch({
                 type: 'search/setState',

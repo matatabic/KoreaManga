@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
-        color: Color.light_btn,
+        color: Color.light,
     },
 });
 

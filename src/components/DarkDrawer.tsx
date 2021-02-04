@@ -4,9 +4,9 @@ import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {Color} from "@/utils/const";
 import Touchable from "@/components/Touchable";
-import Header from "@/pages/Brief/DrawerComponents/Header";
+import Header from "./DarkDrawerComponents/Header";
 import {IChapter} from "@/models/brief";
-import Item from "@/pages/Brief/DrawerComponents/Item";
+import Item from "./DarkDrawerComponents/Item";
 
 
 const mapStateToProps = ({brief}: RootState) => {
@@ -23,7 +23,7 @@ type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
     drawerTranslateX: any;
-    goMangaView: (data: IChapter) => void;
+    goMangaChapter: (data: IChapter) => void;
     hideDrawer: () => void;
 }
 
@@ -31,7 +31,7 @@ interface IState {
     chapterList: IChapter[];
 }
 
-class Drawer extends React.Component<IProps, IState> {
+class DarkDrawer extends React.Component<IProps, IState> {
 
     spinValue = new Animated.Value(0)
     isSpin: boolean = true;
@@ -53,7 +53,7 @@ class Drawer extends React.Component<IProps, IState> {
 
     renderItem = ({item}: ListRenderItemInfo<IChapter>) => {
         return (
-            <Item data={item} goMangaView={this.props.goMangaView}/>
+            <Item data={item} goMangaChapter={this.props.goMangaChapter}/>
         )
     }
 
@@ -80,7 +80,7 @@ class Drawer extends React.Component<IProps, IState> {
             ).start(() => this.spinValue.setValue(0));
         }
         this.setState({
-            chapterList:[...this.state.chapterList.reverse()]
+            chapterList: [...this.state.chapterList.reverse()]
         })
         this.isSpin = !this.isSpin
     }
@@ -99,7 +99,6 @@ class Drawer extends React.Component<IProps, IState> {
                 transform: [{translateX: drawerTranslateX}]
             }]}>
                 <View style={styles.container}>
-                    <Touchable onPress={this.hideDrawer} style={styles.transparentView}/>
                     <View style={[styles.listContainer, {
                         paddingTop: statusBarHeight
                     }]}>
@@ -111,6 +110,7 @@ class Drawer extends React.Component<IProps, IState> {
                             extraData={this.state}
                         />
                     </View>
+                    <Touchable onPress={this.hideDrawer} style={styles.transparentView}/>
                 </View>
             </Animated.View>
         );
@@ -133,8 +133,8 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         flex: 5,
-        backgroundColor: Color.page_bg,
-    }
+        backgroundColor: Color.dark,
+    },
 })
 
-export default connector(Drawer);
+export default connector(DarkDrawer);

@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     topTabBarView: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderBottomColor: Color.light_btn,
+        borderBottomColor: Color.light,
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
     tabBar: {
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     editBtn: {
         paddingHorizontal: 15,
         borderLeftWidth: StyleSheet.hairlineWidth,
-        borderColor: Color.light_btn,
+        borderColor: Color.light,
     },
     text: {
         color: Color.white,

@@ -4,9 +4,8 @@ import {EPISODE_URL, ADD_HISTORY} from "@/config/api";
 
 export interface IParams {
     book_id: number,
-    roast: number,
-    page_size: number,
-    current_page: number,
+    roast?: number,
+    chapter_num?: number,
 }
 
 export async function getList(params: IParams) {

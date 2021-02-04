@@ -37,7 +37,7 @@ function getCurrentDate() {
 
     let hour = date.getHours();
     let minute = date.getMinutes();
-    let min = minute > 10 ? minute : `0${minute}`
+    let min = minute >= 10 ? minute : `0${minute}`
 
     return `${hour}:${min}`;
 }

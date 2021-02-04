@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, ScrollView, Animated} from 'react-native';
+import {StyleSheet, View, Animated} from 'react-native';
 import ImageBackground from './ImageBackground'
 import {Color} from "@/utils/const";
 import Information from "./Information";
@@ -28,17 +28,18 @@ class Mine extends Component<IProps> {
         const {navigation} = this.props;
         const imageSize = this.getBgImageSize();
         return (
-            <View style={{flex: 1}}>
+            <View>
                 <ImageBackground imageSize={imageSize}/>
-                <View style={styles.spaceView}/>
-                <ScrollView
+                <Animated.ScrollView
                     scrollEventThrottle={1}
                     onScroll={Animated.event(
-                        [{
-                            nativeEvent: {contentOffset: {y: this.translateY}}
-                        }],
+                        [
+                            {
+                                nativeEvent: {contentOffset: {y: this.translateY}},
+                            },
+                        ],
                         {
-                            useNativeDriver: false,
+                            useNativeDriver: true,
                         },
                     )}>
                     <View style={styles.container}>
@@ -48,7 +49,7 @@ class Mine extends Component<IProps> {
                             <Balance/>
                         </View>
                     </View>
-                </ScrollView>
+                </Animated.ScrollView>
             </View>
         );
     }
@@ -67,12 +68,11 @@ const styles = StyleSheet.create({
     },
     detail: {
         ...StyleSheet.absoluteFillObject,
-        flex: 1,
         height: 200,
         top: -100,
         marginHorizontal: 15,
         marginBottom: 25,
-        backgroundColor: Color.white
+        backgroundColor: Color.page_bg
     },
 
 });

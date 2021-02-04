@@ -13,22 +13,29 @@ export interface IEpisode {
     chapter_num: number;
     episode_total: number;
     multiple: number;
+    title: string;
 }
 
 export interface IPagination {
-    current_page: number;
-    page_size: number;
-    total: number;
+    current_chapter_id: number;
+    current_chapter: number;
+    episode_offset: number;
+    episode_total: number;
+    manga_total: number;
+    current_title: string;
 }
 
 export interface MangaViewState {
     episodeList: IEpisode[];
     refreshing: boolean;
-    book_id: number;
-    headerIndex: number;
-    endIndex: number;
-    headerHasMore: boolean;
-    endHasMore: boolean;
+    hasMore: boolean;
+    currentEpisodeTotal: number;
+    currentChapterNum: number;
+    currentChapterId: number;
+    currentNumber: number;
+    currentRoast: number;
+    currentTitle: string;
+    panelStatus: boolean;
     pagination: IPagination;
 }
 
@@ -37,26 +44,32 @@ interface MangaViewModel extends Model {
     state: MangaViewState;
     reducers: {
         setState: Reducer<MangaViewState>;
-        initData: Reducer<MangaViewState>;
     };
     effects: {
         fetchEpisodeList: Effect;
         addHistory: Effect;
+        setCurrentIndex: Effect;
     };
 }
 
 export const initialState = {
     episodeList: [],
     refreshing: false,
-    book_id: 0,
-    headerIndex: 0,
-    endIndex: 0,
-    headerHasMore: false,
-    endHasMore: false,
+    hasMore: false,
+    currentEpisodeTotal: 0,
+    currentChapterNum: 0,
+    currentChapterId: 0,
+    currentNumber: 0,
+    currentRoast: 0,
+    currentTitle: '',
+    panelStatus: true,
     pagination: {
-        current_page: 0,
-        page_size: 0,
-        total: 0,
+        current_chapter_id: 0,
+        current_chapter: 0,
+        episode_offset: 0,
+        episode_total: 0,
+        manga_total: 0,
+        current_title: '',
     }
 };
 
@@ -70,47 +83,36 @@ const mangaViewModel: MangaViewModel = {
                 ...payload,
             };
         },
-        initData(state = initialState) {
-            return {
-                ...state,
-                ...initialState,
-            };
-        },
     },
     effects: {
         *fetchEpisodeList(action, {call, put, select}) {
             const {payload} = action;
-            const {refreshing, direction} = payload;
+            const {refreshing} = payload;
 
-            let {episodeList: list, book_id, roast, headerIndex, endIndex} = yield select(
+            let {episodeList: list,} = yield select(
                 (state: RootState) => state['mangaView'],
             );
 
             const {data} = yield call(EpisodeServices.getList, {
-                book_id,
-                roast: refreshing ? roast : direction ? endIndex + 1 : headerIndex - 6 > 0
-                    ? headerIndex - 6 : 1,
-                current_page: 1,
-                page_size: refreshing ? 6 : direction ? 6 : headerIndex - 6 > 0 ?
-                    6 : headerIndex - 1,
+                book_id: payload.book_id,
+                roast: refreshing ? payload.roast : list[list.length - 1].roast + 1,
+                chapter_num: payload.chapter_num,
             });
 
-            const newList = refreshing ? data.list :
-                direction ? [...list, ...data.list] : [...data.list, ...list];
+            const newList = refreshing ? data.list : [...list, ...data.list];
 
             yield put({
                 type: 'setState',
                 payload: {
                     episodeList: newList,
-                    headerIndex: newList[0].roast,
-                    endIndex: newList[newList.length - 1].roast,
-                    headerHasMore: newList[0].roast > 1,
-                    endHasMore: newList[newList.length - 1].roast < data.pages.total,
-                    pagination: {
-                        current_page: data.pages.current_page,
-                        page_size: data.pages.page_size,
-                        total: data.pages.total,
-                    },
+                    hasMore: data.pages.current_chapter < data.pages.manga_total,
+                    currentEpisodeTotal: data.pages.episode_total,
+                    currentChapterNum: data.pages.current_chapter,
+                    currentChapterId: data.pages.current_chapter_id,
+                    currentNumber: data.pages.episode_offset,
+                    currentTitle: data.pages.current_title,
+                    currentRoast: payload.roast,
+                    pagination: data.pages,
                 }
             });
 
@@ -119,8 +121,29 @@ const mangaViewModel: MangaViewModel = {
             }
         },
         *addHistory({payload}, {call}) {
-            const data = yield call(EpisodeServices.saveMark, payload);
+            yield call(EpisodeServices.saveMark, payload);
         },
+        *setCurrentIndex(action, {_, put, select}) {
+            const {payload} = action;
+
+            let {episodeList: list, currentChapterNum} = yield select(
+                (state: RootState) => state['mangaView'],
+            );
+            const index = list.findIndex((item: IEpisode) => item.chapter_num === currentChapterNum && item.number === payload.currentNumber)
+
+            yield put({
+                type: 'setState',
+                payload: {
+                    currentNumber: list[index].number
+                }
+            });
+
+            if (action.callback) {
+                action.debounce(() => {
+                    action.callback(index)
+                })
+            }
+        }
     },
 };
 
