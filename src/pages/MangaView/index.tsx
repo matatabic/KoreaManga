@@ -6,35 +6,39 @@ import {
     NativeSyntheticEvent,
     NativeScrollEvent,
     StatusBar,
-    NativeEventEmitter,
-    NativeModules
+    Animated,
+    Easing
 } from 'react-native';
-import NetInfo from "@react-native-community/netinfo";
 import {IChapter} from "@/models/brief";
 import {RootState} from "@/models/index";
 import {connect, ConnectedProps} from "react-redux";
 import {RouteProp} from "@react-navigation/native";
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
-import {RootStackParamList} from "@/navigator/index";
-import {IEpisode} from "@/models/mangaView";
+import {RootStackNavigation, RootStackParamList} from "@/navigator/index";
+import {IEpisode, initialState} from "@/models/mangaView";
 import Item from "./item/Item";
 import More from "@/components/More";
 import End from "@/components/End";
-import {viewportWidth, getCurrentDate} from "@/utils/index";
-import Toast from "react-native-root-toast";
+import {hp, viewportWidth} from "@/utils/index";
 import BookStatusBar from "./BookStatusBar";
-
-const deviceInfoEmitter = new NativeEventEmitter(NativeModules.RNDeviceInfo);
+import TopCtrPanel from "@/pages/MangaView/TopCtrPanel";
+import BottomCtrPanel from "@/pages/MangaView/BottomCtrPanel";
+import Touchable from "@/components/Touchable";
+import DarkDrawer from "@/components/DarkDrawer";
 
 const mapStateToProps = ({mangaView, brief, user, loading}: RootState) => {
     return {
         isLogin: user.isLogin,
+        statusBarHeight: brief.statusBarHeight,
         episodeList: mangaView.episodeList,
         currentChapter: brief.markChapterNum,
-        currentRoast: brief.markRoast,
+        currentRoast: mangaView.currentRoast,
+        hasMore: mangaView.hasMore,
         refreshing: mangaView.refreshing,
-        headerHasMore: mangaView.headerHasMore,
-        endHasMore: mangaView.endHasMore,
+        currentChapterId: mangaView.currentChapterId,
+        currentChapterNum: mangaView.currentChapterNum,
+        panelStatus: mangaView.panelStatus,
+        pages: mangaView.pagination,
         loading: loading.effects['mangaView/fetchEpisodeList']
     };
 };
@@ -45,138 +49,73 @@ type ModelState = ConnectedProps<typeof connector>;
 
 interface IProps extends ModelState {
     route: RouteProp<RootStackParamList, 'MangaView'>;
+    navigation: RootStackNavigation;
     data: IChapter;
 }
 
 
 interface IState {
     endReached: boolean;
-    currentTime: string;
-    currentEpisodeTotal: number;
-    currentChapterNum: number;
-    currentNumber: number;
-    connectionType: string;
-    batteryLevel: string;
 }
 
 
 class MangaView extends React.PureComponent<IProps, IState> {
 
-    timer: NodeJS.Timer | null = null;
-    currentChapterId: number = 0;
-    currentRoast: number = 0;
+    flatListRef: FlatList<IEpisode> | null = null;
+    topPanelValue = new Animated.Value(0)
+    bottomPanelValue = new Animated.Value(0)
+    panelStatus: boolean = true;
+    drawerTranslateX = new Animated.Value(-viewportWidth);
 
     constructor(props: IProps) {
         super(props);
         this.state = {
             endReached: false,
-            connectionType: '未知',
-            currentEpisodeTotal: 0,
-            currentChapterNum: 1,
-            currentNumber: 1,
-            currentTime: '',
-            batteryLevel: '100',
         };
     }
 
     componentDidMount() {
-        const time: string = getCurrentDate();
-        this.setState({
-            currentTime: time
-        })
-
-        this.timer = setInterval(() => {
-            const time: string = getCurrentDate();
-            this.setState({
-                currentTime: time
-            })
-        }, 60000)
-
-        NetInfo.fetch("wifi").then(state => {
-            if (state.type !== "wifi") {
-                Toast.show('现在处于非wifi环境，请注意流量使用', {
-                    position: Toast.positions.CENTER,
-                    duration: Toast.durations.LONG,
-                    shadow: true,
-                    animation: true,
-                })
-            }
-        });
-
-        NetInfo.addEventListener(state => {
-            this.setState({
-                connectionType: state.type === "wifi" ? state.type : "noWifi",
-            })
-        });
-
-        deviceInfoEmitter.addListener('RNDeviceInfo_batteryLevelDidChange', level => {
-            if (level !== '-1') {
-                this.setState({
-                    batteryLevel: parseInt(level).toString()
-                })
-            }
-        });
-
-        const {dispatch} = this.props;
-        const {roast, book_id} = this.props.route.params;
-        dispatch({
-            type: 'mangaView/setState',
-            payload: {
-                book_id,
-                roast,
-            }
-        });
-        this.loadData(true, true);
-    }
-
-    static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
-        if (prevState.currentEpisodeTotal === 0 && nextProps.episodeList.length > 0) {
-            return {
-                currentEpisodeTotal: nextProps.episodeList[0].episode_total,
-                currentChapterNum: nextProps.episodeList[0].chapter_num,
-                currentNumber: nextProps.episodeList[0].number,
-            }
-        }
-
-        return null;
+        this.loadData(true);
     }
 
     renderFooter = () => {
-        const {endHasMore} = this.props;
+        const {hasMore} = this.props;
         const {endReached} = this.state;
         if (endReached) {
             return <More/>;
         }
-        if (!endHasMore) {
+        if (!hasMore) {
             return <End/>;
         }
 
         return null;
     }
 
-    loadData = (refreshing: boolean, direction: boolean, callback?: () => void) => {
+    loadData = (refreshing: boolean, callback?: () => void) => {
         const {dispatch} = this.props;
+        const {roast, book_id} = this.props.route.params
         dispatch({
             type: 'mangaView/fetchEpisodeList',
             payload: {
                 refreshing,
-                direction,
+                roast,
+                book_id
             },
             callback
         });
     }
 
     onEndReached = () => {
-        const {endHasMore, loading} = this.props;
+        const {hasMore, loading} = this.props;
 
-        if (!endHasMore || loading) {
+        if (!hasMore || loading) {
             return;
         }
         this.setState({
             endReached: true,
         });
 
-        this.loadData(false, true, () => {
+        this.loadData(false, () => {
             this.setState({
                 endReached: false,
             });
@@ -184,115 +123,275 @@ class MangaView extends React.PureComponent<IProps, IState> {
     }
 
     onScrollEndDrag = ({nativeEvent}: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const {episodeList} = this.props;
+        const {dispatch, episodeList} = this.props;
         let offset_total = 0;
         for (let i = 0; i < episodeList.length; i++) {
             offset_total += episodeList[i].multiple * viewportWidth;
             if (nativeEvent.contentOffset.y < offset_total) {
-                this.currentChapterId = episodeList[i].chapter_id;
-                this.currentRoast = episodeList[i].roast;
-
-                this.setState({
-                    currentChapterNum: episodeList[i].chapter_num,
-                    currentEpisodeTotal: episodeList[i].episode_total,
-                    currentNumber: episodeList[i].number,
+                dispatch({
+                    type: 'mangaView/setState',
+                    payload: {
+                        currentEpisodeTotal: episodeList[i].episode_total,
+                        currentChapterId: episodeList[i].chapter_id,
+                        currentChapterNum: episodeList[i].chapter_num,
+                        currentNumber: episodeList[i].number,
+                        currentRoast: episodeList[i].roast,
+                        currentTitle: episodeList[i].title,
+                    }
                 })
                 break;
             }
         }
     };
 
+    onScroll = () => {
+        const {dispatch, panelStatus} = this.props;
+        if (panelStatus) {
+            dispatch({
+                type: 'mangaView/setState',
+                payload: {
+                    panelStatus: false
+                }
+            })
+            this.hidePanel();
+        }
+    }
+
+    showDrawer = () => {
+        Animated.timing(this.drawerTranslateX, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true
+        }).start();
+    }
+
+    hideDrawer = () => {
+        Animated.timing(this.drawerTranslateX, {
+            toValue: -viewportWidth,
+            duration: 200,
+            useNativeDriver: true
+        }).start();
+    }
+
+    goMangaChapter = (item: IChapter) => {
+        const {dispatch} = this.props;
+        const {book_id} = this.props.route.params
+        dispatch({
+            type: 'mangaView/fetchEpisodeList',
+            payload: {
+                refreshing: true,
+                roast: item.roast,
+                book_id,
+                callback: this.hideDrawer()
+            }
+        });
+    }
+
+    hidePanel = () => {
+        const {statusBarHeight} = this.props;
+        Animated.parallel([
+            Animated.timing(
+                this.topPanelValue,
+                {
+                    toValue: -(statusBarHeight + getStatusBarHeight()),
+                    duration: 200,
+                    easing: Easing.linear,
+                    useNativeDriver: true
+                }
+            ),
+            Animated.timing(
+                this.bottomPanelValue,
+                {
+                    toValue: hp(25),
+                    duration: 200,
+                    easing: Easing.linear,
+                    useNativeDriver: true
+                }
+            )
+        ]).start();
+        StatusBar.setHidden(true);
+    }
+
+    showPanel = () => {
+        Animated.parallel([
+            Animated.timing(
+                this.topPanelValue,
+                {
+                    toValue: 0,
+                    duration: 200,
+                    easing: Easing.linear,
+                    useNativeDriver: true
+                }
+            ),
+            Animated.timing(
+                this.bottomPanelValue,
+                {
+                    toValue: 0,
+                    duration: 200,
+                    easing: Easing.linear,
+                    useNativeDriver: true
+                }
+            )
+        ]).start();
+    }
+
+    panelHandle = () => {
+        const {dispatch, panelStatus} = this.props;
+        if (panelStatus) {
+            this.hidePanel();
+            StatusBar.setHidden(true);
+        } else {
+            this.showPanel();
+            StatusBar.setHidden(false);
+        }
+
+        dispatch({
+            type: 'mangaView/setState',
+            payload: {
+                panelStatus: !panelStatus
+            }
+        })
+    }
+
+    lastChapter = () => {
+        const {dispatch, currentChapterNum, loading} = this.props;
+        const {book_id} = this.props.route.params
+
+        if (!loading) {
+            dispatch({
+                type: 'mangaView/fetchEpisodeList',
+                payload: {
+                    refreshing: true,
+                    chapter_num: currentChapterNum - 1,
+                    book_id,
+                }
+            });
+        }
+    }
+
+    nextChapter = () => {
+        const {dispatch, currentChapterNum, loading} = this.props;
+        const {book_id} = this.props.route.params
+
+        if (!loading) {
+            dispatch({
+                type: 'mangaView/fetchEpisodeList',
+                payload: {
+                    refreshing: true,
+                    chapter_num: currentChapterNum + 1,
+                    book_id,
+                }
+            });
+        }
+    }
+
+    scrollToIndex = (index: number) => {
+        this.flatListRef?.scrollToIndex({viewPosition: 0, index: index});
+    }
+
     renderItem = ({item}: ListRenderItemInfo<IEpisode>) => {
         return (
-            <Item data={item}/>
+            <Touchable onPress={this.panelHandle} activeOpacity={1}>
+                <Item data={item}/>
+            </Touchable>
         )
     }
 
     componentWillUnmount() {
-        const {isLogin, dispatch, episodeList} = this.props;
+        const {isLogin, dispatch, currentChapterId, currentChapterNum, currentRoast} = this.props;
         const {book_id} = this.props.route.params;
-
-        const chapter_id = this.currentChapterId > 0 ? this.currentChapterId : episodeList[0].chapter_id;
-        const chapter_num = this.state.currentChapterNum > 0 ?
-            this.state.currentChapterNum : episodeList[0].chapter_num;
-        const roast = this.currentRoast > 0 ? this.currentRoast : episodeList[0].roast;
 
         dispatch({
             type: 'brief/setChapter',
             payload: {
-                markChapterNum: chapter_num,
-                markRoast: roast
+                markChapterNum: currentChapterNum,
+                markRoast: currentRoast
             }
         })
 
         dispatch({
-            type: 'mangaView/initData',
+            type: 'mangaView/setState',
+            payload: {
+                ...initialState
+            }
         })
+
+        StatusBar.setHidden(false);
 
         if (isLogin) {
             dispatch({
                 type: 'mangaView/addHistory',
                 payload: {
                     book_id,
-                    chapter_id,
-                    chapter_num,
-                    roast,
+                    chapter_id: currentChapterId,
+                    chapter_num: currentChapterNum,
+                    roast: currentRoast,
                 }
             })
             dispatch({
                 type: 'shelf/setHistoryScreenReload',
             })
         }
+    }
 
-        clearInterval(Number(this.timer));
+    goBack = () => {
+        this.props.navigation.goBack();
     }
 
     render() {
-        const {episodeList} = this.props;
-        const {
-            batteryLevel,
-            connectionType,
-            currentTime,
-            currentNumber,
-            currentChapterNum,
-            currentEpisodeTotal
-        } = this.state;
+        const {episodeList, pages} = this.props;
         return (
-            <>
-                <StatusBar hidden/>
+            episodeList.length > 0 && <>
+                <StatusBar barStyle="light-content"/>
+                <TopCtrPanel topPanelValue={this.topPanelValue} goBack={this.goBack}/>
+                <BottomCtrPanel
+                    bottomPanelValue={this.bottomPanelValue}
+                    scrollToIndex={this.scrollToIndex}
+                    showDrawer={this.showDrawer}
+                    lastChapter={this.lastChapter}
+                    nextChapter={this.nextChapter}
+                />
                 <FlatList
+                    ref={ref => (this.flatListRef = ref)}
                     style={styles.container}
                     data={episodeList}
                     numColumns={1}
                     scrollEventThrottle={1}
                     extraData={this.state}
                     renderItem={this.renderItem}
+                    onScroll={this.onScroll}
                     getItemLayout={(data: any, index) => {
+                        if (data[index] === undefined) {
+                            return {length: 0, offset: 0, index}
+                        }
+
                         let offset = 0;
-                        const length = viewportWidth * data[index].multiple;
+                        const length = viewportWidth * data[index].multiple
+
                         for (let i = 0; i < index; i++) {
                             offset += viewportWidth * data[i].multiple
                         }
+
                         return {length: length, offset, index}
                     }}
+                    initialScrollIndex={pages.episode_offset - 1}
                     keyExtractor={(item) => `item-${item.id}`}
                     onEndReached={this.onEndReached}
                     onEndReachedThreshold={0.1}
                     onScrollEndDrag={this.onScrollEndDrag}
                     ListFooterComponent={this.renderFooter}
                 />
-                <BookStatusBar
-                    batteryLevel={batteryLevel}
-                    connectionType={connectionType}
-                    currentTime={currentTime}
-                    currentEpisodeTotal={currentEpisodeTotal}
-                    currentChapterNum={currentChapterNum}
-                    currentNumber={currentNumber}
+                <DarkDrawer
+                    drawerTranslateX={this.drawerTranslateX}
+                    hideDrawer={this.hideDrawer}
+                    goMangaChapter={this.goMangaChapter}
                 />
+                <BookStatusBar/>
             </>
         );
     }
 }
+
 
 const styles = StyleSheet.create({
     container: {
