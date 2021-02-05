@@ -21,7 +21,7 @@ export interface IPagination {
     current_chapter: number;
     episode_offset: number;
     episode_total: number;
-    manga_total: number;
+    chapter_total: number;
     current_title: string;
 }
 
@@ -68,7 +68,7 @@ export const initialState = {
         current_chapter: 0,
         episode_offset: 0,
         episode_total: 0,
-        manga_total: 0,
+        chapter_total: 0,
         current_title: '',
     }
 };
@@ -105,7 +105,7 @@ const mangaViewModel: MangaViewModel = {
                 type: 'setState',
                 payload: {
                     episodeList: newList,
-                    hasMore: data.pages.current_chapter < data.pages.manga_total,
+                    hasMore: data.pages.current_chapter < data.pages.chapter_total,
                     currentEpisodeTotal: data.pages.episode_total,
                     currentChapterNum: data.pages.current_chapter,
                     currentChapterId: data.pages.current_chapter_id,

@@ -15,7 +15,7 @@ const mapStateToProps = ({brief, mangaView}: RootState) => {
         currentEpisodeTotal: mangaView.currentEpisodeTotal,
         currentNumber: mangaView.currentNumber,
         currentChapterNum: mangaView.currentChapterNum,
-        manga_total: mangaView.pagination.manga_total,
+        chapter_total: mangaView.pagination.chapter_total,
     };
 };
 
@@ -30,7 +30,7 @@ interface IProps extends ModelState {
 }
 
 
-function SliderView({dispatch, currentEpisodeTotal, currentNumber, currentChapterNum, manga_total, scrollToIndex, lastChapter, nextChapter}: IProps) {
+function SliderView({dispatch, currentEpisodeTotal, currentNumber, currentChapterNum, chapter_total, scrollToIndex, lastChapter, nextChapter}: IProps) {
 
     let [time, setTime] = useState<any>(null);
 
@@ -92,7 +92,7 @@ function SliderView({dispatch, currentEpisodeTotal, currentNumber, currentChapte
                     }}
                 />
                 {
-                    currentChapterNum !== manga_total ?
+                    currentChapterNum !== chapter_total ?
                         <Touchable onPress={nextClick}>
                             <Icon name="icon-xiayige-copy" color={Color.yellow} size={20}/>
                         </Touchable> :
