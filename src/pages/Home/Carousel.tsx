@@ -5,10 +5,11 @@ import SnapCarousel, {
     AdditionalParallaxProps,
 } from 'react-native-snap-carousel';
 import {viewportWidth, wp, hp} from '@/utils/index';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ICarousel} from '@/models/home';
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
+import FastImage from 'react-native-fast-image';
 
 const sliderWidth = viewportWidth;
 const sideWidth = wp(90);
@@ -73,7 +74,7 @@ class Carousel extends React.Component<IProps> {
         {item}: { item: ICarousel }) => {
         return (
             <View>
-                <Image source={{uri: item.image}} style={styles.containerStyle}/>
+                <FastImage source={{uri: item.image}} style={styles.containerStyle}/>
             </View>
         );
     };
