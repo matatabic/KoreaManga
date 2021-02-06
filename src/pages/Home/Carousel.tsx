@@ -5,7 +5,7 @@ import SnapCarousel, {
     AdditionalParallaxProps,
 } from 'react-native-snap-carousel';
 import {viewportWidth, wp, hp} from '@/utils/index';
-import {StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {ICarousel} from '@/models/home';
 import {RootState} from '@/models/index';
 import {connect, ConnectedProps} from 'react-redux';
@@ -53,23 +53,30 @@ class Carousel extends React.Component<IProps> {
         });
     };
 
+    // renderItem = (
+    //     {item}: { item: ICarousel },
+    //     parallaxProps?: AdditionalParallaxProps,
+    // ) => {
+    //     return (
+    //         <ParallaxImage
+    //             source={{uri: item.image}}
+    //             style={styles.image}
+    //             containerStyle={styles.containerStyle}
+    //             parallaxFactor={0.8}
+    //             showSpinner
+    //             spinnerColor="rgba(0,0,0,0.25)"
+    //             {...parallaxProps}
+    //         />
+    //     );
+    // };
     renderItem = (
-        {item}: { item: ICarousel },
-        parallaxProps?: AdditionalParallaxProps,
-    ) => {
+        {item}: { item: ICarousel }) => {
         return (
-            <ParallaxImage
-                source={{uri: item.image}}
-                style={styles.image}
-                containerStyle={styles.containerStyle}
-                parallaxFactor={0.8}
-                showSpinner
-                spinnerColor="rgba(0,0,0,0.25)"
-                {...parallaxProps}
-            />
+            <View>
+                <Image source={{uri: item.image}} style={styles.containerStyle}/>
+            </View>
         );
     };
-
 
     get pagination() {
         const {carouselList, activeCarouselIndex} = this.props;
@@ -97,7 +104,7 @@ class Carousel extends React.Component<IProps> {
                     renderItem={this.renderItem}
                     sliderWidth={sliderWidth}
                     itemWidth={itemWidth}
-                    hasParallaxImages
+                    // hasParallaxImages
                     onSnapToItem={this.onSnapToItem}
                     loop
                     autoplay

@@ -6,6 +6,7 @@ import Information from "./Information";
 import BuyList from "./BuyList";
 import Balance from "./Balance";
 import {ModalStackNavigation} from "@/navigator/index";
+import {viewportHeight} from "@/utils/index";
 
 
 interface IProps {
@@ -43,11 +44,14 @@ class Mine extends Component<IProps> {
                         },
                     )}>
                     <View style={styles.container}>
+                        <View style={{height: 100}}/>
+                        <View style={{flex: 1, backgroundColor: Color.grey_page_bg}}/>
                         <View style={styles.detail}>
                             <Information navigation={navigation}/>
                             <BuyList/>
                             <Balance/>
                         </View>
+
                     </View>
                 </Animated.ScrollView>
             </View>
@@ -56,20 +60,13 @@ class Mine extends Component<IProps> {
 }
 
 const styles = StyleSheet.create({
-    spaceView: {
-        ...StyleSheet.absoluteFillObject,
-        marginTop: 500,
-        backgroundColor: Color.grey_page_bg
-    },
     container: {
-        height: 800,
-        marginTop: 250,
-        backgroundColor: Color.grey_page_bg,
+        height: viewportHeight,
+        marginTop: 150,
     },
     detail: {
         ...StyleSheet.absoluteFillObject,
         height: 200,
-        top: -100,
         marginHorizontal: 15,
         marginBottom: 25,
         backgroundColor: Color.page_bg
