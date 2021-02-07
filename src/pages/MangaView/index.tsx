@@ -297,7 +297,7 @@ class MangaView extends React.PureComponent<IProps, IState> {
         )
     }
 
-    componentWillUnmount() {
+    UNSAFE_componentWillMount() {
         const {isLogin, dispatch, currentChapterId, currentChapterNum, currentRoast} = this.props;
         const {book_id} = this.props.route.params;
 
